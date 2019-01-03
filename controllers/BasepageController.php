@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use yii\web\Controller;
 
-class PageController extends Controller {
+class BasepageController extends Controller {
     
     public function actionInds() {
         echo 1;

@@ -5,8 +5,10 @@ $params = require(__DIR__ . '/params.php');
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
-    'defaultRoute' => 'page',
+    'bootstrap' => [
+        'log',
+    ],
+    'defaultRoute' => 'baseapi',
     'layout' => 'main',
     'components' => [
         'request' => [
