@@ -1,6 +1,7 @@
 <?php
 
 $params = require(__DIR__ . '/params.php');
+require(__DIR__ . '/constant.php');
 
 $config = [
     'id' => 'basic',
@@ -9,6 +10,7 @@ $config = [
         'log',
     ],
     'defaultRoute' => 'baseapi',
+//    'catchAll' => ['site/index'], // 所有的页面都会跳到此动作
     'layout' => 'main',
     'components' => [
         'request' => [
@@ -19,7 +21,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\User.old',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -45,9 +47,8 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-                '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-            ],
+            'enableStrictParsing' => false,
+            'rules' => require(__DIR__ . '/route.php'),
         ],
     ],
     'params' => $params,

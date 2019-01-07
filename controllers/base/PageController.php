@@ -1,10 +1,10 @@
 <?php
 
-namespace app\controllers;
+namespace app\controllers\base;
 
 use yii\web\Controller;
 
-class BasepageController extends Controller {
+class PageController extends Controller {
     
     public function actionInds() {
         echo 1;
