@@ -1,15 +1,15 @@
 <?php
 
 return [
-    '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+    '<controller:\w+>/<action:\w+>'=>'<controller>/<action>', // 限制 url 中的字符
+    
+    // 用户控制器的路由
     [
-        'pattern' => 'api/user/list/<page:\d+>',
+        'pattern' => 'api/users/<page:\d+>/<pageSize:\d+>',
         'route' => 'api/user/list',
-        'defaults' => ['page' => 1],
-    ],[
-        'pattern' => 'api/user/get/<id:\d+>',
-        'route' => 'api/user/get',
-        'defaults' => ['id' => 0],
+        'defaults' => ['page' => 1, 'pageSize' => DEFAULT_PAGE_SIZE],
     ],
-//    'posts' => 'site/about', // 指定别名的规则
+    'api/user/<id:\d+>' => 'api/user/get',
+    'POST,PUT api/user' => 'api/user/update',
+    'DELETE api/user/<id:\d+>' => 'api/user/delete',
 ];

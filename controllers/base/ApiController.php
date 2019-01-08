@@ -30,7 +30,15 @@ class ApiController extends Controller {
         ];
     }
     
-    public function successJson($data) {
+    public function listJson($list, $total, $pageSize=DEFAULT_PAGE_SIZE) {
+        $result['success'] = true;
+        $result['list'] = $list;
+        $result['total'] = $total;
+        $result['pageTotal'] = ceil($total / $pageSize);
+        return $this->asJson($result);
+    }
+    
+    public function successJson($data=[]) {
         $result['success'] = true;
         $result['data'] = $data;
         return $this->asJson($result);

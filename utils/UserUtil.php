@@ -7,15 +7,16 @@ use app\models\User;
 
 class UserUtil extends BaseUtil {
     
-    public static $status = [
+    const STATUS = [
         'NORMAL' => 1, // 正常
         'ENABLE' => 2, // 启用状态
         'DISABLE' => 4, // 停用状态
     ];
     
-    public static $gender = [
+    const GENDER = [
         'FEMALE' => 0, // 女
         'MALE' => 1, // 男
+        'UNKNOW' => 2, // 未填写
     ];
     
     public static function toArray(User $user, $scope='all') {
@@ -50,11 +51,11 @@ class UserUtil extends BaseUtil {
                 $value = $user[$field];
                 break;
             case 'status':
-                $statusLabels = array_flip(self::$status);
+                $statusLabels = array_flip(self::STATUS);
                 $value = $statusLabels[$user[$field]];
                 break;
             case 'gender':
-                $genderLabels = array_flip(self::$gender);
+                $genderLabels = array_flip(self::GENDER);
                 $value = $genderLabels[$user[$field]];
                 break;
         }
