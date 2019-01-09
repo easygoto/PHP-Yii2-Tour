@@ -1,9 +1,9 @@
 <?php
 
-namespace app\utils;
+namespace app\utils\api;
 
 use app\utils\BaseUtil;
-use app\models\User;
+use app\models\api\User;
 
 class UserUtil extends BaseUtil {
     
@@ -13,10 +13,22 @@ class UserUtil extends BaseUtil {
         'DISABLE' => 4, // 停用状态
     ];
     
+    const STATUS_LABELS = [
+        1 => '正常', // 正常
+        2 => '启用', // 启用状态
+        4 => '停用', // 停用状态
+    ];
+    
     const GENDER = [
         'FEMALE' => 0, // 女
         'MALE' => 1, // 男
-        'UNKNOW' => 2, // 未填写
+        'UNKNOW' => 2, // 未知
+    ];
+    
+    const GENDER_LABELS = [
+        0 => '女', // 女
+        1 => '男', // 男
+        2 => '未知', // 未知
     ];
     
     public static function toArray(User $user, $scope='all') {
@@ -46,17 +58,22 @@ class UserUtil extends BaseUtil {
         if (! array_key_exists($field, $user)) {
             return $default;
         }
+        $value = 'Null';
         switch ($field) {
             default:
                 $value = $user[$field];
                 break;
             case 'status':
                 $statusLabels = array_flip(self::STATUS);
-                $value = $statusLabels[$user[$field]];
+                if (array_key_exists($user[$field], $statusLabels)) {
+                    $value = $statusLabels[$user[$field]];
+                }
                 break;
             case 'gender':
                 $genderLabels = array_flip(self::GENDER);
-                $value = $genderLabels[$user[$field]];
+                if (array_key_exists($user[$field], $genderLabels)) {
+                    $value = $genderLabels[$user[$field]];
+                }
                 break;
         }
         return $value;

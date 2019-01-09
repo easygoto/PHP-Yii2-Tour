@@ -2,11 +2,11 @@
 
 namespace app\controllers\api;
 
-use app\service\UserService;
 use Yii;
 use yii\db\Exception;
-use app\models\User;
-use app\utils\UserUtil;
+use app\models\api\User;
+use app\utils\api\UserUtil;
+use app\service\api\UserService;
 use app\controllers\base\ApiController;
 
 class UserController extends ApiController {

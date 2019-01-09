@@ -1,11 +1,11 @@
 <?php
 
-namespace app\service;
+namespace app\service\api;
 
 use Yii;
-use app\models\User;
-use app\utils\UserUtil;
 use yii\db\Exception;
+use app\models\api\User;
+use app\utils\api\UserUtil;
 use app\service\BaseService;
 
 class UserService extends BaseService {
