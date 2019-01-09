@@ -14,7 +14,7 @@ class ApiController extends Controller {
     public $defaultAction = 'index';
     
     // 过滤器
-    public function behaviors(){
+    public function behaviors() {
         return [
             [
                 /*
@@ -23,39 +23,40 @@ class ApiController extends Controller {
                  * except 不过滤某些, 其他的全过滤
                  * 两者结合使用, 各做各的事情, 其他的不过滤
                  */
-                'class' => LoginAuthFilter::className(),
-                'only' => ['demo'],
+                'class'  => LoginAuthFilter::className(),
+                'only'   => ['demo'],
                 'except' => ['test'],
             ],
         ];
     }
     
-    public function listJson($list, $total, $pageSize=DEFAULT_PAGE_SIZE) {
-        $result['success'] = true;
-        $result['list'] = $list;
-        $result['total'] = $total;
+    public function listJson($list, $total, $pageSize = DEFAULT_PAGE_SIZE) {
+        $result['success']   = true;
+        $result['list']      = $list;
+        $result['total']     = $total;
         $result['pageTotal'] = ceil($total / $pageSize);
         return $this->asJson($result);
     }
     
-    public function successJson($data=[]) {
+    public function successJson($data = [], $extra = []) {
         $result['success'] = true;
-        $result['data'] = $data;
+        $result['data']    = $data;
+        $result            = array_merge($result, $extra);
         return $this->asJson($result);
     }
     
-    public function failJson($msg='', $debug='') {
+    public function failJson($msg = '', $debug = '') {
         $result['success'] = false;
-        $result['msg'] = $msg;
-        $result['debug'] = $debug;
+        $result['msg']     = $msg;
+        $result['debug']   = $debug;
         return $this->asJson($result);
     }
     
     public function actionSendjson() {
         $this->asJson([
             'controllerId' => $this->id,
-            'route' => $this->route,
-            'basePath' => \Yii::$app->basePath,
+            'route'        => $this->route,
+            'basePath'     => \Yii::$app->basePath,
         ]);
     }
     
@@ -67,7 +68,7 @@ class ApiController extends Controller {
     public function actionDemo() {
         echo "Base Api Demo ...";
         echo "<br>";
-        echo "<a href='".Url::to(['api/user/get', 'id' => 10])."'>api/user/get?id=10</a>";
+        echo "<a href='" . Url::to(['api/user/get', 'id' => 10]) . "'>api/user/get?id=10</a>";
         echo "<br>";
     }
     
@@ -91,7 +92,7 @@ class ApiController extends Controller {
     public function actionSetcookie() {
         $cookies = Yii::$app->response->cookies;
         $cookies->add(new Cookie([
-            'name' => 'language',
+            'name'  => 'language',
             'value' => 'zh-CN',
         ]));
     }

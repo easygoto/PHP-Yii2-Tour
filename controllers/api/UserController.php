@@ -11,7 +11,7 @@ use app\controllers\base\ApiController;
 
 class UserController extends ApiController {
     
-    public function actionGet($id=0) {
+    public function actionGet($id) {
         
         $id = (int)$id;
         if (! $id) {
@@ -24,49 +24,62 @@ class UserController extends ApiController {
         }
         
         $user = UserUtil::toArray($user, 'detail');
-    
+        
         return $this->successJson($user);
     }
     
-    public function actionList($page=1, $pageSize=10) {
+    public function actionList($page, $pageSize) {
+        
         // 如果该查询没有结果则返回空数组
-        $sql = 'SELECT * FROM `user` WHERE `status`=:status AND `deleted`=:deleted';
+        $sql      = 'SELECT * FROM `user` WHERE `status`=:status AND `deleted`=:deleted';
         $userList = Yii::$app->db->createCommand($sql)
             ->bindValue(':status', 1)
             ->bindValue(':deleted', 0)
             ->queryAll();
-    
+        
         // 返回一个标量值
         // 如果该查询没有结果则返回 false
-        $sql = 'SELECT COUNT(1) FROM `user` WHERE `status`=:status AND `deleted`=:deleted';
+        $sql   = 'SELECT COUNT(1) FROM `user` WHERE `status`=:status AND `deleted`=:deleted';
         $total = Yii::$app->db->createCommand($sql)
             ->bindValue(':status', 1)
             ->bindValue(':deleted', 0)
             ->queryScalar();
-    
+        
         $pageTotal = 0;
         
         $this->asJson([
-            'page' => $page,
-            'pageSize' => $pageSize,
+            'page'      => $page,
+            'pageSize'  => $pageSize,
             'pageTotal' => $pageTotal,
-            'total' => $total,
-            'userList' => $userList,
+            'total'     => $total,
+            'userList'  => $userList,
         ]);
     }
     
-    public function actionUpdate() {
+    public function actionCreate() {
         $request = Yii::$app->request;
-        if ($request->isPost) {
-            $data = $request->post();
-            UserService::add($data);
-        } else if ($request->isPut) {
+        $data    = $request->post();
+//        UserService::add($data);
+        return $this->successJson($data);
+    }
+    
+    public function actionUpdate($id) {
+        $request = Yii::$app->request;
+        if ($request->isPut) {
             $data = $request->bodyParams;
-            $this->successJson($data);
+            return $this->successJson($data, ['id' => $id, 'method' => 'put']);
+        } else if ($request->isPatch) {
+            $data = $request->bodyParams;
+            return $this->successJson($data, ['id' => $id, 'method' => 'patch']);
+        } else {
+            return $this->failJson('未接受的请求');
         }
     }
     
-    public function actionDelete() {
-        $this->successJson('delete me? you are a big !');
+    public function actionDelete($id = 0) {
+        $this->successJson([
+            'id'  => $id,
+            'msg' => 'delete me? you are a big !',
+        ]);
     }
 }
