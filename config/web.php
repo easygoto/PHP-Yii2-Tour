@@ -16,12 +16,14 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'study_yii',
+            'enableCookieValidation' => false,
+            'enableCsrfValidation' => false,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User.old',
+            'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -46,8 +48,8 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => false, // 若开启，路由和真实的接口前面不可相同
             'showScriptName' => false,
-            'enableStrictParsing' => false,
             'rules' => require(__DIR__ . '/route.php'),
         ],
     ],

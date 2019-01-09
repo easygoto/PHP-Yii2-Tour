@@ -67,6 +67,6 @@ class UserController extends ApiController {
     }
     
     public function actionDelete() {
-    
+        $this->successJson('delete me? you are a big !');
     }
 }
