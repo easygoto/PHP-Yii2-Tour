@@ -48,7 +48,7 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => false, // 若开启，路由和真实的接口前面不可相同
+            'enableStrictParsing' => true, // 若开启，路由和真实的接口前面不可相同
             'showScriptName' => false,
             'rules' => require(__DIR__ . '/route.php'),
         ],
