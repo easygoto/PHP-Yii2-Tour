@@ -30,30 +30,14 @@ class UserController extends ApiController {
     
     public function actionList($page, $pageSize) {
         
-        // 如果该查询没有结果则返回空数组
-        $sql      = 'SELECT * FROM `user` WHERE `status`=:status AND `deleted`=:deleted';
-        $userList = Yii::$app->db->createCommand($sql)
-            ->bindValue(':status', 1)
-            ->bindValue(':deleted', 0)
-            ->queryAll();
-        
-        // 返回一个标量值
-        // 如果该查询没有结果则返回 false
-        $sql   = 'SELECT COUNT(1) FROM `user` WHERE `status`=:status AND `deleted`=:deleted';
-        $total = Yii::$app->db->createCommand($sql)
-            ->bindValue(':status', 1)
-            ->bindValue(':deleted', 0)
-            ->queryScalar();
-        
-        $pageTotal = 0;
-        
-        $this->asJson([
-            'page'      => $page,
-            'pageSize'  => $pageSize,
-            'pageTotal' => $pageTotal,
-            'total'     => $total,
-            'userList'  => $userList,
-        ]);
+        $data   = Yii::$app->request->get();
+        $result = UserService::lists($data, $page, $pageSize);
+        if ($result['list']) {
+            foreach ($result['list'] as & $row) {
+                $row = UserUtil::toArray($row, 'list');
+            }
+        }
+        $this->successJson($result, ['debug' => $data]);
     }
     
     public function actionCreate() {

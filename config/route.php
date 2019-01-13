@@ -13,16 +13,16 @@ class RouteRule {
     
     public static function __callStatic($name, $arguments) {
         list($pattern, $route) = $arguments;
-        $default = (isset($arguments[2]) && !empty($arguments[2])) ? $arguments[2] : [];
-        return self::rule($pattern, $route, $default, strtoupper($name));
+        $defaults = (isset($arguments[2]) && ! empty($arguments[2])) ? $arguments[2] : [];
+        return self::rule($pattern, $route, $defaults, strtoupper($name));
     }
     
-    public static function rule($pattern, $route, $default, $verb){
+    public static function rule($pattern, $route, $defaults, $verb) {
         return [
-            'pattern' => $pattern,
-            'route' => $route,
-            'defaults' => $default,
-            'verb' => $verb,
+            'pattern'  => $pattern,
+            'route'    => $route,
+            'defaults' => $defaults,
+            'verb'     => $verb,
         ];
     }
 }

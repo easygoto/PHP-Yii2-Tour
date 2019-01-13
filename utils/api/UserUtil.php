@@ -31,8 +31,15 @@ class UserUtil extends BaseUtil {
         2 => '未知', // 未知
     ];
     
-    public static function toArray(User $user, $scope='all') {
-        $userAttr = $user->attributes;
+    public static function toArray($user, $scope='all') {
+        if ($user instanceof User) {
+            $userAttr = $user->attributes;
+        } elseif (is_array($user)) {
+            $userAttr = $user;
+        } else {
+            return $user;
+        }
+        
         switch ($scope) {
             default:
             case 'all':
@@ -58,7 +65,7 @@ class UserUtil extends BaseUtil {
         if (! array_key_exists($field, $user)) {
             return $default;
         }
-        $value = 'Null';
+        $value = null;
         switch ($field) {
             default:
                 $value = $user[$field];
