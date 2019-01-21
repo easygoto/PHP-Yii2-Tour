@@ -56,8 +56,10 @@ $__route = [
 ];
 
 $__RestRoute = [
+    RouteRule::get('api/test', 'base/api/test'),
     // 用户控制器的路由
-    RouteRule::get('api/users/<page:\d+>/<pageSize:\d+>', 'api/user/list', ['page' => 1, 'pageSize' => DEFAULT_PAGE_SIZE]),
+//    RouteRule::get('api/users/<page:\d+>/<page_size:\d+>', 'api/user/list', ['page' => 1, 'page_size' => DEFAULT_PAGE_SIZE]),
+    RouteRule::get('api/users', 'api/user/list'),
     RouteRule::get('api/user/<id:\d+>', 'api/user/get'),
     RouteRule::post('api/user', 'api/user/create'),
     RouteRule::put_patch('api/user/<id:\d+>', 'api/user/update'),

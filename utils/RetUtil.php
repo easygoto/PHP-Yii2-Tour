@@ -3,20 +3,29 @@
 namespace app\utils;
 
 
-class RetUtil {
+class RetUtil extends BaseUtil {
     
-    public static function success($data = '', $debug = []) {
-        return ['success' => true, 'data' => $data, 'debug' => $debug];
+    private static function _ret($success, $data, $msg, $debug) {
+        return [
+            'success' => $success,
+            'data'    => $data,
+            'msg'     => $msg,
+            'debug'   => $debug,
+        ];
     }
     
-    public static function fail($msg = '', $debug = []) {
-        return ['sucess' => false, 'msg' => $msg, 'debug' => $debug];
+    public static function success($data = [], $msg = '', $debug = []) {
+        return self::_ret(true, $msg, $data, $debug);
     }
     
-    public static function retList($list, $total, $pageSize = DEFAULT_PAGE_SIZE) {
+    public static function fail($msg = '', $data = [], $debug = []) {
+        return self::_ret(false, $msg, $data, $debug);
+    }
+    
+    public static function retList($list, $total, $page_size = DEFAULT_PAGE_SIZE) {
         $result['list']      = $list;
         $result['total']     = $total;
-        $result['pageTotal'] = ceil($total / $pageSize);
+        $result['pageTotal'] = ceil($total / $page_size);
         return $result;
     }
 }

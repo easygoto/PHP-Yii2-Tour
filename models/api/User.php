@@ -17,7 +17,7 @@ use Yii;
  * @property string $updated_at
  * @property string $operated_at
  * @property string $last_login_at
- * @property string $status
+ * @property integer $status
  * @property integer $deleted
  */
 class User extends \yii\db\ActiveRecord
@@ -36,9 +36,9 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['gender', 'deleted'], 'integer'],
+            [['gender', 'status', 'deleted'], 'integer'],
             [['created_at', 'updated_at', 'operated_at', 'last_login_at'], 'safe'],
-            [['user_name', 'secret_code', 'real_name', 'mobile_number', 'status'], 'string', 'max' => 50],
+            [['user_name', 'secret_code', 'real_name', 'mobile_number'], 'string', 'max' => 50],
         ];
     }
 

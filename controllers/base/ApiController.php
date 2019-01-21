@@ -31,12 +31,12 @@ class ApiController extends Controller {
         ];
     }
     
-    public function successJson($data = [], $extra = [], $debug = []) {
-        return $this->asJson(RetUtil::success(array_merge($data, $extra), $debug));
+    public function successJson($data = [], $msg = '', $debug = []) {
+        return $this->asJson(RetUtil::success($data, $msg, $debug));
     }
     
-    public function failJson($msg = '', $debug = []) {
-        return $this->asJson(RetUtil::fail($msg, $debug));
+    public function failJson($msg = '', $data = [], $debug = []) {
+        return $this->asJson(RetUtil::fail($msg, $data, $debug));
     }
     
     public function actionSendjson() {
