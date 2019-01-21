@@ -2,6 +2,7 @@
 
 namespace app\controllers\base;
 
+use app\utils\RetUtil;
 use Yii;
 use app\filters\LoginAuthFilter;
 use yii\helpers\Url;
@@ -30,26 +31,12 @@ class ApiController extends Controller {
         ];
     }
     
-    public function listJson($list, $total, $pageSize = DEFAULT_PAGE_SIZE) {
-        $result['success']   = true;
-        $result['list']      = $list;
-        $result['total']     = $total;
-        $result['pageTotal'] = ceil($total / $pageSize);
-        return $this->asJson($result);
+    public function successJson($data = [], $extra = [], $debug = []) {
+        return $this->asJson(RetUtil::success(array_merge($data, $extra), $debug));
     }
     
-    public function successJson($data = [], $extra = []) {
-        $result['success'] = true;
-        $result['data']    = $data;
-        $result            = array_merge($result, $extra);
-        return $this->asJson($result);
-    }
-    
-    public function failJson($msg = '', $debug = '') {
-        $result['success'] = false;
-        $result['msg']     = $msg;
-        $result['debug']   = $debug;
-        return $this->asJson($result);
+    public function failJson($msg = '', $debug = []) {
+        return $this->asJson(RetUtil::fail($msg, $debug));
     }
     
     public function actionSendjson() {

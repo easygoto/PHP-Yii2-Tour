@@ -37,13 +37,13 @@ class UserController extends ApiController {
                 $row = UserUtil::toArray($row, 'list');
             }
         }
-        $this->successJson($result, ['debug' => $data]);
+        return $this->successJson($result, ['debug' => $data]);
     }
     
     public function actionCreate() {
         $request = Yii::$app->request;
         $data    = $request->post();
-//        UserService::add($data);
+//        $result  = UserService::add($data);
         return $this->successJson($data);
     }
     
@@ -61,7 +61,11 @@ class UserController extends ApiController {
     }
     
     public function actionDelete($id = 0) {
-        $this->successJson([
+        if ((int)$id) {
+            return $this->failJson('用户不存在');
+        }
+        $result = UserService::delete($id);
+        return $this->successJson([
             'id'  => $id,
             'msg' => 'delete me? you are a big !',
         ]);

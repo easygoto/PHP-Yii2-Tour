@@ -5,6 +5,7 @@ namespace app\service\api;
 use Yii;
 use yii\db\Exception;
 use app\models\api\User;
+use app\utils\RetUtil;
 use app\utils\api\UserUtil;
 use app\service\BaseService;
 use yii\db\Query;
@@ -26,7 +27,7 @@ class UserService extends BaseService {
         $query->offset(($page - 1) * $pageSize);
         $total = $query->count();
         $list  = $query->all();
-        return self::retList($list, $total, $pageSize);
+        return RetUtil::retList($list, $total, $pageSize);
     }
     
     public static function add($data = []) {
@@ -52,14 +53,14 @@ class UserService extends BaseService {
             }
             
             $transaction->commit();
-            return self::success([$user->id, $data]);
+            return RetUtil::success([$user->id, $data]);
         } catch (Exception $e) {
             try {
                 $transaction->rollBack();
             } catch (Exception $e) {
-                return self::fail($e->getMessage());
+                return RetUtil::fail($e->getMessage());
             }
-            return self::fail($e->getMessage());
+            return RetUtil::fail($e->getMessage());
         }
     }
     
@@ -67,7 +68,7 @@ class UserService extends BaseService {
     
     }
     
-    public static function delete() {
+    public static function delete($id) {
     
     }
 }
