@@ -41,7 +41,7 @@ class CheckUtil extends BaseUtil {
             }
         }
         if (! empty($msg_list)) {
-            return RetUtil::fail('', $msg_list);
+            return RetUtil::fail('数据录入不全', $msg_list);
         } else {
             return RetUtil::success();
         }

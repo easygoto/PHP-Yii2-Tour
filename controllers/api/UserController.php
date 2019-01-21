@@ -4,6 +4,7 @@ namespace app\controllers\api;
 
 use Yii;
 use app\models\api\User;
+use app\utils\BaseUtil;
 use app\utils\CheckUtil;
 use app\utils\api\UserUtil;
 use app\service\api\UserService;
@@ -15,12 +16,15 @@ class UserController extends ApiController {
         
         $id = (int)$id;
         if (! $id) {
-            return $this->failJson('用户不存在(1)', ['id' => $id]);
+            return $this->failJson('用户不存在(1)', [], ['id' => $id]);
         }
         
         $user = User::findOne($id);
         if (! $user) {
-            return $this->failJson('用户不存在(2)', ['user' => $user]);
+            return $this->failJson('用户不存在(2)', [], ['user' => $user]);
+        }
+        if ($user->deleted == 0) {
+            return $this->failJson('用户不存在(3)', [], ['user' => $user]);
         }
         
         $user = UserUtil::toArray($user, 'detail');
@@ -30,32 +34,36 @@ class UserController extends ApiController {
     
     public function actionList($page, $page_size = DEFAULT_PAGE_SIZE) {
         
-        $data   = Yii::$app->request->get();
-        $result = UserService::lists($data, $page, $page_size);
+        $keywords = Yii::$app->request->get();
         
-        if (! isset($result['list']) || empty($result['list'])) {
-            return $this->failJson('列表获取出现错误');
+        $result    = UserService::lists($keywords, $page, $page_size);
+        $user_list = BaseUtil::getTrimValue($result, 'list', []);
+        foreach ($user_list as & $user) {
+            $user = UserUtil::toArray($user, 'list');
         }
         
-        foreach ($result['list'] as & $row) {
-            $row = UserUtil::toArray($row, 'list');
-        }
-        
-        return $this->successJson($result, $data);
+        return $this->successJson($result, '', $keywords);
     }
     
     public function actionCreate() {
-        $request      = Yii::$app->request;
-        $data         = $request->post();
+        $request = Yii::$app->request;
+        $data    = $request->post();
+        
+        // check data
         $check_result = CheckUtil::verify($data, [
-            'user_name'     => ['type' => 'string', 'label' => '用户名'],
-            'mobile_number' => ['type' => 'mobile', 'label' => '手机号'],
+            'user_name'     => ['label' => '用户名', 'type' => 'string'],
+            'mobile_number' => ['label' => '手机号', 'type' => 'mobile'],
         ]);
-        $result       = UserService::add($data);
-        return $this->successJson([
-            'check_result' => $check_result,
-            'result'       => $result,
-        ]);
+        if (! BaseUtil::getTrimValue($check_result, 'success')) {
+            return $this->failJson($check_result);
+        }
+        
+        // add to db
+        $result = UserService::add($data);
+        if (! BaseUtil::getTrimValue($result, 'success')) {
+            return $this->failJson($result);
+        }
+        return $this->successJson($result);
     }
     
     public function actionUpdate($id) {
@@ -73,13 +81,22 @@ class UserController extends ApiController {
     }
     
     public function actionDelete($id = 0) {
-        if ((int)$id) {
-            return $this->failJson('用户不存在');
+        $id = (int)$id;
+        if (! $id) {
+            return $this->failJson('用户不存在(1)', [], ['id' => $id]);
         }
-        $result = UserService::delete($id);
-        return $this->successJson([
-            'id'  => $id,
-            'msg' => 'delete me? you are a big !',
-        ]);
+        
+        $user = User::findOne($id);
+        if (! $user) {
+            return $this->failJson('用户不存在(2)', [], ['user' => $user]);
+        }
+        
+        $user->deleted = 1;
+        
+        if (! $user->save()) {
+            return $this->failJson('未删除成功', [], $user->getErrors());
+        }
+        
+        return $this->successJson(['id' => $user->id]);
     }
 }

@@ -75,8 +75,4 @@ class UserService extends BaseService {
     public static function edit() {
     
     }
-    
-    public static function delete($id) {
-    
-    }
 }
