@@ -6,6 +6,7 @@ use Yii;
 use yii\db\Exception;
 use app\models\api\User;
 use app\utils\RetUtil;
+use app\utils\BaseUtil;
 use app\utils\api\UserUtil;
 use app\service\BaseService;
 use yii\db\Query;
@@ -40,19 +41,19 @@ class UserService extends BaseService {
     
     public static function add($data = []) {
         
-        $postFix = md5(microtime(true));
         $user                = new User;
-        $user->user_name     = 'admin' . $postFix;
-        $user->real_name     = 'admin' . $postFix;
-        $user->gender        = UserUtil::GENDER['MALE'];
-        $user->mobile_number = '15755054365';
+        $user->user_name     = BaseUtil::getTrimValue($data, 'user_name');
+        $user->real_name     = BaseUtil::getTrimValue($data, 'real_name');
+        $gender              = BaseUtil::getTrimValue($data, 'gender');
+        $user->gender        = array_key_exists($gender, UserUtil::GENDER) ? $gender : 2; // 默认未知
+        $user->mobile_number = BaseUtil::getTrimValue($data, 'mobile_number');
         $user->created_at    = date('Y-m-d H:i:s');
-        $user->updated_at    = date('Y-m-d H:i:s');
-        $user->operated_at   = date('Y-m-d H:i:s');
-        $user->last_login_at = date('Y-m-d H:i:s');
-        $user->status        = UserUtil::STATUS['NORMAL'];
-        $user->deleted       = DEFAULT_DELETED;
-    
+        $user->updated_at    = '';
+        $user->operated_at   = '';
+        $user->last_login_at = '';
+        $user->status        = 1; // 正常
+        $user->deleted       = DEFAULT_UNDELETED;
+        
         $db          = Yii::$app->db;
         $transaction = $db->beginTransaction();
         try {
@@ -66,13 +67,13 @@ class UserService extends BaseService {
             try {
                 $transaction->rollBack();
             } catch (Exception $e) {
-                return RetUtil::fail($e->getMessage());
+                return RetUtil::fail($e->getMessage(), $e->errorInfo);
             }
             return RetUtil::fail($e->getMessage(), $user->getErrors());
         }
     }
     
-    public static function edit() {
+    public static function edit($id, $data = []) {
     
     }
 }

@@ -12,7 +12,7 @@ use app\controllers\base\ApiController;
 
 class UserController extends ApiController {
     
-    public function actionGet($id) {
+    public function actionGet($id = 0) {
         
         $id = (int)$id;
         if (! $id) {
@@ -23,7 +23,7 @@ class UserController extends ApiController {
         if (! $user) {
             return $this->failJson('用户不存在(2)', [], ['user' => $user]);
         }
-        if ($user->deleted == 0) {
+        if ($user->deleted === DEFAULT_DELETED) {
             return $this->failJson('用户不存在(3)', [], ['user' => $user]);
         }
         
@@ -32,7 +32,7 @@ class UserController extends ApiController {
         return $this->successJson($user);
     }
     
-    public function actionList($page, $page_size = DEFAULT_PAGE_SIZE) {
+    public function actionList($page = DEFAULT_PAGE, $page_size = DEFAULT_PAGE_SIZE) {
         
         $keywords = Yii::$app->request->get();
         

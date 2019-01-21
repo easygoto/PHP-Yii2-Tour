@@ -15,7 +15,7 @@ class RetUtil extends BaseUtil {
     }
     
     public static function success($data = [], $msg = '', $debug = []) {
-        return self::_ret(true, $msg, $data, $debug);
+        return self::_ret(true, $data, $msg, $debug);
     }
     
     public static function fail($msg = '', $data = [], $debug = []) {
