@@ -2,18 +2,20 @@
 
 namespace app\controllers\base;
 
+use app\components\Foo;
+use app\components\TestComponent;
 use app\utils\RetUtil;
 use Yii;
 use app\filters\LoginAuthFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
-use app\utils\TestUtil;
 use yii\web\Cookie;
+use yii\web\NotFoundHttpException;
 
 class ApiController extends Controller {
-    
+
     public $defaultAction = 'index';
-    
+
     // 过滤器
     public function behaviors() {
         return [
@@ -30,15 +32,15 @@ class ApiController extends Controller {
             ],
         ];
     }
-    
+
     public function successJson($data = [], $msg = '', $debug = []) {
         return $this->asJson(RetUtil::success($data, $msg, $debug));
     }
-    
+
     public function failJson($msg = '', $data = [], $debug = []) {
         return $this->asJson(RetUtil::fail($msg, $data, $debug));
     }
-    
+
     public function actionSendjson() {
         $this->asJson([
             'controllerId' => $this->id,
@@ -46,12 +48,12 @@ class ApiController extends Controller {
             'basePath'     => \Yii::$app->basePath,
         ]);
     }
-    
+
     public function actionIndex() {
         echo "Join Base Api ...";
         echo "<br>";
     }
-    
+
     public function actionDemo() {
         echo "Base Api Demo ...";
         echo "<br>";
@@ -64,7 +66,7 @@ class ApiController extends Controller {
         echo "Base Api Test ...";
         echo "<br>";
     }
-    
+
     public function actionSession() {
         $session = Yii::$app->session;
         $session->open();
@@ -75,7 +77,7 @@ class ApiController extends Controller {
             $session->destroy();
         }
     }
-    
+
     public function actionSetcookie() {
         $cookies = Yii::$app->response->cookies;
         $cookies->add(new Cookie([
@@ -83,21 +85,36 @@ class ApiController extends Controller {
             'value' => 'zh-CN',
         ]));
     }
-    
+
     public function actionCookie() {
         // 只能获取后端设置的 cookie
         $cookies = Yii::$app->request->cookies;
         var_dump($cookies->getValue('language', 'zh-CN'));
     }
-    
+
     public function actionTesterror() {
-        throw new \yii\web\NotFoundHttpException();
+        throw new NotFoundHttpException();
     }
-    
+
     public function actionError() {
         Yii::trace('haha');
         echo $this->action->id;
         echo '<br>';
         echo $this->id;
+    }
+
+    public function actionDemoredis() {
+        echo '<pre>';
+        $redis  = Yii::$app->redis;
+        $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
+        print_r($result);
+    }
+
+    public function actionWelcome() {
+        $this->asJson([$this->action->id => (new TestComponent())->welcome(Yii::$app->request->get('name'))]);
+    }
+
+    public function actionRedirect() {
+        Yii::$app->response->redirect("http://www.example.com");
     }
 }

@@ -23,21 +23,11 @@ class CheckUtil extends BaseUtil {
             $data_label = self::getTrimValue($rule, 'label', $field);
             switch ($data_type) {
                 default:
-                case 'string':
-                    if (! trim($row_data)) {
-                        $msg_list[$field] = $data_label . '不可为空';
-                    }
-                    break;
                 case 'mobile':
-                    if (! trim($row_data)) {
-                        $msg_list[$field] = $data_label . '不可为空';
-                    }
-                    break;
+                case 'string':
+                    trim($row_data) or $msg_list[$field] = $data_label . '不可为空'; break;
                 case 'number':
-                    if (! is_numeric($row_data)) {
-                        $msg_list[$field] = $data_label . '不是数字格式';
-                    }
-                    break;
+                    is_numeric($row_data) or $msg_list[$field] = $data_label . '不是数字格式'; break;
             }
         }
         if (! empty($msg_list)) {

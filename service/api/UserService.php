@@ -40,23 +40,23 @@ class UserService extends BaseService {
     }
     
     public static function add($data = []) {
-        
-        $user                = new User;
-        $user->user_name     = BaseUtil::getTrimValue($data, 'user_name');
-        $user->real_name     = BaseUtil::getTrimValue($data, 'real_name');
-        $gender              = BaseUtil::getTrimValue($data, 'gender');
-        $user->gender        = array_key_exists($gender, UserUtil::GENDER) ? $gender : 2; // 默认未知
-        $user->mobile_number = BaseUtil::getTrimValue($data, 'mobile_number');
-        $user->created_at    = date('Y-m-d H:i:s');
-        $user->updated_at    = '';
-        $user->operated_at   = '';
-        $user->last_login_at = '';
-        $user->status        = 1; // 正常
-        $user->deleted       = DEFAULT_UNDELETED;
-        
         $db          = Yii::$app->db;
         $transaction = $db->beginTransaction();
+        
+        $user                = new User;
         try {
+            $user->user_name     = BaseUtil::getTrimValue($data, 'user_name');
+            $user->real_name     = BaseUtil::getTrimValue($data, 'real_name');
+            $gender              = BaseUtil::getTrimValue($data, 'gender');
+            $user->gender        = array_key_exists($gender, UserUtil::GENDER) ? $gender : 2; // 默认未知
+            $user->mobile_number = BaseUtil::getTrimValue($data, 'mobile_number');
+            $user->created_at    = date('Y-m-d H:i:s');
+            $user->updated_at    = '';
+            $user->operated_at   = '';
+            $user->last_login_at = '';
+            $user->status        = 1; // 正常
+            $user->deleted       = DEFAULT_UNDELETED;
+            
             if (! $user->save()) {
                 throw new Exception('记录未保存成功');
             }
@@ -74,6 +74,6 @@ class UserService extends BaseService {
     }
     
     public static function edit($id, $data = []) {
-    
+
     }
 }

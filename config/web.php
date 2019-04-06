@@ -9,15 +9,15 @@ $config = [
     'bootstrap' => [
         'log',
     ],
-    'defaultRoute' => 'baseapi',
+    'defaultRoute' => 'site/index',
 //    'catchAll' => ['site/index'], // 所有的页面都会跳到此动作
     'layout' => 'main',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'study_yii',
-            'enableCookieValidation' => false,
-            'enableCsrfValidation' => false,
+            'enableCookieValidation' => ! RESTFUL_API_ENABLE,
+            'enableCsrfValidation' => ! RESTFUL_API_ENABLE,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -46,9 +46,10 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'redis' => require(__DIR__ . '/redis.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => true, // 若开启，路由和真实的接口前面不可相同
+            'enableStrictParsing' => RESTFUL_API_ENABLE, // 若开启，路由和真实的接口前面不可相同
             'showScriptName' => false,
             'rules' => require(__DIR__ . '/route.php'),
         ],
