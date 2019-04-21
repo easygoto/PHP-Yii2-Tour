@@ -27,16 +27,16 @@ class UserService extends BaseService {
         return $query;
     }
     
-    public static function lists($keywords, $page, $page_size) {
+    public static function lists($keywords, $page) {
         $query = new Query();
         $query->select('*');
         $query->from('`user`');
         self::_complete($query, $keywords);
-        $query->limit($page_size);
-        $query->offset(($page - 1) * $page_size);
-        $total = $query->count();
+        $query->limit(DEFAULT_PAGE_SIZE);
+        $query->offset(($page - 1) * DEFAULT_PAGE_SIZE);
+        $total = $query->count('1');
         $list  = $query->all();
-        return RetUtil::retList($list, $total, $page_size);
+        return RetUtil::retList($list, $total, DEFAULT_PAGE_SIZE);
     }
     
     public static function add($data = []) {

@@ -35,7 +35,7 @@
 <script>
     window.onload = function () {
         window.ui = SwaggerUIBundle({
-            url: "openapi.yaml",
+            url: "openapi.yaml?t=" + Math.random(),
             dom_id: '#swagger-ui',
             deepLinking: true,
             presets: [

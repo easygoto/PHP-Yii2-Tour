@@ -3,12 +3,28 @@
 namespace app\controllers\api\v1;
 
 use app\models\Goods;
+use Yii;
 use yii\db\Exception;
 use yii\db\Query;
 use yii\web\Controller;
 
 class GoodsController extends Controller {
-    
+
+    /**
+     * @OA\Get(
+     *   tags={"商品相关接口"},
+     *   path="/api/v1/product/{goodsId}",
+     *   @OA\Parameter(name="goodsId",
+     *     in="path",
+     *     required=true,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *       response="default",
+     *       description="successful operation"
+     *   )
+     * )
+     */
     public function actionGet($id) {
         $id = max(0, intval($id));
         if (! $id) {
@@ -23,17 +39,16 @@ class GoodsController extends Controller {
     
     public function actionList($page = 1) {
         $page     = max(1, intval($page));
-        $pageSize = 20;
-        
+
         $query    = new Query();
         $query->select('*');
         $query->from('`b_goods`');
         $query->where('is_delete=0');
-        $query->limit($pageSize);
-        $query->offset(($page - 1) * $pageSize);
+        $query->limit(DEFAULT_PAGE_SIZE);
+        $query->offset(($page - 1) * DEFAULT_PAGE_SIZE);
         $list       = $query->all();
         $total      = $query->count();
-        $totalPages = ceil($total / $pageSize);
+        $totalPages = ceil($total / DEFAULT_PAGE_SIZE);
         
         return $this->asJson([
             'success' => true,
@@ -46,8 +61,8 @@ class GoodsController extends Controller {
     }
     
     public function actionCreate() {
-        $data = \Yii::$app->request->post();
-        $transaction = \Yii::$app->db->beginTransaction();
+        $data = Yii::$app->request->post();
+        $transaction = Yii::$app->db->beginTransaction();
         try {
             $goods = new Goods;
     

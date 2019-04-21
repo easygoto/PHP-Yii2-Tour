@@ -1,17 +1,17 @@
 <?php
 
-namespace app\controllers\api;
+namespace app\controllers\api\v1;
 
-use Yii;
+use app\controllers\base\ApiController;
 use app\models\api\User;
+use app\service\api\UserService;
+use app\utils\api\UserUtil;
 use app\utils\BaseUtil;
 use app\utils\CheckUtil;
-use app\utils\api\UserUtil;
-use app\service\api\UserService;
-use app\controllers\base\ApiController;
+use Yii;
 
 class UserController extends ApiController {
-    
+
     public function actionGet($id = 0) {
         
         $id = (int)$id;
@@ -31,12 +31,27 @@ class UserController extends ApiController {
         
         return $this->successJson($user);
     }
-    
-    public function actionList($page = DEFAULT_PAGE, $page_size = DEFAULT_PAGE_SIZE) {
+
+    /**
+     * @OA\Get(
+     *   tags={"用户相关接口"},
+     *   path="/api/v1/users/{page}",
+     *   @OA\Parameter(name="page",
+     *     in="path",
+     *     required=true,
+     *     @OA\Schema(type="integer")
+     *   ),
+     *   @OA\Response(
+     *       response="default",
+     *       description="successful operation"
+     *   )
+     * )
+     */
+    public function actionList($page = DEFAULT_PAGE) {
         
         $keywords = Yii::$app->request->get();
         
-        $result    = UserService::lists($keywords, $page, $page_size);
+        $result    = UserService::lists($keywords, $page);
         $user_list = BaseUtil::getTrimValue($result, 'list', []);
         foreach ($user_list as & $user) {
             $user = UserUtil::toArray($user, 'list');
@@ -44,7 +59,44 @@ class UserController extends ApiController {
         
         return $this->successJson($result, '', $keywords);
     }
-    
+
+    /**
+     * @OA\Post(
+     *   tags={"用户相关接口"},
+     *   path="/api/v1/user",
+     *   @OA\Parameter(name="user_name",
+     *     in="path",
+     *     required=true,
+     *     description="用户名",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(name="real_name",
+     *     in="path",
+     *     required=false,
+     *     description="真实姓名",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Parameter(name="gender",
+     *     in="path",
+     *     required=false,
+     *     description="0(女),1(男),2(未知)",
+     *     @OA\Schema(
+     *       type="integer",
+     *       enum={0, 1, 2}
+     *     )
+     *   ),
+     *   @OA\Parameter(name="mobile_number",
+     *     in="path",
+     *     required=true,
+     *     description="手机号码",
+     *     @OA\Schema(type="mobile")
+     *   ),
+     *   @OA\Response(
+     *       response="default",
+     *       description="successful operation"
+     *   )
+     * )
+     */
     public function actionCreate() {
         $request = Yii::$app->request;
         $data    = $request->post();

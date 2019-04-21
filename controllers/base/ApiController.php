@@ -12,6 +12,12 @@ use yii\web\Controller;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 
+/**
+ * @OA\Info(
+ *   title="接口文档",
+ *   version="1.0.0"
+ * )
+ */
 class ApiController extends Controller {
 
     public $defaultAction = 'index';

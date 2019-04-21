@@ -21,6 +21,12 @@ $config = [
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
+            /*'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 0,
+            ],*/
         ],
         'user' => [
             'identityClass' => 'app\models\User',
@@ -50,7 +56,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => RESTFUL_API_ENABLE, // 若开启，路由和真实的接口前面不可相同
-            'showScriptName' => false,
+            'showScriptName' => true,
             'rules' => require(__DIR__ . '/route.php'),
         ],
     ],
