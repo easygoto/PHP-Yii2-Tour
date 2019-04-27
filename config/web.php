@@ -1,13 +1,15 @@
 <?php
 
-$params = require(__DIR__ . '/params.php');
-require(__DIR__ . '/constant.php');
+$params = require __DIR__ . '/params.php';
+require __DIR__ . '/constant.php';
 
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => [
-        'log',
+    'bootstrap' => ['log'],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
     ],
     'defaultRoute' => 'site/index',
 //    'catchAll' => ['site/index'], // 所有的页面都会跳到此动作
@@ -52,12 +54,12 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        'redis' => require(__DIR__ . '/redis.php'),
+        'redis' => require __DIR__ . '/redis.php',
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => RESTFUL_API_ENABLE, // 若开启，路由和真实的接口前面不可相同
-            'showScriptName' => true,
-            'rules' => require(__DIR__ . '/route.php'),
+            'showScriptName' => RESTFUL_API_ENABLE,
+            'rules' => require __DIR__ . '/route.php',
         ],
     ],
     'params' => $params,
