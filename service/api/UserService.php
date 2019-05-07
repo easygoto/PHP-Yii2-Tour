@@ -11,39 +11,42 @@ use app\utils\api\UserUtil;
 use app\service\BaseService;
 use yii\db\Query;
 
-class UserService extends BaseService {
-    
-    private static function _complete(Query $query, $keywords = []) {
+class UserService extends BaseService
+{
+    private static function complete(Query $query, $keywords = [])
+    {
         if (empty($keywords)) {
             return $query;
         }
         foreach ($keywords as $key => $value) {
             if ($key == 'status' && array_key_exists($value, UserUtil::STATUS)) {
                 $query->where(['status' => UserUtil::STATUS[$value]]);
-            } else if ($key == 'status') {
+            } elseif ($key == 'status') {
                 $query->where(['status' => UserUtil::STATUS[$value]]);
             }
         }
         return $query;
     }
-    
-    public static function lists($keywords, $page) {
+
+    public static function lists($keywords, $page)
+    {
         $query = new Query();
         $query->select('*');
         $query->from('`user`');
-        self::_complete($query, $keywords);
+        self::complete($query, $keywords);
         $query->limit(DEFAULT_PAGE_SIZE);
         $query->offset(($page - 1) * DEFAULT_PAGE_SIZE);
         $total = $query->count('1');
         $list  = $query->all();
         return RetUtil::retList($list, $total, DEFAULT_PAGE_SIZE);
     }
-    
-    public static function add($data = []) {
+
+    public static function add($data = [])
+    {
         $db          = Yii::$app->db;
         $transaction = $db->beginTransaction();
-        
-        $user                = new User;
+
+        $user = new User;
         try {
             $user->user_name     = BaseUtil::getTrimValue($data, 'user_name');
             $user->real_name     = BaseUtil::getTrimValue($data, 'real_name');
@@ -56,24 +59,20 @@ class UserService extends BaseService {
             $user->last_login_at = '';
             $user->status        = 1; // 正常
             $user->deleted       = DEFAULT_UNDELETED;
-            
-            if (! $user->save()) {
+
+            if (!$user->save()) {
                 throw new Exception('记录未保存成功');
             }
-            
+
             $transaction->commit();
             return RetUtil::success($user->id, $data);
         } catch (Exception $e) {
-            try {
-                $transaction->rollBack();
-            } catch (Exception $e) {
-                return RetUtil::fail($e->getMessage(), $e->errorInfo);
-            }
+            $transaction->rollBack();
             return RetUtil::fail($e->getMessage(), $user->getErrors());
         }
     }
-    
-    public static function edit($id, $data = []) {
 
+    public static function edit($id, $data = [])
+    {
     }
 }

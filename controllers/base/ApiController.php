@@ -18,12 +18,13 @@ use yii\web\NotFoundHttpException;
  *   version="1.0.0"
  * )
  */
-class ApiController extends Controller {
-
+class ApiController extends Controller
+{
     public $defaultAction = 'index';
 
     // 过滤器
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             [
                 /*
@@ -39,15 +40,18 @@ class ApiController extends Controller {
         ];
     }
 
-    public function successJson($data = [], $msg = '', $debug = []) {
+    public function successJson($data = [], $msg = '', $debug = [])
+    {
         return $this->asJson(RetUtil::success($data, $msg, $debug));
     }
 
-    public function failJson($msg = '', $data = [], $debug = []) {
+    public function failJson($msg = '', $data = [], $debug = [])
+    {
         return $this->asJson(RetUtil::fail($msg, $data, $debug));
     }
 
-    public function actionSendjson() {
+    public function actionSendjson()
+    {
         $this->asJson([
             'controllerId' => $this->id,
             'route'        => $this->route,
@@ -55,25 +59,29 @@ class ApiController extends Controller {
         ]);
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         echo "Join Base Api ...";
         echo "<br>";
     }
 
-    public function actionDemo() {
+    public function actionDemo()
+    {
         echo "Base Api Demo ...";
         echo "<br>";
         echo "<a href='" . Url::to(['api/user/get', 'id' => 10]) . "'>api/user/get?id=10</a>";
         echo "<br>";
     }
     
-    public function actionTest() {
+    public function actionTest()
+    {
         TestUtil::test();
         echo "Base Api Test ...";
         echo "<br>";
     }
 
-    public function actionSession() {
+    public function actionSession()
+    {
         $session = Yii::$app->session;
         $session->open();
         $session->set('haha', 'haha');
@@ -84,7 +92,8 @@ class ApiController extends Controller {
         }
     }
 
-    public function actionSetcookie() {
+    public function actionSetcookie()
+    {
         $cookies = Yii::$app->response->cookies;
         $cookies->add(new Cookie([
             'name'  => 'language',
@@ -92,35 +101,41 @@ class ApiController extends Controller {
         ]));
     }
 
-    public function actionCookie() {
+    public function actionCookie()
+    {
         // 只能获取后端设置的 cookie
         $cookies = Yii::$app->request->cookies;
         var_dump($cookies->getValue('language', 'zh-CN'));
     }
 
-    public function actionTesterror() {
+    public function actionTesterror()
+    {
         throw new NotFoundHttpException();
     }
 
-    public function actionError() {
+    public function actionError()
+    {
         Yii::trace('haha');
         echo $this->action->id;
         echo '<br>';
         echo $this->id;
     }
 
-    public function actionDemoredis() {
+    public function actionDemoredis()
+    {
         echo '<pre>';
         $redis  = Yii::$app->redis;
         $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
         print_r($result);
     }
 
-    public function actionWelcome() {
+    public function actionWelcome()
+    {
         $this->asJson([$this->action->id => (new TestComponent())->welcome(Yii::$app->request->get('name'))]);
     }
 
-    public function actionRedirect() {
+    public function actionRedirect()
+    {
         Yii::$app->response->redirect("http://www.example.com");
     }
 }

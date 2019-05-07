@@ -9,11 +9,12 @@ use app\utils\api\UserUtil;
 use app\utils\BaseUtil;
 use app\utils\CheckUtil;
 use Yii;
+use yii\web\Response;
 
-class UserController extends ApiController {
-
-    public function actionGet($id = 0) {
-        
+class UserController extends ApiController
+{
+    public function actionGet($id = 0)
+    {
         $id = (int)$id;
         if (! $id) {
             return $this->failJson('用户不存在(1)', [], ['id' => $id]);
@@ -46,9 +47,12 @@ class UserController extends ApiController {
      *       description="successful operation"
      *   )
      * )
+     * @param int $page
+     *
+     * @return Response
      */
-    public function actionList($page = DEFAULT_PAGE) {
-        
+    public function actionList($page = DEFAULT_PAGE)
+    {
         $keywords = Yii::$app->request->get();
         
         $result    = UserService::lists($keywords, $page);
@@ -97,7 +101,8 @@ class UserController extends ApiController {
      *   )
      * )
      */
-    public function actionCreate() {
+    public function actionCreate()
+    {
         $request = Yii::$app->request;
         $data    = $request->post();
         
@@ -118,13 +123,14 @@ class UserController extends ApiController {
         return $this->successJson($result);
     }
     
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $request = Yii::$app->request;
         if ($request->isPut) {
             $data = $request->bodyParams;
 //            UserService::edit();
             return $this->successJson($data, ['id' => $id, 'method' => 'put']);
-        } else if ($request->isPatch) {
+        } elseif ($request->isPatch) {
             $data = $request->bodyParams;
             return $this->successJson($data, ['id' => $id, 'method' => 'patch']);
         } else {
@@ -132,7 +138,8 @@ class UserController extends ApiController {
         }
     }
     
-    public function actionDelete($id = 0) {
+    public function actionDelete($id = 0)
+    {
         $id = (int)$id;
         if (! $id) {
             return $this->failJson('用户不存在(1)', [], ['id' => $id]);
