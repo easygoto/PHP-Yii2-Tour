@@ -2,11 +2,9 @@
 
 namespace app\controllers\base;
 
-use app\components\Foo;
-use app\components\TestComponent;
+use app\filters\LoginAuthFilter;
 use app\utils\RetUtil;
 use Yii;
-use app\filters\LoginAuthFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Cookie;
@@ -75,7 +73,6 @@ class ApiController extends Controller
     
     public function actionTest()
     {
-        TestUtil::test();
         echo "Base Api Test ...";
         echo "<br>";
     }
