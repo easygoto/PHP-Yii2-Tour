@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: 接口文档
+  version: 1.0.0
+paths:
+  '/api/v1/product/{goodsId}':
+    get:
+      tags:
+        - 商品相关接口
+      operationId: 'app\controllers\api\v1\GoodsController::actionGet'
+      parameters:
+        -
+          name: goodsId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: 'successful operation'
+  '/api/v1/users/{page}':
+    get:
+      tags:
+        - 用户相关接口
+      operationId: 'app\controllers\api\v1\UserController::actionList'
+      parameters:
+        -
+          name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: 'successful operation'
+  /api/v1/user:
+    post:
+      tags:
+        - 用户相关接口
+      operationId: 'app\controllers\api\v1\UserController::actionCreate'
+      parameters:
+        -
+          name: user_name
+          in: path
+          description: 用户名
+          required: true
+          schema:
+            type: string
+        -
+          name: real_name
+          in: path
+          description: 真实姓名
+          required: false
+          schema:
+            type: string
+        -
+          name: gender
+          in: path
+          description: '0(女),1(男),2(未知)'
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+              - 2
+        -
+          name: mobile_number
+          in: path
+          description: 手机号码
+          required: true
+          schema:
+            type: mobile
+      responses:
+        default:
+          description: 'successful operation'
