@@ -1,11 +1,11 @@
 <?php
 
-namespace Trink\Frame\Lib;
+namespace Trink\Core\Helper;
 
 /**
  * Class RouteRule
  *
- * @package Trink\Frame\Lib
+ * @package Trink\Core\Helper
  *
  * @method  static array get(string $pattern, string $route, array $defaults = [])
  * @method  static array post(string $pattern, string $route, array $defaults = [])
@@ -20,11 +20,6 @@ class RouteRule
         list($pattern, $route) = $arguments;
         $defaults = (isset($arguments[2]) && !empty($arguments[2])) ? $arguments[2] : [];
         return self::rule($pattern, $route, $defaults, strtoupper($name));
-    }
-
-    public static function putPatch($pattern, $route, $defaults = [])
-    {
-        return self::rule($pattern, $route, $defaults, 'PUT,PATCH');
     }
 
     public static function rule($pattern, $route, $defaults, $verb)

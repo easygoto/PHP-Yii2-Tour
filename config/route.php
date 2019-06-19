@@ -9,7 +9,7 @@
 //    'users/<id>' => 'api/user/options',
 //    'users' => 'api/user/options',
 
-use Trink\Frame\Lib\RouteRule;
+use Trink\Core\Helper\RouteRule;
 
 if (RESTFUL_API_ENABLE) {
     return [
