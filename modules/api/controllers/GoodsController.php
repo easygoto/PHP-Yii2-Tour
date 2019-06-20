@@ -3,8 +3,8 @@
 namespace app\modules\api\controllers;
 
 use app\controllers\ApiController;
-use app\models\Goods;
 use app\modules\api\helpers\Constant;
+use app\modules\api\models\Goods;
 use Yii;
 use yii\db\Exception;
 use yii\db\Query;
