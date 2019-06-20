@@ -18,7 +18,7 @@ if (RESTFUL_API_ENABLE) {
         RouteRule::get('api/v1/users/<page:\d+>', 'api/v1/user/list', ['page' => DEFAULT_PAGE]),
         RouteRule::get('api/v1/user/<id:\d+>', 'api/v1/user/get'),
         RouteRule::post('api/v1/user', 'api/v1/user/create'),
-        RouteRule::putPatch('api/v1/user/<id:\d+>', 'api/v1/user/update'),
+        RouteRule::put('api/v1/user/<id:\d+>', 'api/v1/user/update'),
         RouteRule::delete('api/v1/user/<id:\d+>', 'api/v1/user/delete'),
 
         // 商品控制器
@@ -31,6 +31,6 @@ if (RESTFUL_API_ENABLE) {
     return [
         '<controller:\w+>/<action:\w+>'                            => '<controller>/<action>',
         '<module:\w+>/<controller:\w+>/<action:\w+>'               => '<module>/<controller>/<action>',
-        '<version:\w+>/<module:\w+>/<controller:\w+>/<action:\w+>' => '<version>/<module>/<controller>/<action>',
+        '<module:\w+>/<version:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<version>/<controller>/<action>',
     ];
 }
