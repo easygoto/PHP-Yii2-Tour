@@ -26,11 +26,6 @@ class ReturnResult
         $this->data   = $data;
     }
 
-    public function __set($name, $value)
-    {
-        $this->$name = $value;
-    }
-
     /**
      * @return int
      */
@@ -84,7 +79,7 @@ class ReturnResult
             $properties[$field_name] = $this->$field_name;
         }
 
-        return array_merge($properties, get_object_vars($this));
+        return $properties;
     }
 
     /**
@@ -99,18 +94,14 @@ class ReturnResult
      * 错误返回
      *
      * @param string $msg    返回消息
-     * @param array  $debug  调试信息
+     * @param array  $data   调试信息
      * @param int    $status 状态码
      *
      * @return ReturnResult
      */
-    public static function fail(string $msg, array $debug = [], int $status = 1): self
+    public static function fail(string $msg, array $data = [], int $status = 1): self
     {
-        $message        = new self($status, $msg, []);
-        if (YII_DEBUG) {
-            $message->debug = $debug;
-        }
-        return $message;
+        return new self($status, $msg, $data);
     }
 
     /**
@@ -142,7 +133,7 @@ class ReturnResult
         return new self($status, $msg, [
             'list' => $list,
             'total' => $total,
-            'totalPages' => ceil($total / Constant::PAGE_SIZE),
+            'totalPages' => ceil($total / Constant::DEFAULT_PAGE_SIZE),
         ]);
     }
 

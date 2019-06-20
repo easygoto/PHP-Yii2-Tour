@@ -1,14 +1,15 @@
 <?php
 
-namespace app\controllers\api\v1;
+namespace app\modules\api\controllers;
 
+use app\controllers\ApiController;
 use app\models\Goods;
+use app\modules\api\helpers\Constant;
 use Yii;
 use yii\db\Exception;
 use yii\db\Query;
-use yii\web\Controller;
 
-class GoodsController extends Controller
+class GoodsController extends ApiController
 {
 
     /**
@@ -47,11 +48,11 @@ class GoodsController extends Controller
         $query->select('*');
         $query->from('`b_goods`');
         $query->where('is_delete=0');
-        $query->limit(DEFAULT_PAGE_SIZE);
-        $query->offset(($page - 1) * DEFAULT_PAGE_SIZE);
+        $query->limit(Constant::DEFAULT_PAGE_SIZE);
+        $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
         $list       = $query->all();
         $total      = $query->count();
-        $totalPages = ceil($total / DEFAULT_PAGE_SIZE);
+        $totalPages = ceil($total / Constant::DEFAULT_PAGE_SIZE);
 
         return $this->asJson([
             'success' => true,

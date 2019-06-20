@@ -1,9 +1,11 @@
 <?php
 
-namespace app\controllers\api\v1;
+namespace app\modules\api\controllers;
 
-use app\controllers\base\ApiController;
-use app\models\api\User;
+use app\controllers\ApiController;
+use app\modules\api\helpers\Constant;
+use app\modules\api\helpers\Message;
+use app\modules\api\models\User;
 use app\service\api\UserService;
 use app\utils\api\UserUtil;
 use app\utils\BaseUtil;
@@ -17,15 +19,15 @@ class UserController extends ApiController
     {
         $id = (int)$id;
         if (! $id) {
-            return $this->failJson('用户不存在(1)', [], ['id' => $id]);
+            return $this->failJson('用户不存在(1)', ['id' => $id]);
         }
         
         $user = User::findOne($id);
         if (! $user) {
-            return $this->failJson('用户不存在(2)', [], ['user' => $user]);
+            return $this->failJson('用户不存在(2)', ['user' => $user]);
         }
-        if ($user->deleted === DEFAULT_DELETED) {
-            return $this->failJson('用户不存在(3)', [], ['user' => $user]);
+        if ($user->deleted === Constant::DEFAULT_IS_DELETE) {
+            return $this->failJson('用户不存在(3)', ['user' => $user]);
         }
         
         $user = UserUtil::toArray($user, 'detail');
@@ -51,7 +53,7 @@ class UserController extends ApiController
      *
      * @return Response
      */
-    public function actionList($page = DEFAULT_PAGE)
+    public function actionList($page = Constant::DEFAULT_PAGE)
     {
         $keywords = Yii::$app->request->get();
         
@@ -61,7 +63,7 @@ class UserController extends ApiController
             $user = UserUtil::toArray($user, 'list');
         }
         
-        return $this->successJson($result, '', $keywords);
+        return $this->successJson(Message::SUCCESS, $result);
     }
 
     /**
@@ -120,7 +122,7 @@ class UserController extends ApiController
         if (! BaseUtil::getTrimValue($result, 'success')) {
             return $this->failJson($result);
         }
-        return $this->successJson($result);
+        return $this->successJson(Message::ADD_SUCCESS, $result);
     }
     
     public function actionUpdate($id)
@@ -129,10 +131,10 @@ class UserController extends ApiController
         if ($request->isPut) {
             $data = $request->bodyParams;
 //            UserService::edit();
-            return $this->successJson($data, ['id' => $id, 'method' => 'put']);
+            return $this->successJson(Message::EDIT_SUCCESS, $data);
         } elseif ($request->isPatch) {
             $data = $request->bodyParams;
-            return $this->successJson($data, ['id' => $id, 'method' => 'patch']);
+            return $this->successJson(Message::EDIT_SUCCESS, $data);
         } else {
             return $this->failJson('未接受的请求');
         }
@@ -142,20 +144,20 @@ class UserController extends ApiController
     {
         $id = (int)$id;
         if (! $id) {
-            return $this->failJson('用户不存在(1)', [], ['id' => $id]);
+            return $this->failJson('用户不存在(1)', ['id' => $id]);
         }
         
         $user = User::findOne($id);
         if (! $user) {
-            return $this->failJson('用户不存在(2)', [], ['user' => $user]);
+            return $this->failJson('用户不存在(2)', ['user' => $user]);
         }
         
         $user->deleted = 1;
         
         if (! $user->save()) {
-            return $this->failJson('未删除成功', [], $user->getErrors());
+            return $this->failJson('未删除成功', $user->getErrors());
         }
         
-        return $this->successJson(['id' => $user->id]);
+        return $this->successJson(Message::DELETE_SUCCESS, ['id' => $user->id]);
     }
 }

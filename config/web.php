@@ -1,7 +1,6 @@
 <?php
 
 $params = require __DIR__ . '/params.php';
-require __DIR__ . '/constant.php';
 
 $config = [
     'id' => 'basic',

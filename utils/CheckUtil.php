@@ -2,15 +2,16 @@
 
 namespace app\utils;
 
-
-class CheckUtil extends BaseUtil {
+class CheckUtil extends BaseUtil
+{
     
     /**
      * @param array $data 待校验的数据
      * @param array $rule_list 校验规则
      * @return array
      */
-    public static function verify($data = [], $rule_list = []) {
+    public static function verify($data = [], $rule_list = [])
+    {
         $msg_list = [];
         foreach ($rule_list as $field => $rule) {
             if (empty($rule)) {
@@ -25,9 +26,11 @@ class CheckUtil extends BaseUtil {
                 default:
                 case 'mobile':
                 case 'string':
-                    trim($row_data) or $msg_list[$field] = $data_label . '不可为空'; break;
+                    trim($row_data) or $msg_list[$field] = $data_label . '不可为空';
+                    break;
                 case 'number':
-                    is_numeric($row_data) or $msg_list[$field] = $data_label . '不是数字格式'; break;
+                    is_numeric($row_data) or $msg_list[$field] = $data_label . '不是数字格式';
+                    break;
             }
         }
         if (! empty($msg_list)) {

@@ -1,9 +1,9 @@
 <?php
 
-namespace app\controllers\base;
+namespace app\controllers;
 
 use app\filters\LoginAuthFilter;
-use app\utils\RetUtil;
+use Trink\Core\Helper\ReturnResult;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -38,14 +38,14 @@ class ApiController extends Controller
         ];
     }
 
-    public function successJson($data = [], $msg = '', $debug = [])
+    public function successJson($msg = '', $data = [])
     {
-        return $this->asJson(RetUtil::success($data, $msg, $debug));
+        return $this->asJson(ReturnResult::success($msg, $data, 0));
     }
 
-    public function failJson($msg = '', $data = [], $debug = [])
+    public function failJson($msg = '', $data = [])
     {
-        return $this->asJson(RetUtil::fail($msg, $data, $debug));
+        return $this->asJson(ReturnResult::fail($msg, $data, 1));
     }
 
     public function actionSendjson()
@@ -70,7 +70,7 @@ class ApiController extends Controller
         echo "<a href='" . Url::to(['api/user/get', 'id' => 10]) . "'>api/user/get?id=10</a>";
         echo "<br>";
     }
-    
+
     public function actionTest()
     {
         echo "Base Api Test ...";
