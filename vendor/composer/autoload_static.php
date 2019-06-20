@@ -46,7 +46,7 @@ class ComposerStaticInitceead6880235b55fe551c1f295ee195b
         ),
         'T' => 
         array (
-            'Trink\\Frame\\' => 12,
+            'Trink\\Core\\' => 11,
         ),
         'S' => 
         array (
@@ -139,7 +139,7 @@ class ComposerStaticInitceead6880235b55fe551c1f295ee195b
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Trink\\Frame\\' => 
+        'Trink\\Core\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),

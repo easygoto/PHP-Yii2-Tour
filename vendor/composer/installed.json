@@ -3717,17 +3717,17 @@
     },
     {
         "name": "yiisoft/yii2",
-        "version": "2.0.20",
-        "version_normalized": "2.0.20.0",
+        "version": "2.0.21",
+        "version_normalized": "2.0.21.0",
         "source": {
             "type": "git",
             "url": "https://github.com/yiisoft/yii2-framework.git",
-            "reference": "bd05e0e0ac353cb239997da78f459d0960a1fe9f"
+            "reference": "7e4622252c5f272373e1339a47d331e4a55e9591"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/bd05e0e0ac353cb239997da78f459d0960a1fe9f",
-            "reference": "bd05e0e0ac353cb239997da78f459d0960a1fe9f",
+            "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/7e4622252c5f272373e1339a47d331e4a55e9591",
+            "reference": "7e4622252c5f272373e1339a47d331e4a55e9591",
             "shasum": "",
             "mirrors": [
                 {
@@ -3749,7 +3749,7 @@
             "php": ">=5.4.0",
             "yiisoft/yii2-composer": "~2.0.4"
         },
-        "time": "2019-06-04T19:10:59+00:00",
+        "time": "2019-06-18T14:25:08+00:00",
         "bin": [
             "yii"
         ],
