@@ -36,32 +36,34 @@ class RouteRule
      * 增删改查
      *
      * @param string $baseRoute
+     * @param string $baseCtrl
      *
      * @return array
      */
-    public static function base(string $baseRoute)
+    public static function base(string $baseRoute, string $baseCtrl = '')
     {
+        $baseCtrl = $baseCtrl ?: $baseRoute;
         return [
             RouteRule::post(
                 "{$baseRoute}",
-                "{$baseRoute}/add"
+                "{$baseCtrl}/add"
             ),
             RouteRule::get(
                 "{$baseRoute}/list/<page:\d+>",
-                "{$baseRoute}/index",
-                ['page' => 1]
+                "{$baseCtrl}/index",
+                ['page' => Constant::DEFAULT_PAGE]
             ),
             RouteRule::get(
                 "{$baseRoute}/<id:\d+>",
-                "{$baseRoute}/get"
+                "{$baseCtrl}/get"
             ),
             RouteRule::put(
                 "{$baseRoute}/<id:\d+>",
-                "{$baseRoute}/edit"
+                "{$baseCtrl}/edit"
             ),
             RouteRule::delete(
                 "{$baseRoute}/<id:\d+>",
-                "{$baseRoute}/delete"
+                "{$baseCtrl}/delete"
             ),
         ];
     }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\api;
+namespace app\modules\dawn;
 
 use Yii;
 

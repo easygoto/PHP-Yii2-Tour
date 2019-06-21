@@ -1,6 +1,17 @@
 <?php
 
+use app\components\TestComponent;
+
 $params = require __DIR__ . '/params.php';
+if (RESTFUL_API_ENABLE) {
+    $rule = require_once __DIR__ . '/route.php';
+} else {
+    $rule = [
+        '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+        '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+        '<module:\w+>/<category:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<category>/<controller>/<action>',
+    ];
+}
 
 $config = [
     'id' => 'basic',
@@ -33,6 +44,9 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+        'test' => [
+            'class' => TestComponent::class,
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -63,8 +77,8 @@ $config = [
     ],
     'params' => $params,
     'modules' => [
-        'api' => [
-            'class' => 'app\modules\api\Module',
+        'dawn' => [
+            'class' => 'app\modules\dawn\Module',
         ]
     ]
 ];

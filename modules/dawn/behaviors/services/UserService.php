@@ -1,13 +1,13 @@
 <?php
 
-namespace app\modules\api\behaviors\services;
+namespace app\modules\dawn\behaviors\services;
 
 use app\behaviors\services\BaseService;
 use app\behaviors\utils\BaseUtil;
-use app\modules\api\behaviors\utils\UserUtil;
-use app\modules\api\helpers\Constant;
-use app\modules\api\helpers\Message;
-use app\modules\api\models\User;
+use app\modules\dawn\behaviors\utils\UserUtil;
+use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\helpers\Message;
+use app\modules\dawn\models\User;
 use Trink\Core\Helper\ReturnResult;
 use Yii;
 use yii\db\Exception;

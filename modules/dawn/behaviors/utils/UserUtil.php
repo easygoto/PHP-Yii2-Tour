@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\api\behaviors\utils;
+namespace app\modules\dawn\behaviors\utils;
 
 use app\behaviors\utils\BaseUtil;
 

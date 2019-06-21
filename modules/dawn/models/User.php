@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\api\models;
+namespace app\modules\dawn\models;
 
 use Yii;
 

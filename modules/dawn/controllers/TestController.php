@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\api\controllers;
+namespace app\modules\dawn\controllers;
 
 use app\controllers\base\PageController;
 

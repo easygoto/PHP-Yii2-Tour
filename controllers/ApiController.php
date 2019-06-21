@@ -2,7 +2,8 @@
 
 namespace app\controllers;
 
-use app\filters\LoginAuthFilter;
+use app\behaviors\filters\LoginAuthFilter;
+use app\components\TestComponent;
 use Trink\Core\Helper\ReturnResult;
 use Yii;
 use yii\helpers\Url;
@@ -40,12 +41,12 @@ class ApiController extends Controller
 
     public function successJson($msg = '', $data = [])
     {
-        return $this->asJson(ReturnResult::success($msg, $data, 0));
+        return $this->asJson(ReturnResult::success($msg, $data));
     }
 
-    public function failJson($msg = '', $data = [])
+    public function failJson($msg = '', $data = [], $status = 0)
     {
-        return $this->asJson(ReturnResult::fail($msg, $data, 1));
+        return $this->asJson(ReturnResult::fail($msg, $data, $status));
     }
 
     public function actionSendjson()
@@ -105,6 +106,9 @@ class ApiController extends Controller
         var_dump($cookies->getValue('language', 'zh-CN'));
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionTesterror()
     {
         throw new NotFoundHttpException();
@@ -128,7 +132,11 @@ class ApiController extends Controller
 
     public function actionWelcome()
     {
-        $this->asJson([$this->action->id => (new TestComponent())->welcome(Yii::$app->request->get('name'))]);
+        $this->asJson([
+            $this->action->id => Yii::$app->test->welcome(
+                Yii::$app->request->get('name') ?? 'hello, world'
+            )
+        ]);
     }
 
     public function actionRedirect()

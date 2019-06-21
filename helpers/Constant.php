@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\api\helpers;
+namespace app\helpers;
 
 class Constant extends \Trink\Core\Helper\Constant
 {

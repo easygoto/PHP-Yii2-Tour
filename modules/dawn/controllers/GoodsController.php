@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\api\controllers;
+namespace app\modules\dawn\controllers;
 
 use app\controllers\ApiController;
-use app\modules\api\helpers\Constant;
-use app\modules\api\models\Goods;
+use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\models\Goods;
 use Yii;
 use yii\db\Exception;
 use yii\db\Query;
