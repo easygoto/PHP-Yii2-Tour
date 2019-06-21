@@ -1,12 +1,11 @@
 <?php
 
-namespace app\utils\api;
+namespace app\modules\api\behaviors\utils;
 
-use app\utils\BaseUtil;
-use app\models\api\User;
+use app\behaviors\utils\BaseUtil;
 
-class UserUtil extends BaseUtil {
-    
+class UserUtil extends BaseUtil
+{
     const STATUS = [
         1 => '正常',
         2 => '启用',
@@ -19,7 +18,8 @@ class UserUtil extends BaseUtil {
         2 => '未知',
     ];
     
-    public static function toArray($user, $scope = 'all') {
+    public static function toArray($user, $scope = 'all')
+    {
         if ($user instanceof User) {
             $userAttr = $user->attributes;
         } elseif (is_array($user)) {
@@ -56,7 +56,8 @@ class UserUtil extends BaseUtil {
      * @param string $default
      * @return string|null
      */
-    protected static function formatValue($user, $field, $default = '') {
+    protected static function formatValue($user, $field, $default = '')
+    {
         if (! array_key_exists($field, $user)) {
             return $default;
         }
@@ -69,7 +70,8 @@ class UserUtil extends BaseUtil {
         return $value;
     }
     
-    protected static function toArrayByAll($user_attr) {
+    protected static function toArrayByAll($user_attr)
+    {
         $user_array = [];
         foreach ($user_attr as $key => $value) {
             $user_array[$key] = self::formatValue($user_attr, $key);
@@ -77,7 +79,8 @@ class UserUtil extends BaseUtil {
         return $user_array;
     }
     
-    protected static function toArrayByInclude($user_attr, $field_list = []) {
+    protected static function toArrayByInclude($user_attr, $field_list = [])
+    {
         $user_array = [];
         foreach ($user_attr as $key => $value) {
             if (in_array($key, $field_list)) {
@@ -87,7 +90,8 @@ class UserUtil extends BaseUtil {
         return $user_array;
     }
     
-    protected static function toArrayByExcept($user_attr, $field_list = []) {
+    protected static function toArrayByExcept($user_attr, $field_list = [])
+    {
         $user_array = [];
         foreach ($user_attr as $key => $value) {
             if (! in_array($key, $field_list)) {

@@ -27,30 +27,6 @@ class ReturnResult
     }
 
     /**
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMsg(): string
-    {
-        return $this->msg;
-    }
-
-    /**
-     * @return array
-     */
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
-    /**
      * @return bool
      */
     public function isSuccess()
@@ -79,7 +55,7 @@ class ReturnResult
             $properties[$field_name] = $this->$field_name;
         }
 
-        return $properties;
+        return array_merge($properties, get_object_vars($this));
     }
 
     /**
@@ -109,13 +85,12 @@ class ReturnResult
      *
      * @param string $msg    返回消息
      * @param array  $data   返回数据
-     * @param int    $status 状态码
      *
      * @return ReturnResult
      */
-    public static function success(string $msg = '', array $data = [], int $status = 0): self
+    public static function success(string $msg = '', array $data = []): self
     {
-        return new self($status, $msg, $data);
+        return new self(0, $msg, $data);
     }
 
     /**
@@ -123,17 +98,16 @@ class ReturnResult
      *
      * @param array  $list
      * @param int    $total
-     * @param int    $status
-     * @param string $msg
+     * @param int    $pageSize
      *
      * @return ReturnResult
      */
-    public static function lists(array $list, int $total, int $status = 0, string $msg = ''): self
+    public static function lists(array $list, int $total, int $pageSize = Constant::DEFAULT_PAGE_SIZE): self
     {
-        return new self($status, $msg, [
-            'list' => $list,
-            'total' => $total,
-            'totalPages' => ceil($total / Constant::DEFAULT_PAGE_SIZE),
+        return new self(0, '', [
+            'list'       => $list,
+            'total'      => $total,
+            'totalPages' => ceil($total / $pageSize),
         ]);
     }
 

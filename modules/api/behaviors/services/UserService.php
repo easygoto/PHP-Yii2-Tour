@@ -1,14 +1,16 @@
 <?php
 
-namespace app\service\api;
+namespace app\modules\api\behaviors\services;
 
+use app\behaviors\services\BaseService;
+use app\behaviors\utils\BaseUtil;
+use app\modules\api\behaviors\utils\UserUtil;
+use app\modules\api\helpers\Constant;
+use app\modules\api\helpers\Message;
+use app\modules\api\models\User;
+use Trink\Core\Helper\ReturnResult;
 use Yii;
 use yii\db\Exception;
-use app\models\api\User;
-use app\utils\RetUtil;
-use app\utils\BaseUtil;
-use app\utils\api\UserUtil;
-use app\service\BaseService;
 use yii\db\Query;
 
 class UserService extends BaseService
@@ -34,11 +36,11 @@ class UserService extends BaseService
         $query->select('*');
         $query->from('`user`');
         self::complete($query, $keywords);
-        $query->limit(DEFAULT_PAGE_SIZE);
-        $query->offset(($page - 1) * DEFAULT_PAGE_SIZE);
+        $query->limit(Constant::DEFAULT_PAGE_SIZE);
+        $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
         $total = $query->count('1');
         $list  = $query->all();
-        return RetUtil::retList($list, $total, DEFAULT_PAGE_SIZE);
+        return ReturnResult::lists($list, $total, Constant::DEFAULT_PAGE_SIZE);
     }
 
     public static function add($data = [])
@@ -58,17 +60,19 @@ class UserService extends BaseService
             $user->operated_at   = '';
             $user->last_login_at = '';
             $user->status        = 1; // 正常
-            $user->deleted       = DEFAULT_UNDELETED;
+            $user->deleted       = Constant::DEFAULT_NOT_DELETE;
 
             if (!$user->save()) {
                 throw new Exception('记录未保存成功');
             }
 
             $transaction->commit();
-            return RetUtil::success($user->id, $data);
+            return ReturnResult::success(Message::ADD_SUCCESS, [
+                'id' => $user->id
+            ]);
         } catch (Exception $e) {
             $transaction->rollBack();
-            return RetUtil::fail($e->getMessage(), $user->getErrors());
+            return ReturnResult::fail($e->getMessage(), $user->getErrors());
         }
     }
 

@@ -1,23 +1,25 @@
 <?php
 
-namespace app\utils;
+namespace app\behaviors\utils;
+
+use Trink\Core\Helper\ReturnResult;
 
 class CheckUtil extends BaseUtil
 {
-    
     /**
-     * @param array $data 待校验的数据
-     * @param array $rule_list 校验规则
+     * @param array $data     待校验的数据
+     * @param array $ruleList 校验规则
+     *
      * @return array
      */
-    public static function verify($data = [], $rule_list = [])
+    public static function verify($data = [], $ruleList = [])
     {
-        $msg_list = [];
-        foreach ($rule_list as $field => $rule) {
+        $msgList = [];
+        foreach ($ruleList as $field => $rule) {
             if (empty($rule)) {
                 continue;
             }
-            
+
             // 需要处理的数据
             $row_data   = self::getTrimValue($data, $field);
             $data_type  = self::getTrimValue($rule, 'type', 'string');
@@ -26,17 +28,17 @@ class CheckUtil extends BaseUtil
                 default:
                 case 'mobile':
                 case 'string':
-                    trim($row_data) or $msg_list[$field] = $data_label . '不可为空';
+                    trim($row_data) or $msgList[$field] = $data_label . '不可为空';
                     break;
                 case 'number':
-                    is_numeric($row_data) or $msg_list[$field] = $data_label . '不是数字格式';
+                    is_numeric($row_data) or $msgList[$field] = $data_label . '不是数字格式';
                     break;
             }
         }
-        if (! empty($msg_list)) {
-            return RetUtil::fail('数据录入不全', $msg_list);
+        if (!empty($msgList)) {
+            return ReturnResult::fail('数据录入不全', $msgList)->asArray();
         } else {
-            return RetUtil::success();
+            return ReturnResult::success()->asArray();
         }
     }
 }
