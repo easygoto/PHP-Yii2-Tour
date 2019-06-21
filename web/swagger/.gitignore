@@ -1,5 +1,8 @@
 *
 !.gitignore
-!css
-!js
-!images
+!css/
+!css/*
+!js/
+!js/*
+!images/
+!images/*
