@@ -31,13 +31,13 @@ class GoodsController extends ApiController
     {
         $id = max(0, intval($id));
         if (!$id) {
-            return $this->asJson(['success' => false, 'msg' => '商品不存在(1)']);
+            return $this->failJson('商品不存在(1)');
         }
         $goods = Goods::findOne($id);
         if (!$goods) {
-            return $this->asJson(['success' => false, 'msg' => '商品不存在(2)']);
+            return $this->failJson('商品不存在(2)');
         }
-        return $this->asJson(['success' => true, 'data' => $goods]);
+        return $this->successJson('', $goods);
     }
 
     public function actionList($page = 1)
@@ -48,20 +48,12 @@ class GoodsController extends ApiController
         $query->select('*');
         $query->from('`b_goods`');
         $query->where('is_delete=0');
+        $total      = $query->count();
         $query->limit(Constant::DEFAULT_PAGE_SIZE);
         $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
         $list       = $query->all();
-        $total      = $query->count();
-        $totalPages = ceil($total / Constant::DEFAULT_PAGE_SIZE);
 
-        return $this->asJson([
-            'success' => true,
-            'data'    => [
-                'list'      => $list,
-                'total'     => $total,
-                'totalPage' => $totalPages,
-            ],
-        ]);
+        return $this->listJson($list, $total);
     }
 
     public function actionCreate()

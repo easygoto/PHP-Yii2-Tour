@@ -3,6 +3,6 @@
 
 namespace app\modules\dawn\helpers;
 
-class Message extends \Trink\Core\Helper\Message
+class Message extends \app\helpers\Message
 {
 }

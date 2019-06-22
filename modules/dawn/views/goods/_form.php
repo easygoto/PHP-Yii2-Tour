@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Goods */
+/* @var $model app\modules\api\models\Goods */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -33,7 +33,9 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'is_delete')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '修改', [
+            'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+        ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

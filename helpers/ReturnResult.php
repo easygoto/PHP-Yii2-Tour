@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trink\Core\Helper;
+namespace app\helpers;
 
 use ReflectionObject;
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\components;
+namespace app\modules\dawn\components;
 
 class TestComponent
 {

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\GoodsSearch */
+/* @var $searchModel app\modules\api\models\GoodsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = '商品';

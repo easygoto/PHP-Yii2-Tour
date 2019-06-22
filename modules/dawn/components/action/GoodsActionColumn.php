@@ -1,12 +1,12 @@
 <?php
 
-namespace app\components\action;
+namespace app\modules\api\components\action;
 
 use Yii;
 use yii\grid\ActionColumn;
 
-class GoodsActionColumn extends ActionColumn {
-    
+class GoodsActionColumn extends ActionColumn
+{
     protected function initDefaultButtons()
     {
         $this->initDefaultButton('view', 'eye-open', [

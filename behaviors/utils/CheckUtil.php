@@ -2,7 +2,7 @@
 
 namespace app\behaviors\utils;
 
-use Trink\Core\Helper\ReturnResult;
+use app\helpers\ReturnResult;
 
 class CheckUtil extends BaseUtil
 {

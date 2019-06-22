@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use app\behaviors\filters\LoginAuthFilter;
-use app\components\TestComponent;
-use Trink\Core\Helper\ReturnResult;
+use app\helpers\Constant;
+use app\helpers\ReturnResult;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
@@ -47,6 +47,11 @@ class ApiController extends Controller
     public function failJson($msg = '', $data = [], $status = 0)
     {
         return $this->asJson(ReturnResult::fail($msg, $data, $status));
+    }
+
+    public function listJson($list, $total, $pageSize = Constant::DEFAULT_PAGE_SIZE)
+    {
+        return $this->asJson(ReturnResult::lists($list, $total, $pageSize));
     }
 
     public function actionSendjson()

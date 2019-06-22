@@ -1,7 +1,5 @@
 <?php
 
-use app\components\TestComponent;
-
 $params = require __DIR__ . '/params.php';
 if (RESTFUL_API_ENABLE) {
     $rule = require_once __DIR__ . '/route.php';
@@ -43,9 +41,6 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
-        ],
-        'test' => [
-            'class' => TestComponent::class,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
