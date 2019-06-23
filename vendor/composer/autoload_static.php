@@ -69,6 +69,7 @@ class ComposerStaticInitceead6880235b55fe551c1f295ee195b
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
+            'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
         ),
         'G' => 
@@ -206,6 +207,10 @@ class ComposerStaticInitceead6880235b55fe551c1f295ee195b
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
         'Prophecy\\' => 
         array (

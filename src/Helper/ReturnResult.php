@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\helpers;
+namespace Trink\Core\Helper;
 
 use ReflectionObject;
 
@@ -77,7 +77,7 @@ class ReturnResult
      */
     public static function fail(string $msg, array $data = [], int $status = 1): self
     {
-        return new self($status, $msg, $data);
+        return new static($status, $msg, $data);
     }
 
     /**
@@ -90,7 +90,7 @@ class ReturnResult
      */
     public static function success(string $msg = '', array $data = []): self
     {
-        return new self(0, $msg, $data);
+        return new static(0, $msg, $data);
     }
 
     /**
@@ -102,9 +102,9 @@ class ReturnResult
      *
      * @return ReturnResult
      */
-    public static function lists(array $list, int $total, int $pageSize = Constant::DEFAULT_PAGE_SIZE): self
+    public static function lists(array $list, int $total, int $pageSize = 15): self
     {
-        return new self(0, '', [
+        return new static(0, '', [
             'list'       => $list,
             'total'      => $total,
             'totalPages' => ceil($total / $pageSize),
@@ -123,7 +123,7 @@ class ReturnResult
      */
     public static function result(int $status, string $msg, array $data, array $extra = []): self
     {
-        $message = new self($status, $msg, $data);
+        $message = new static($status, $msg, $data);
         foreach ($extra as $key => $value) {
             $message->$key = $value;
         }

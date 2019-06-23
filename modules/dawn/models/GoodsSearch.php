@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\models;
 
-use Yii;
+use app\web\Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 

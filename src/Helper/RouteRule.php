@@ -1,6 +1,6 @@
 <?php
 
-namespace app\helpers;
+namespace Trink\Core\Helper;
 
 /**
  * Class RouteRule
@@ -51,7 +51,7 @@ class RouteRule
             RouteRule::get(
                 "{$baseRoute}/list/<page:\d+>",
                 "{$baseCtrl}/index",
-                ['page' => Constant::DEFAULT_PAGE]
+                ['page' => 1]
             ),
             RouteRule::get(
                 "{$baseRoute}/<id:\d+>",

@@ -1,7 +1,7 @@
 <?php
 
 
-use app\helpers\RouteRule;
+use Trink\Core\Helper\RouteRule;
 
 return array_merge(
     RouteRule::base(/*商品*/ 'api/v1/product', 'dawn/api/goods'),

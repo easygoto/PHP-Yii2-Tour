@@ -18,6 +18,11 @@
     "source": "https://github.com/yiisoft/yii2"
   },
   "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Trink\\Core\\": "src"
+    }
+  },
   "require": {
     "php": ">=7.3",
     "yiisoft/yii2": "~2.0.14",

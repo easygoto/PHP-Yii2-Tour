@@ -2,9 +2,9 @@
 
 $params = require __DIR__ . '/params.php';
 if (RESTFUL_API_ENABLE) {
-    $rule = require_once __DIR__ . '/route.php';
+    $rules = require_once __DIR__ . '/route.php';
 } else {
-    $rule = [
+    $rules = [
         '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
         '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
         '<module:\w+>/<category:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<category>/<controller>/<action>',
@@ -67,7 +67,7 @@ $config = [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => RESTFUL_API_ENABLE, // 若开启，路由和真实的接口前面不可相同
             'showScriptName' => RESTFUL_API_ENABLE,
-            'rules' => require __DIR__ . '/route.php',
+            'rules' => $rules,
         ],
     ],
     'params' => $params,

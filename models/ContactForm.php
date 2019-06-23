@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use Yii;
+use app\web\Yii;
 use yii\base\Model;
 
 /**

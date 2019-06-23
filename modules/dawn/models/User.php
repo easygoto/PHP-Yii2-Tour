@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\models;
 
-use Yii;
+use app\web\Yii;
 
 /**
  * This is the model class for table "user".
