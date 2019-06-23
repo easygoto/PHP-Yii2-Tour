@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\models;
 
-use app\web\Yii;
+use Yii;
 
 /**
  * This is the model class for table "b_goods".

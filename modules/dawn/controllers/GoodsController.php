@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\filters\LoginAuthFilter;
-use app\web\Yii;
+use Yii;
 use app\models\Goods;
 use app\models\GoodsSearch;
 use yii\web\Controller;

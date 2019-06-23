@@ -3,7 +3,7 @@
 
 namespace app\modules\dawn;
 
-use app\web\Yii;
+use Yii;
 
 class Module extends \yii\base\Module
 {

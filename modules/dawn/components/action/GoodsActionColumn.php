@@ -2,7 +2,7 @@
 
 namespace app\modules\api\components\action;
 
-use app\web\Yii;
+use Yii;
 use yii\grid\ActionColumn;
 
 class GoodsActionColumn extends ActionColumn

@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\behaviors\filters\LoginAuthFilter;
 use app\helpers\Constant;
-use app\web\Yii;
+use Yii;
 use Trink\Core\Helper\ReturnResult;
 use yii\helpers\Url;
 use yii\web\Controller;

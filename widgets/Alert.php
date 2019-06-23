@@ -1,7 +1,7 @@
 <?php
 namespace app\widgets;
 
-use app\web\Yii;
+use Yii;
 
 /**
  * Alert widget renders a message from session flash. All flash messages are displayed

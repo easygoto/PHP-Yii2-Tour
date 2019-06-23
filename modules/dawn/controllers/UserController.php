@@ -10,7 +10,7 @@ use app\service\dawn\UserService;
 use app\utils\dawn\UserUtil;
 use app\utils\BaseUtil;
 use app\utils\CheckUtil;
-use app\web\Yii;
+use Yii;
 use yii\web\Response;
 
 class UserController extends ApiController
