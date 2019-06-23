@@ -1,6 +1,32 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
+2.0.9 September 23, 2018
+------------------------
+
+- Bug #166: zrangebyscore without scores does not work (razonyang)
+- Enh #13: Added `>`, `<`, `>=` and `<=` conditions support in ActiveQuery (nailfor, zacksleo)
+
+
+2.0.8 March 20, 2018
+--------------------
+
+- Bug #141: Calling ActiveQuery::indexBy() had no effect since Yii 2.0.14 (cebe)
+- Bug: (CVE-2018-8073): Fix possible remote code execution when improperly filtered user input is passed to `ActiveRecord::findOne()` and `::findAll()` (cebe)
+- Enh #66: Cache component can be configured to read / get from replicas (ryusoft)
+
+
+2.0.7 December 11, 2017
+-----------------------
+
+- Bug #114: Fixed ActiveQuery `not between` and `not` conditions which where not working correctly (cebe, ak1987)
+- Bug #123: Fixed ActiveQuery to work with negative limit values, which are used in ActiveDataProvider for the count query (cebe)
+- Enh #9: Added orderBy support to redis ActiveQuery and LuaScriptBuilder (valinurovam)
+- Enh #91: Added option to retry connection after failing to communicate with redis server on stale socket (cebe)
+- Enh #106: Improved handling of connection errors and introduced `yii\redis\SocketException` for these (cebe)
+- Chg #127: Added PHP 7.2 compatibility (brandonkelly)
+
+
 2.0.6 April 05, 2017
 --------------------
 

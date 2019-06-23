@@ -1,5 +1,10 @@
-Redis Cache, Session and ActiveRecord for Yii 2
-===============================================
+<p align="center">
+    <a href="http://redis.io/" target="_blank" rel="external">
+        <img src="http://download.redis.io/logocontest/82.png" height="100px">
+    </a>
+    <h1 align="center">Redis Cache, Session and ActiveRecord for Yii 2</h1>
+    <br>
+</p>
 
 This extension provides the [redis](http://redis.io/) key-value store support for the [Yii framework 2.0](http://www.yiiframework.com).
 It includes a `Cache` and `Session` storage handler and implements the `ActiveRecord` pattern that allows
@@ -27,7 +32,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist yiisoft/yii2-redis
+php composer.phar require --prefer-dist yiisoft/yii2-redis:"~2.0.0"
 ```
 
 or add

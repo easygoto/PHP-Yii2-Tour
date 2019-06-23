@@ -18,7 +18,7 @@ use yii\db\Expression;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class LuaScriptBuilder extends \yii\base\Object
+class LuaScriptBuilder extends \yii\base\BaseObject
 {
     /**
      * Builds a Lua script for finding a list of records
@@ -27,7 +27,6 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildAll($query)
     {
-        // TODO add support for orderBy
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
@@ -42,7 +41,6 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildOne($query)
     {
-        // TODO add support for orderBy
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
@@ -58,7 +56,7 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildColumn($query, $column)
     {
-        // TODO add support for orderBy and indexBy
+        // TODO add support for indexBy
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
@@ -145,10 +143,6 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     private function build($query, $buildResult, $return)
     {
-        if (!empty($query->orderBy)) {
-            throw new NotSupportedException('orderBy is currently not supported by redis ActiveRecord.');
-        }
-
         $columns = [];
         if ($query->where !== null) {
             $condition = $this->buildCondition($query->where, $columns);
@@ -156,19 +150,47 @@ class LuaScriptBuilder extends \yii\base\Object
             $condition = 'true';
         }
 
-        $start = $query->offset === null ? 0 : $query->offset;
-        $limitCondition = 'i>' . $start . ($query->limit === null ? '' : ' and i<=' . ($start + $query->limit));
+        $start = ($query->offset === null || $query->offset < 0) ? 0 : $query->offset;
+        $limitCondition = 'i>' . $start . (($query->limit === null || $query->limit < 0) ? '' : ' and i<=' . ($start + $query->limit));
 
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix());
         $loadColumnValues = '';
         foreach ($columns as $column => $alias) {
-            $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, '$column')\n";
+            $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, " . $this->quoteValue($column) . ")\n";
+        }
+
+        $getAllPks = <<<EOF
+local allpks=redis.call('LRANGE',$key,0,-1)
+EOF;
+        if (!empty($query->orderBy)) {
+            if (!is_array($query->orderBy) || count($query->orderBy) > 1) {
+                throw new NotSupportedException(
+                    'orderBy by multiple columns is not currently supported by redis ActiveRecord.'
+                );
+            }
+
+            $k = key($query->orderBy);
+            $v = $query->orderBy[$k];
+            if (is_numeric($k)) {
+                $orderColumn = $v;
+                $orderType = 'ASC';
+            } else {
+                $orderColumn = $k;
+                $orderType = $v === SORT_DESC ? 'DESC' : 'ASC';
+            }
+
+            $getAllPks = <<<EOF
+local allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
+if allpks['err'] then
+    allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
+end
+EOF;
         }
 
         return <<<EOF
-local allpks=redis.call('LRANGE',$key,0,-1)
+$getAllPks
 local pks={}
 local n=0
 local v=nil
@@ -198,7 +220,7 @@ EOF;
         if (isset($columns[$column])) {
             return $columns[$column];
         }
-        $name = 'c' . preg_replace("/[^A-z]+/", "", $column) . count($columns);
+        $name = 'c' . preg_replace("/[^a-z]+/i", "", $column) . count($columns);
 
         return $columns[$column] = $name;
     }
@@ -241,6 +263,10 @@ EOF;
             'not like' => 'buildLikeCondition',
             'or like' => 'buildLikeCondition',
             'or not like' => 'buildLikeCondition',
+            '>' => 'buildCompareCondition',
+            '>=' => 'buildCompareCondition',
+            '<' => 'buildCompareCondition',
+            '<=' => 'buildCompareCondition',
         ];
 
         if (!is_array($condition)) {
@@ -299,7 +325,7 @@ EOF;
             $operand = $this->buildCondition($operand, $params);
         }
 
-        return "!($operand)";
+        return "$operator ($operand)";
     }
 
     private function buildAndCondition($operator, $operands, &$columns)
@@ -332,7 +358,8 @@ EOF;
         $value2 = $this->quoteValue($value2);
         $column = $this->addColumn($column, $columns);
 
-        return "$column >= $value1 and $column <= $value2";
+        $condition = "$column >= $value1 and $column <= $value2";
+        return $operator === 'not between' ? "not ($condition)" : $condition;
     }
 
     private function buildInCondition($operator, $operands, &$columns)
@@ -349,7 +376,7 @@ EOF;
             return $operator === 'in' ? 'false' : 'true';
         }
 
-        if (count($column) > 1) {
+        if (is_array($column) && count($column) > 1) {
             return $this->buildCompositeInCondition($operator, $column, $values, $columns);
         } elseif (is_array($column)) {
             $column = reset($column);
@@ -392,6 +419,22 @@ EOF;
         $operator = $operator === 'in' ? '' : 'not ';
 
         return "$operator(" . implode(' or ', $vss) . ')';
+    }
+
+    protected function buildCompareCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $column = $this->addColumn($column, $columns);
+        if (is_numeric($value)){
+            return "tonumber($column) $operator $value";
+        }
+        $value = $this->quoteValue($value);
+        return "$column $operator $value";
     }
 
     private function buildLikeCondition($operator, $operands, &$columns)

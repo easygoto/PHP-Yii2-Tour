@@ -85,7 +85,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
     /**
      * Constructor.
-     * @param array $modelClass the model class associated with this query
+     * @param string $modelClass the model class associated with this query
      * @param array $config configurations to be applied to the newly created query object
      */
     public function __construct($modelClass, $config = [])
@@ -133,21 +133,36 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
             $rows[] = $row;
         }
-        if (!empty($rows)) {
-            $models = $this->createModels($rows);
-            if (!empty($this->with)) {
-                $this->findWith($this->with, $models);
-            }
-            if (!$this->asArray) {
-                foreach ($models as $model) {
-                    $model->afterFind();
-                }
-            }
-
-            return $models;
-        } else {
+        if (empty($rows)) {
             return [];
         }
+
+        $models = $this->createModels($rows);
+        if (!empty($this->with)) {
+            $this->findWith($this->with, $models);
+        }
+        if ($this->indexBy !== null) {
+            $indexedModels = [];
+            if (is_string($this->indexBy)) {
+                foreach ($models as $model) {
+                    $key = $model[$this->indexBy];
+                    $indexedModels[$key] = $model;
+                }
+            } else {
+                foreach ($models as $model) {
+                    $key = call_user_func($this->indexBy, $model);
+                    $indexedModels[$key] = $model;
+                }
+            }
+            $models = $indexedModels;
+        }
+        if (!$this->asArray) {
+            foreach ($models as $model) {
+                $model->afterFind();
+            }
+        }
+
+        return $models;
     }
 
     /**
@@ -374,10 +389,6 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
         }
 
-        if (!empty($this->orderBy)) {
-            throw new NotSupportedException('orderBy is currently not supported by redis ActiveRecord.');
-        }
-
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
@@ -411,6 +422,25 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     private function findByPk($db, $type, $columnName = null)
     {
+        $needSort = !empty($this->orderBy) && in_array($type, ['All', 'One', 'Column']);
+        if ($needSort) {
+            if (!is_array($this->orderBy) || count($this->orderBy) > 1) {
+                throw new NotSupportedException(
+                    'orderBy by multiple columns is not currently supported by redis ActiveRecord.'
+                );
+            }
+
+            $k = key($this->orderBy);
+            $v = $this->orderBy[$k];
+            if (is_numeric($k)) {
+                $orderColumn = $v;
+                $orderType = SORT_ASC;
+            } else {
+                $orderColumn = $k;
+                $orderType = $v;
+            }
+        }
+
         if (isset($this->where[0]) && $this->where[0] === 'in') {
             $pks = (array) $this->where[2];
         } elseif (count($this->where) == 1) {
@@ -428,28 +458,44 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
-        if ($type == 'Count') {
+        if ($type === 'Count') {
             $start = 0;
             $limit = null;
         } else {
-            $start = $this->offset === null ? 0 : $this->offset;
-            $limit = $this->limit;
+            $start = ($this->offset === null || $this->offset < 0) ? 0 : $this->offset;
+            $limit = ($this->limit < 0) ? null : $this->limit;
         }
         $i = 0;
         $data = [];
+        $orderArray = [];
         foreach ($pks as $pk) {
             if (++$i > $start && ($limit === null || $i <= $start + $limit)) {
                 $key = $modelClass::keyPrefix() . ':a:' . $modelClass::buildKey($pk);
                 $result = $db->executeCommand('HGETALL', [$key]);
                 if (!empty($result)) {
                     $data[] = $result;
+                    if ($needSort) {
+                        $orderArray[] = $db->executeCommand('HGET', [$key, $orderColumn]);
+                    }
                     if ($type === 'One' && $this->orderBy === null) {
                         break;
                     }
                 }
             }
         }
-        // TODO support orderBy
+
+        if ($needSort) {
+            $resultData = [];
+            if ($orderType === SORT_ASC) {
+                asort($orderArray, SORT_NATURAL);
+            } else {
+                arsort($orderArray, SORT_NATURAL);
+            }
+            foreach ($orderArray as $orderKey => $orderItem) {
+                $resultData[] = $data[$orderKey];
+            }
+            $data = $resultData;
+        }
 
         switch ($type) {
             case 'All':
