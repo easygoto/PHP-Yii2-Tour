@@ -23,14 +23,14 @@ class LoginAuthFilter extends ActionFilter
             list($userId, $token) = json_decode($authStr, 1);
             $user = User::findIdentity($userId);
             if ($user && $user->authKey === $token) {
-                \Yii::$app->params['isLogin'] = 1;
+                Yii::$app->params['isLogin'] = 1;
                 return parent::beforeAction($action);
             }
         }
 
         // 未登录 跳转至首页
         if ($action->controller->id !== 'site' && $action->id !== 'index') {
-            \Yii::$app->getResponse()->redirect('site/index');
+            Yii::$app->getResponse()->redirect('site/index');
         } else {
             return parent::beforeAction($action);
         }*/
