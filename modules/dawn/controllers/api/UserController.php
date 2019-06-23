@@ -1,15 +1,15 @@
 <?php
 
-namespace app\modules\dawn\controllers;
+namespace app\modules\dawn\controllers\api;
 
-use app\controllers\ApiController;
+use app\modules\dawn\controllers\ApiController;
+use app\modules\dawn\behaviors\services\UserService;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
-use app\service\dawn\UserService;
-use app\utils\dawn\UserUtil;
-use app\utils\BaseUtil;
-use app\utils\CheckUtil;
+use app\modules\dawn\behaviors\utils\UserUtil;
+use app\behaviors\utils\BaseUtil;
+use app\behaviors\utils\CheckUtil;
 use app\web\Yii;
 use yii\web\Response;
 
@@ -58,7 +58,7 @@ class UserController extends ApiController
         $keywords = Yii::$app->request->get();
         
         $result    = UserService::lists($keywords, $page);
-        $user_list = BaseUtil::getTrimValue($result, 'list', []);
+        $user_list = BaseUtil::getTrimValue($result->asArray(), 'list', []);
         foreach ($user_list as & $user) {
             $user = UserUtil::toArray($user, 'list');
         }
@@ -119,7 +119,7 @@ class UserController extends ApiController
         
         // add to db
         $result = UserService::add($data);
-        if (! BaseUtil::getTrimValue($result, 'success')) {
+        if (! BaseUtil::getTrimValue($result->asArray(), 'success')) {
             return $this->failJson($result);
         }
         return $this->successJson(Message::ADD_SUCCESS, $result);

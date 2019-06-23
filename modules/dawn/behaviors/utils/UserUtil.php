@@ -3,6 +3,7 @@
 namespace app\modules\dawn\behaviors\utils;
 
 use app\behaviors\utils\BaseUtil;
+use app\modules\dawn\models\User;
 
 class UserUtil extends BaseUtil
 {

@@ -3,9 +3,9 @@
 
 namespace app\modules\dawn\controllers;
 
-use app\controllers\base\PageController;
+use yii\web\Controller;
 
-class TestController extends PageController
+class TestController extends Controller
 {
     public function actionIndex()
     {

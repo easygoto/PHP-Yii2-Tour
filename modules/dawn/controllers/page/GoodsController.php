@@ -1,19 +1,19 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\dawn\controllers\page;
 
-use app\filters\LoginAuthFilter;
+use app\behaviors\filters\LoginAuthFilter;
+use app\modules\dawn\controllers\PageController;
 use app\web\Yii;
-use app\models\Goods;
-use app\models\GoodsSearch;
-use yii\web\Controller;
+use app\modules\dawn\models\Goods;
+use app\modules\dawn\models\GoodsSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * GoodsController implements the CRUD actions for Goods model.
  */
-class GoodsController extends Controller
+class GoodsController extends PageController
 {
     /**
      * @inheritdoc
@@ -137,8 +137,8 @@ class GoodsController extends Controller
         }
     }
     
-    public function actionMakedata() {
-    
+    public function actionMakedata()
+    {
         for ($i=0; $i<100; $i++) {
             $price = rand(200, 999);
             $now = date('Y-m-d H:i:s');

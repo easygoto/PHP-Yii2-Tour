@@ -8,7 +8,7 @@ use app\modules\dawn\behaviors\utils\UserUtil;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
-use app\helpers\ReturnResult;
+use Trink\Core\Helper\ReturnResult;
 use app\web\Yii;
 use yii\db\Exception;
 use yii\db\Query;

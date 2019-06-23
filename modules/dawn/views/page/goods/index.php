@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\api\models\GoodsSearch */
+/* @var $searchModel app\modules\dawn\models\GoodsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = '商品';
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'status',
             // 'is_delete',
 
-            ['class' => '\app\components\action\GoodsActionColumn'],
+            ['class' => 'app\modules\dawn\components\action\GoodsActionColumn'],
         ],
     ]); ?>
 </div>
