@@ -3,13 +3,12 @@
 
 namespace app\web;
 
-use app\modules\dawn\components\TestComponent;
+use app\components\HelloComponent;
 use yii\redis\Connection;
 
 /**
- * @property Connection    redis
- *
- * @property TestComponent test
+ * @property Connection     redis
+ * @property HelloComponent hello
  */
 class Application extends \yii\web\Application
 {

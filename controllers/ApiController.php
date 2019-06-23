@@ -6,10 +6,7 @@ use app\behaviors\filters\LoginAuthFilter;
 use app\helpers\Constant;
 use app\web\Yii;
 use Trink\Core\Helper\ReturnResult;
-use yii\helpers\Url;
 use yii\web\Controller;
-use yii\web\Cookie;
-use yii\web\NotFoundHttpException;
 
 /**
  * @OA\Info(
@@ -54,15 +51,6 @@ class ApiController extends Controller
         return $this->asJson(ReturnResult::lists($list, $total, $pageSize));
     }
 
-    public function actionSendjson()
-    {
-        $this->asJson([
-            'controllerId' => $this->id,
-            'route'        => $this->route,
-            'basePath'     => \Yii::$app->basePath,
-        ]);
-    }
-
     public function actionIndex()
     {
         echo "Join Base Api ...";
@@ -73,79 +61,11 @@ class ApiController extends Controller
     {
         echo "Base Api Demo ...";
         echo "<br>";
-        echo "<a href='" . Url::to(['api/user/get', 'id' => 10]) . "'>api/user/get?id=10</a>";
-        echo "<br>";
     }
 
     public function actionTest()
     {
         echo "Base Api Test ...";
         echo "<br>";
-    }
-
-    public function actionSession()
-    {
-        $session = Yii::$app->session;
-        $session->open();
-        $session->set('haha', 'haha');
-        echo $session->get('haha');
-        $session->close();
-        if ($session->isActive) {
-            $session->destroy();
-        }
-    }
-
-    public function actionSetcookie()
-    {
-        $cookies = Yii::$app->response->cookies;
-        $cookies->add(new Cookie([
-            'name'  => 'language',
-            'value' => 'zh-CN',
-        ]));
-    }
-
-    public function actionCookie()
-    {
-        // 只能获取后端设置的 cookie
-        $cookies = Yii::$app->request->cookies;
-        var_dump($cookies->getValue('language', 'zh-CN'));
-    }
-
-    /**
-     * @throws NotFoundHttpException
-     */
-    public function actionTesterror()
-    {
-        throw new NotFoundHttpException();
-    }
-
-    public function actionError()
-    {
-        Yii::trace('haha');
-        echo $this->action->id;
-        echo '<br>';
-        echo $this->id;
-    }
-
-    public function actionDemoredis()
-    {
-        echo '<pre>';
-        $redis  = Yii::$app->redis;
-        $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
-        print_r($result);
-    }
-
-    public function actionWelcome()
-    {
-        $this->asJson([
-            $this->action->id => Yii::$app->test->welcome(
-                Yii::$app->request->get('name') ?? 'hello, world'
-            )
-        ]);
-    }
-
-    public function actionRedirect()
-    {
-        Yii::$app->response->redirect("http://www.example.com");
     }
 }
