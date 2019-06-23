@@ -13,4 +13,9 @@ use yii\redis\Connection;
  */
 class Application extends \yii\web\Application
 {
+    public function __construct($config = [])
+    {
+        Yii::$app = $this;
+        parent::__construct($config);
+    }
 }
