@@ -5,7 +5,7 @@ namespace app\modules\dawn\controllers;
 use app\controllers\ApiController;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\models\Goods;
-use Yii;
+use app\web\Yii;
 use yii\db\Exception;
 use yii\db\Query;
 

@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use Yii;
+use app\web\Yii;
 use yii\web\Controller;
 
 class UploadController extends Controller

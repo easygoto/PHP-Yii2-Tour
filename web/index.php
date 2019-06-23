@@ -8,8 +8,9 @@ defined('RESTFUL_API_ENABLE') or define('RESTFUL_API_ENABLE', false);
 defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', true);
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
+require __DIR__ . '/Yii.php';
+require __DIR__ . '/Application.php';
 
 $config = require __DIR__ . '/../config/web.php';
 
-(new yii\web\Application($config))->run();
+(new app\web\Application($config))->run();
