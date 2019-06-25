@@ -3,11 +3,11 @@
 
 namespace app\modules\dawn;
 
-use app\modules\dawn\components\TestComponent;
+use app\modules\dawn\components\Test;
 use app\web\Yii;
 
 /**
- * @property TestComponent test
+ * @property Test test
  */
 class Module extends \yii\base\Module
 {

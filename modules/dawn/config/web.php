@@ -1,7 +1,5 @@
 <?php
 
-use app\modules\dawn\components\TestComponent;
-
 require_once __DIR__ . '/constant.php';
 
 $config = [
@@ -12,7 +10,7 @@ $config = [
     'components' => [
         // list of component configurations
         'test' => [
-            'class' => TestComponent::class,
+            'class' => app\modules\dawn\components\Test::class,
         ],
     ],
 

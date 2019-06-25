@@ -3,7 +3,9 @@
 
 namespace app\modules\dawn\components;
 
-class TestComponent
+use yii\base\Component;
+
+class Test extends Component
 {
     public function welcome($name = 'hello, world')
     {

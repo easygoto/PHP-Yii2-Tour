@@ -18,6 +18,7 @@ class TestController extends Controller
 
     public function actionWelcome()
     {
-        echo $this->module->test->welcome();
+        $test = $this->module->test;
+        echo $test->welcome();
     }
 }

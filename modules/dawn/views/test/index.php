@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $form yii\widgets\ActiveForm */
 /* @var $model app\models\LoginForm */
 
-$this->title = 'Login';
+$this->title = '测试模块';
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
 
