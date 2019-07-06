@@ -1,10 +1,10 @@
 <?php
 
-use yii\gii\CodeFile;
+use app\modules\gen\CodeFile;
 use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
-/* @var $generator \yii\gii\Generator */
+/* @var $generator \app\modules\gen\Generator */
 /* @var $files CodeFile[] */
 /* @var $answers array */
 /* @var $id string panel ID */

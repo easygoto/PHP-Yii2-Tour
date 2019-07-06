@@ -4,7 +4,7 @@ namespace app\modules\gen;
 
 use Yii;
 use yii\base\BaseObject;
-use yii\gii\components\DiffRendererHtmlInline;
+use app\modules\gen\components\DiffRendererHtmlInline;
 use yii\helpers\Html;
 
 /**
@@ -77,7 +77,7 @@ class CodeFile extends BaseObject
         if ($this->operation === self::OP_CREATE) {
             $dir = dirname($this->path);
             if (!is_dir($dir)) {
-                if ($module instanceof \yii\gii\Module) {
+                if ($module instanceof \app\modules\gen\Module) {
                     $mask = @umask(0);
                     $result = @mkdir($dir, $module->newDirMode, true);
                     @umask($mask);
@@ -93,7 +93,7 @@ class CodeFile extends BaseObject
             return "Unable to write the file '{$this->path}'.";
         }
 
-        if ($module instanceof \yii\gii\Module) {
+        if ($module instanceof \app\modules\gen\Module) {
             $mask = @umask(0);
             @chmod($this->path, $module->newFileMode);
             @umask($mask);

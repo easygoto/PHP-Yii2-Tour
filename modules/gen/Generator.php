@@ -6,7 +6,7 @@ use Yii;
 use ReflectionClass;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\gii\CodeFile;
+use app\modules\gen\CodeFile;
 use yii\helpers\VarDumper;
 use yii\web\View;
 
@@ -47,7 +47,7 @@ abstract class Generator extends Model
     /**
      * Generates the code based on the current user input and the specified code template files.
      * This is the main method that child classes should implement.
-     * Please refer to [[\yii\gii\generators\controller\Generator::generate()]] as an example
+     * Please refer to [[\app\modules\gen\generators\controller\Generator::generate()]] as an example
      * on how to implement this method.
      * @return CodeFile[] a list of code files to be created.
      */

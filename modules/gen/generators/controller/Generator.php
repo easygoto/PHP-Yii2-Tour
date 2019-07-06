@@ -5,10 +5,10 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\generators\controller;
+namespace app\modules\gen\generators\controller;
 
 use Yii;
-use yii\gii\CodeFile;
+use app\modules\gen\CodeFile;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -25,7 +25,7 @@ use yii\helpers\StringHelper;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class Generator extends \yii\gii\Generator
+class Generator extends \app\modules\gen\Generator
 {
     /**
      * @var string the controller class name

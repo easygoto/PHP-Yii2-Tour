@@ -5,9 +5,9 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\gii\components;
+namespace app\modules\gen\components;
 
-use yii\gii\Generator;
+use app\modules\gen\Generator;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
