@@ -68,8 +68,8 @@ $config = [
         'redis' => require __DIR__ . '/redis.php',
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => RESTFUL_API_ENABLE, // 若开启，路由和真实的接口前面不可相同
-            'showScriptName' => RESTFUL_API_ENABLE,
+            'enableStrictParsing' => false, // 若开启，路由和真实的接口前面不可相同
+            'showScriptName' => false,
             'rules' => $rules,
         ],
     ],

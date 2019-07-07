@@ -7,6 +7,10 @@ return array_merge(
     RouteRule::base(/*商品*/ 'api/v1/product', 'dawn/api/goods'),
     RouteRule::base(/*用户*/ 'api/v1/user', 'dawn/api/user'),
     [
+        RouteRule::get('/', 'site/index'),
+        RouteRule::get('/site/about', 'site/about'),
+        RouteRule::get('/site/contact', 'site/contact'),
+        RouteRule::get('/site/login', 'site/login'),
         RouteRule::get('api/test', 'api/test'),
     ]
 );
