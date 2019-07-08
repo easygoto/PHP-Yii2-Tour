@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\dawn\controllers;
+namespace app\modules\dawn\controllers\api;
 
 use app\controllers\ApiController;
 use app\modules\dawn\helpers\Constant;
@@ -37,7 +37,7 @@ class GoodsController extends ApiController
         if (!$goods) {
             return $this->failJson('商品不存在(2)');
         }
-        return $this->successJson('', $goods);
+        return $this->successJson('', $goods->attributes);
     }
 
     public function actionList($page = 1)

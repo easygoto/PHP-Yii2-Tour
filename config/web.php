@@ -1,15 +1,7 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-if (RESTFUL_API_ENABLE) {
-    $rules = require_once __DIR__ . '/route.php';
-} else {
-    $rules = [
-        '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-        '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
-        '<module:\w+>/<category:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<category>/<controller>/<action>',
-    ];
-}
+$params = require_once __DIR__ . '/params.php';
+$rules = require_once __DIR__ . '/route.php';
 
 $config = [
     'id' => 'basic',
@@ -29,8 +21,8 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'study_yii',
-            'enableCookieValidation' => ! RESTFUL_API_ENABLE,
-            'enableCsrfValidation' => ! RESTFUL_API_ENABLE,
+            'enableCookieValidation' => false,
+            'enableCsrfValidation' => false,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -68,7 +60,7 @@ $config = [
         'redis' => require __DIR__ . '/redis.php',
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => false, // 若开启，路由和真实的接口前面不可相同
+            'enableStrictParsing' => true, // 若开启，路由和真实的接口前面不可相同
             'showScriptName' => false,
             'rules' => $rules,
         ],

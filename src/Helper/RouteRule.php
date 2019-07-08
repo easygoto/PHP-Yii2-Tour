@@ -5,7 +5,7 @@ namespace Trink\Core\Helper;
 /**
  * Class RouteRule
  *
- * @package app\helpers
+ * @package Trink\Core\Helper
  *
  * @method  static array get(string $pattern, string $route, array $defaults = [])
  * @method  static array post(string $pattern, string $route, array $defaults = [])
@@ -66,5 +66,37 @@ class RouteRule
                 "{$baseCtrl}/delete"
             ),
         ];
+    }
+
+    public static function noRest($options = [])
+    {
+        $module = $options['module'] ?? '\w+';
+        $category = $options['category'] ?? '\w+';
+        $controller = $options['controller'] ?? '\w+';
+
+        if ($module == '\w+' && $category == '\w+' && $controller == '\w+') {
+            return [];
+        } elseif ($module == '\w+' && $category == '\w+' && $controller != '\w+') {
+            return [
+                "<controller:{$controller}>/<action:\w+>" => "<controller>/<action>",
+            ];
+        } elseif ($module == '\w+' && $category != '\w+') {
+            return [
+                "<controller:{$controller}>/<action:\w+>" => "<controller>/<action>",
+                "<category:{$category}>/<controller:{$controller}>/<action:\w+>" => "<category>/<controller>/<action>"
+            ];
+        } elseif ($module != '\w+' && $category == '\w+') {
+            return [
+                "<module:{$module}>" => "<module>",
+                "<module:{$module}>/<controller:{$controller}>/<action:\w+>" => "<module>/<controller>/<action>",
+            ];
+        } else {
+            return [
+                "<module:{$module}>" => "<module>",
+                "<module:{$module}>/<controller:{$controller}>/<action:\w+>" => "<module>/<controller>/<action>",
+                "<module:{$module}>/<cate:{$category}>/<controller:{$controller}>/<action:\w+>" =>
+                    "<module>/<cate>/<controller>/<action>",
+            ];
+        }
     }
 }
