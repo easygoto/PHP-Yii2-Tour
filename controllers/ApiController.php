@@ -38,23 +38,17 @@ class ApiController extends Controller
 
     public function successJson($msg = '', $data = [])
     {
-        return $this->asJson(ReturnResult::success($msg, $data));
+        return $this->asJson(ReturnResult::success($msg, $data)->asArray());
     }
 
     public function failJson($msg = '', $data = [], $status = 0)
     {
-        return $this->asJson(ReturnResult::fail($msg, $data, $status));
+        return $this->asJson(ReturnResult::fail($msg, $data, $status)->asArray());
     }
 
     public function listJson($list, $total, $pageSize = Constant::DEFAULT_PAGE_SIZE)
     {
-        return $this->asJson(ReturnResult::lists($list, $total, $pageSize));
-    }
-
-    public function actionIndex()
-    {
-        echo "Join Base Api ...";
-        echo "<br>";
+        return $this->asJson(ReturnResult::lists($list, $total, $pageSize)->asArray());
     }
 
     public function actionDemo()

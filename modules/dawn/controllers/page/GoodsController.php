@@ -105,7 +105,7 @@ class GoodsController extends PageController
             ]);
         }
     }
-    
+
     /**
      * Deletes an existing Goods model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -135,30 +135,5 @@ class GoodsController extends PageController
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-    
-    public function actionMakedata()
-    {
-        for ($i=0; $i<100; $i++) {
-            $price = rand(200, 999);
-            $now = date('Y-m-d H:i:s');
-            $sn = substr(md5(uniqid()), 0, 4);
-            
-            $model = new Goods();
-            
-            $model->name = '测试商品'.$sn;
-            $model->wholesale = $price*1.1;
-            $model->selling_price = $price * 1.28;
-            $model->market_price = $price * 1.35;
-            $model->inventory = rand(2, 12) * 100;
-            $model->created_at = $now;
-            $model->updated_at = $now;
-            $model->operated_at = $now;
-            $model->status = 1;
-            $model->is_delete = 0;
-            
-            $model->save();
-        }
-        return 'ok';
     }
 }

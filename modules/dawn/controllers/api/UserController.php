@@ -18,27 +18,27 @@ class UserController extends ApiController
     public function actionGet($id = 0)
     {
         $id = (int)$id;
-        if (! $id) {
+        if (!$id) {
             return $this->failJson('用户不存在(1)', ['id' => $id]);
         }
-        
+
         $user = User::findOne($id);
-        if (! $user) {
+        if (!$user) {
             return $this->failJson('用户不存在(2)', ['user' => $user]);
         }
         if ($user->deleted === Constant::DEFAULT_IS_DELETE) {
             return $this->failJson('用户不存在(3)', ['user' => $user]);
         }
-        
+
         $user = UserUtil::toArray($user, 'detail');
-        
+
         return $this->successJson($user);
     }
 
     /**
      * @OA\Get(
      *   tags={"用户相关接口"},
-     *   path="/api/v1/users/{page}",
+     *   path="/dawn/api/user/list/{page}",
      *   @OA\Parameter(name="page",
      *     in="path",
      *     required=true,
@@ -53,23 +53,23 @@ class UserController extends ApiController
      *
      * @return Response
      */
-    public function actionList($page = Constant::DEFAULT_PAGE)
+    public function actionIndex($page = Constant::DEFAULT_PAGE)
     {
         $keywords = Yii::$app->request->get();
-        
+
         $result    = UserService::lists($keywords, $page);
         $user_list = BaseUtil::getTrimValue($result->asArray(), 'list', []);
         foreach ($user_list as & $user) {
             $user = UserUtil::toArray($user, 'list');
         }
-        
+
         return $this->successJson(Message::SUCCESS, $result);
     }
 
     /**
      * @OA\Post(
      *   tags={"用户相关接口"},
-     *   path="/api/v1/user",
+     *   path="/dawn/api/user",
      *   @OA\Parameter(name="user_name",
      *     in="path",
      *     required=true,
@@ -107,24 +107,24 @@ class UserController extends ApiController
     {
         $request = Yii::$app->request;
         $data    = $request->post();
-        
+
         // check data
         $check_result = CheckUtil::verify($data, [
             'user_name'     => ['label' => '用户名', 'type' => 'string'],
             'mobile_number' => ['label' => '手机号', 'type' => 'mobile'],
         ]);
-        if (! BaseUtil::getTrimValue($check_result, 'success')) {
+        if (!BaseUtil::getTrimValue($check_result, 'success')) {
             return $this->failJson($check_result);
         }
-        
+
         // add to db
         $result = UserService::add($data);
-        if (! BaseUtil::getTrimValue($result->asArray(), 'success')) {
+        if (!BaseUtil::getTrimValue($result->asArray(), 'success')) {
             return $this->failJson($result);
         }
         return $this->successJson(Message::ADD_SUCCESS, $result);
     }
-    
+
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
@@ -139,25 +139,25 @@ class UserController extends ApiController
             return $this->failJson('未接受的请求');
         }
     }
-    
+
     public function actionDelete($id = 0)
     {
-        $id = (int)$id;
-        if (! $id) {
+        $id = max(0, (int)$id);
+        if (!$id) {
             return $this->failJson('用户不存在(1)', ['id' => $id]);
         }
-        
+
         $user = User::findOne($id);
-        if (! $user) {
+        if (!$user) {
             return $this->failJson('用户不存在(2)', ['user' => $user]);
         }
-        
+
         $user->deleted = 1;
-        
-        if (! $user->save()) {
+
+        if (!$user->save()) {
             return $this->failJson('未删除成功', $user->getErrors());
         }
-        
-        return $this->successJson(Message::DELETE_SUCCESS, ['id' => $user->id]);
+
+        return $this->successJson(Message::DELETE_SUCCESS, ['user' => $user]);
     }
 }

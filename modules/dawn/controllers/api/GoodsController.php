@@ -29,7 +29,7 @@ class GoodsController extends ApiController
      */
     public function actionGet($id)
     {
-        $id = max(0, intval($id));
+        $id = max(0, (int)$id);
         if (!$id) {
             return $this->failJson('商品不存在(1)');
         }
@@ -40,9 +40,9 @@ class GoodsController extends ApiController
         return $this->successJson('', $goods->attributes);
     }
 
-    public function actionList($page = 1)
+    public function actionIndex($page = 1)
     {
-        $page = max(1, intval($page));
+        $page = max(1, (int)$page);
 
         $query = new Query();
         $query->select('*');
@@ -65,10 +65,10 @@ class GoodsController extends ApiController
 
             $now                  = date('Y-m-d H:i:s');
             $goods->name          = $this->trimValue($data, 'name');
-            $goods->wholesale     = array_key_exists('wholesale', $data) ? floatval($data['wholesale']) : 0;
-            $goods->selling_price = array_key_exists('selling_price', $data) ? floatval($data['selling_price']) : 0;
-            $goods->market_price  = array_key_exists('market_price', $data) ? floatval($data['market_price']) : 0;
-            $goods->inventory     = array_key_exists('inventory', $data) ? intval($data['inventory']) : 0;
+            $goods->wholesale     = isset($data['wholesale']) ? (float)($data['wholesale']) : 0;
+            $goods->selling_price = isset($data['selling_price']) ? (float)($data['selling_price']) : 0;
+            $goods->market_price  = isset($data['market_price']) ? (float)($data['market_price']) : 0;
+            $goods->inventory     = isset($data['inventory']) ? (int)($data['inventory']) : 0;
             $goods->created_at    = $now;
             $goods->updated_at    = $now;
             $goods->operated_at   = $now;

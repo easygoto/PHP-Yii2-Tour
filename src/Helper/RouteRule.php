@@ -46,7 +46,7 @@ class RouteRule
         return [
             RouteRule::post(
                 "{$baseRoute}",
-                "{$baseCtrl}/add"
+                "{$baseCtrl}/create"
             ),
             RouteRule::get(
                 "{$baseRoute}/list/<page:\d+>",
@@ -59,7 +59,7 @@ class RouteRule
             ),
             RouteRule::put(
                 "{$baseRoute}/<id:\d+>",
-                "{$baseCtrl}/edit"
+                "{$baseCtrl}/update"
             ),
             RouteRule::delete(
                 "{$baseRoute}/<id:\d+>",
