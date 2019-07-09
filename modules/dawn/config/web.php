@@ -1,9 +1,7 @@
 <?php
 
-require_once __DIR__ . '/constant.php';
-
 $config = [
-    'id'           => 'dawn',
+    'id' => 'dawn',
     // 'layout' => 'main',
     'defaultRoute' => 'test/index',
 

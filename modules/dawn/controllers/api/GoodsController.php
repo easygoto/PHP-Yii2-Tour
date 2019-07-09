@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\controllers\api;
 
-use app\controllers\ApiController;
+use app\modules\dawn\controllers\ApiController;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\models\Goods;
 use app\web\Yii;
