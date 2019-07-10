@@ -8,6 +8,7 @@ return array_merge(
 
     // not restful api
     RouteRule::noRest(['module' => 'dawn', 'category' => 'page']),
+    RouteRule::noRest(['module' => 'dawn', 'controller' => 'test']),
 
     // spacial api
     [

@@ -93,9 +93,8 @@ class RouteRule
         } else {
             return [
                 "<module:{$module}>" => "<module>",
-                "<module:{$module}>/<controller:{$controller}>/<action:\w+>" => "<module>/<controller>/<action>",
-                "<module:{$module}>/<cate:{$category}>/<controller:{$controller}>/<action:\w+>" =>
-                    "<module>/<cate>/<controller>/<action>",
+                "<module:{$module}>/<category:{$category}>/<controller:{$controller}>/<action:\w+>" =>
+                    "<module>/<category>/<controller>/<action>",
             ];
         }
     }

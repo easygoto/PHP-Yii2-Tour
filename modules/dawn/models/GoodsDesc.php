@@ -18,7 +18,7 @@ class GoodsDesc extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'b_goods_desc';
+        return 'goods_desc';
     }
 
     /**

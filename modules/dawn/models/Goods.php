@@ -26,7 +26,7 @@ class Goods extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'b_goods';
+        return 'goods';
     }
 
     /**

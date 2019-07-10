@@ -26,17 +26,7 @@ class GoodsController extends PageController
                 'actions' => [
                     'delete' => ['POST'],
                 ],
-            ],
-            [
-                /*
-                 * 默认不过滤
-                 * only 只过滤某些, 其他的不过滤
-                 * except 不过滤某些, 其他的全过滤
-                 * 两者结合使用, 各做各的事情, 其他的不过滤
-                 */
-                'class'  => LoginAuthFilter::className(),
-                'except'   => ['makedata'],
-            ],
+            ]
         ];
     }
 

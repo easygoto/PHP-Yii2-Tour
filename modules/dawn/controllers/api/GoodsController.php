@@ -37,7 +37,9 @@ class GoodsController extends ApiController
         if (!$goods) {
             return $this->failJson('商品不存在(2)');
         }
-        return $this->successJson('', $goods->attributes);
+        return $this->successJson('', [
+            'goods' => $goods->attributes,
+        ]);
     }
 
     public function actionIndex($page = 1)

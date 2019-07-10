@@ -20,7 +20,7 @@ class DataController extends PageController
                 'name'          => '测试商品' . $sn,
                 'wholesale'     => $price * 1.1,
                 'selling_price' => $price * 1.28,
-                'market_price ' => $price * 1.35,
+                'market_price'  => $price * 1.35,
                 'inventory'     => rand(2, 12) * 100,
                 'created_at'    => $now,
                 'updated_at'    => $now,
