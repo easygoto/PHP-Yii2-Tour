@@ -1,5 +1,6 @@
 <?php
 
+$defaultSiteRoute = 'site/index';
 $params = require_once __DIR__ . '/params.php';
 $rules = require_once __DIR__ . '/route.php';
 
@@ -11,7 +12,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'defaultRoute' => 'site/index',
+    'defaultRoute' => $defaultSiteRoute,
 //    'catchAll' => ['site/index'], // 所有的页面都会跳到此动作
     'layout' => 'main',
     'components' => [

@@ -12,6 +12,6 @@ return array_merge(
 
     // spacial api
     [
-        RouteRule::get('/', 'site/index'),
+        RouteRule::get('/', $defaultSiteRoute),
     ]
 );
