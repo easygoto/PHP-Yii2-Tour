@@ -1,6 +1,6 @@
 <?php
 
-namespace Trink\Core\Helper;
+namespace Trink\Core\Helper\Yii;
 
 /**
  * Class RouteRule

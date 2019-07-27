@@ -82,10 +82,10 @@ class GoodsController extends ApiController
             }
 
             $transaction->commit();
-            return $this->asJson(['success' => true, 'msg' => '保存成功']);
+            return $this->successJson('保存成功');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return $this->asJson(['success' => false, 'msg' => $e->getMessage()]);
+            return $this->failJson($e->getMessage());
         }
     }
 
