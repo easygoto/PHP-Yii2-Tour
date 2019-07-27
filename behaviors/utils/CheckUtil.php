@@ -2,7 +2,7 @@
 
 namespace app\behaviors\utils;
 
-use Trink\Core\Helper\ReturnResult;
+use Trink\Core\Helper\Result;
 
 class CheckUtil extends BaseUtil
 {
@@ -36,9 +36,9 @@ class CheckUtil extends BaseUtil
             }
         }
         if (!empty($msgList)) {
-            return ReturnResult::fail('数据录入不全', $msgList)->asArray();
+            return Result::fail('数据录入不全', $msgList)->asArray();
         } else {
-            return ReturnResult::success()->asArray();
+            return Result::success()->asArray();
         }
     }
 }
