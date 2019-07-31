@@ -1,11 +1,11 @@
 <?php
 
-namespace Trink\Core\Helper\Yii2;
+namespace app\web;
 
 /**
  * Class RouteRule
  *
- * @package Trink\Core\Helper\Yii2
+ * @package app\web
  *
  * @method  static array get(string $pattern, string $route, array $defaults = [])
  * @method  static array post(string $pattern, string $route, array $defaults = [])

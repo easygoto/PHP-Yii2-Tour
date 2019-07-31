@@ -16,9 +16,7 @@ $config = [
 //    'catchAll' => ['site/index'], // 所有的页面都会跳到此动作
     'layout' => 'main',
     'components' => [
-        'hello' => [
-            'class' => 'app\components\HelloComponent',
-        ],
+        'result' => ['class' => 'Trink\Core\Helper\Result'],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'study_yii',

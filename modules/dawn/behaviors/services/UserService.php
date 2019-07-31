@@ -8,7 +8,6 @@ use app\modules\dawn\behaviors\utils\UserUtil;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
-use Trink\Core\Helper\Result;
 use app\web\Yii;
 use yii\db\Exception;
 use yii\db\Query;
@@ -40,7 +39,7 @@ class UserService extends BaseService
         $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
         $total = $query->count('1');
         $list  = $query->all();
-        return Result::lists($list, $total, Constant::DEFAULT_PAGE_SIZE);
+        return Yii::$app->result::lists($list, $total, Constant::DEFAULT_PAGE_SIZE);
     }
 
     public static function add($data = [])
@@ -67,12 +66,10 @@ class UserService extends BaseService
             }
 
             $transaction->commit();
-            return Result::success([
-                'id' => $user->id
-            ], Message::ADD_SUCCESS);
+            return Yii::$app->result::success(['id' => $user->id], Message::ADD_SUCCESS);
         } catch (Exception $e) {
             $transaction->rollBack();
-            return Result::fail($e->getMessage(), $user->getErrors());
+            return Yii::$app->result::fail($e->getMessage(), $user->getErrors());
         }
     }
 

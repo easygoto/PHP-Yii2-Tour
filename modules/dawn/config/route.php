@@ -1,6 +1,6 @@
 <?php
 
-use Trink\Core\Helper\Yii2\RouteRule;
+use app\web\RouteRule;
 
 return array_merge(
     RouteRule::base(/*商品*/ 'dawn/api/goods'),

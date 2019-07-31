@@ -2,7 +2,7 @@
 
 namespace app\behaviors\utils;
 
-use Trink\Core\Helper\Result;
+use app\web\Yii;
 
 class CheckUtil extends BaseUtil
 {
@@ -36,9 +36,9 @@ class CheckUtil extends BaseUtil
             }
         }
         if (!empty($msgList)) {
-            return Result::fail('数据录入不全', $msgList)->asArray();
+            return Yii::$app->result::fail('数据录入不全', $msgList)->asArray();
         } else {
-            return Result::success()->asArray();
+            return Yii::$app->result::success()->asArray();
         }
     }
 }
