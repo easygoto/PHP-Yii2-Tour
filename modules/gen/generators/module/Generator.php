@@ -90,11 +90,11 @@ class Generator extends \app\modules\gen\Generator
             return "The module has been generated successfully. You may $link.";
         }
 
-        $output = <<<EOD
+        $output1 = <<<EOD
 <p>The module has been generated successfully.</p>
 <p>To access the module, you need to add this to your application configuration:</p>
 EOD;
-        $code = <<<EOD
+        $code1 = <<<EOD
 <?php
     ......
     'modules' => [
@@ -105,7 +105,22 @@ EOD;
     ......
 EOD;
 
-        return $output . '<pre>' . highlight_string($code, true) . '</pre>';
+        $code2 = <<<EOD
+<?php
+    ......
+    require_once dirname(__DIR__) . '/modules/{$this->moduleID}/config/route.php',
+    ......
+EOD;
+
+        $result = $output1 .
+            '<pre>' .
+            highlight_string($code1, true) .
+            '</pre>' .
+            '<p>And add this to your application route</p>' .
+            '<pre>' .
+            highlight_string($code2, true) .
+            '</pre>';
+        return $result;
     }
 
     /**
@@ -126,6 +141,14 @@ EOD;
         $files[] = new CodeFile(
             $modulePath . '/' . StringHelper::basename($this->moduleClass) . '.php',
             $this->render("module.php")
+        );
+        $files[] = new CodeFile(
+            $modulePath . '/config/web.php',
+            $this->render('web.php')
+        );
+        $files[] = new CodeFile(
+            $modulePath . '/config/route.php',
+            $this->render('route.php')
         );
         $files[] = new CodeFile(
             $modulePath . '/controllers/DefaultController.php',

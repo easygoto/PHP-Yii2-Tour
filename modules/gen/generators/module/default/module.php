@@ -16,6 +16,8 @@ echo "<?php\n";
 
 namespace <?= $ns ?>;
 
+use app\web\Yii;
+
 /**
  * <?= $generator->moduleID ?> module definition class
  */
@@ -32,7 +34,7 @@ class <?= $className ?> extends \yii\base\Module
     public function init()
     {
         parent::init();
-
+        Yii::configure($this, require __DIR__ . '/config/web.php');
         // custom initialization code goes here
     }
 }

@@ -66,6 +66,9 @@ $config = [
     ],
     'params' => $params,
     'modules' => [
+        'api' => [
+            'class' => 'app\modules\api\Module',
+        ],
         'dawn' => [
             'class' => 'app\modules\dawn\Module',
         ],
