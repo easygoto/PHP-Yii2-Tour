@@ -15,7 +15,7 @@ use yii\web\Response;
 
 class UserController extends ApiController
 {
-    public function actionGet($id = 0)
+    public function actionView($id = 0)
     {
         $id = (int)$id;
         if (!$id) {

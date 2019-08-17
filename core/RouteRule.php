@@ -55,7 +55,7 @@ class RouteRule
             ),
             RouteRule::get(
                 "{$baseRoute}/<id:\d+>",
-                "{$baseCtrl}/get"
+                "{$baseCtrl}/view"
             ),
             RouteRule::put(
                 "{$baseRoute}/<id:\d+>",

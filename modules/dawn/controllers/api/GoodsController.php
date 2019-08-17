@@ -27,7 +27,7 @@ class GoodsController extends ApiController
      *   )
      * )
      */
-    public function actionGet($id)
+    public function actionView($id)
     {
         $id = max(0, (int)$id);
         if (!$id) {
