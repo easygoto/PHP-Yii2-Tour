@@ -48,12 +48,12 @@ class GoodsController extends ApiController
 
         $query = new Query();
         $query->select('*');
-        $query->from('`b_goods`');
+        $query->from('`goods`');
         $query->where('is_delete=0');
-        $total      = $query->count();
+        $total = $query->count();
         $query->limit(Constant::DEFAULT_PAGE_SIZE);
         $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
-        $list       = $query->all();
+        $list = $query->all();
 
         return $this->listJson($list, $total);
     }
