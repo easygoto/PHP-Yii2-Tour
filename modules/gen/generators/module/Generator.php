@@ -155,10 +155,6 @@ EOD;
             $this->render("controllers/default.php")
         );
         $files[] = new CodeFile(
-            $modulePath . '/views/layouts/main.php',
-            $this->render("views/main.php")
-        );
-        $files[] = new CodeFile(
             $modulePath . '/views/default/index.php',
             $this->render("views/default.php")
         );
