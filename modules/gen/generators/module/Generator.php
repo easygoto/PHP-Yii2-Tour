@@ -128,7 +128,7 @@ EOD;
      */
     public function requiredTemplates()
     {
-        return ['module.php', 'controller.php', 'view.php'];
+        return ['module.php', 'controllers/default.php', 'views/default.php'];
     }
 
     /**
@@ -144,19 +144,23 @@ EOD;
         );
         $files[] = new CodeFile(
             $modulePath . '/config/web.php',
-            $this->render('web.php')
+            $this->render('config/web.php')
         );
         $files[] = new CodeFile(
             $modulePath . '/config/route.php',
-            $this->render('route.php')
+            $this->render('config/route.php')
         );
         $files[] = new CodeFile(
             $modulePath . '/controllers/DefaultController.php',
-            $this->render("controller.php")
+            $this->render("controllers/default.php")
+        );
+        $files[] = new CodeFile(
+            $modulePath . '/views/layouts/main.php',
+            $this->render("views/main.php")
         );
         $files[] = new CodeFile(
             $modulePath . '/views/default/index.php',
-            $this->render("view.php")
+            $this->render("views/default.php")
         );
 
         return $files;

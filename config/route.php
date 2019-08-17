@@ -4,6 +4,7 @@
 use app\web\RouteRule;
 
 return array_merge(
+    require_once dirname(__DIR__) . '/modules/common/config/route.php',
     require_once dirname(__DIR__) . '/modules/dawn/config/route.php',
 
     // not restful api
