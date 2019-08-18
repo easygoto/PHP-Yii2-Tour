@@ -3,8 +3,9 @@
 use app\web\RouteRule;
 
 return array_merge(
+    RouteRule::base(/*菜单*/ 'common/api/menu'),
+
     // not restful api
-    RouteRule::noRest(['module' => 'common', 'category' => 'api']),
 
     // spacial api
     [
