@@ -2,27 +2,27 @@
 
 namespace app\modules\dawn\models;
 
-use app\web\Yii;
+use Yii;
 
 /**
- * This is the model class for table "b_goods".
+ * This is the model class for table "goods".
  *
  * @property string $id
- * @property string $name
- * @property string $wholesale
- * @property string $selling_price
- * @property string $market_price
- * @property integer $inventory
- * @property string $created_at
- * @property string $updated_at
- * @property string $operated_at
- * @property integer $status
- * @property integer $is_delete
+ * @property string $name 商品
+ * @property string $wholesale 批发价
+ * @property string $selling_price 出售价
+ * @property string $market_price 市场价
+ * @property int $inventory 库存
+ * @property string $created_at 创建时间
+ * @property string $updated_at 更新时间
+ * @property string $operated_at 操作时间
+ * @property int $status 状态
+ * @property int $is_delete 是否删除
  */
 class Goods extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -30,7 +30,7 @@ class Goods extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -38,28 +38,27 @@ class Goods extends \yii\db\ActiveRecord
             [['wholesale', 'selling_price', 'market_price'], 'number'],
             [['inventory', 'status', 'is_delete'], 'integer'],
             [['created_at', 'updated_at', 'operated_at'], 'safe'],
-            [['is_delete'], 'required'],
             [['name'], 'string', 'max' => 100],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
-            'id' => '商品ID',
-            'name' => '商品名称',
-            'wholesale' => '批发价',
-            'selling_price' => '出售价',
-            'market_price' => '市场价',
-            'inventory' => '库存',
-            'created_at' => '创建时间',
-            'updated_at' => '修改时间',
-            'operated_at' => '操作时间',
-            'status' => '状态',
-            'is_delete' => '是否删除',
+            'id' => 'ID',
+            'name' => 'Name',
+            'wholesale' => 'Wholesale',
+            'selling_price' => 'Selling Price',
+            'market_price' => 'Market Price',
+            'inventory' => 'Inventory',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'operated_at' => 'Operated At',
+            'status' => 'Status',
+            'is_delete' => 'Is Delete',
         ];
     }
 }

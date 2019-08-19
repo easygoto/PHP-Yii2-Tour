@@ -2,11 +2,11 @@
 
 namespace app\modules\dawn\controllers\api;
 
+use app\modules\common\models\User;
 use app\modules\dawn\controllers\ApiController;
 use app\modules\dawn\behaviors\services\UserService;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
-use app\modules\dawn\models\User;
 use app\modules\dawn\behaviors\utils\UserUtil;
 use app\behaviors\utils\BaseUtil;
 use app\behaviors\utils\CheckUtil;

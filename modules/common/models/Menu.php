@@ -7,8 +7,8 @@ use Yii;
 /**
  * This is the model class for table "menu".
  *
- * @property int $id
- * @property int $pid 父级菜单id
+ * @property string $id
+ * @property string $pid 父级菜单id
  * @property string $sn 编号
  * @property string $name 名称
  * @property string $url 网址
@@ -33,10 +33,8 @@ class Menu extends \yii\db\ActiveRecord
     {
         return [
             [['pid', 'sort', 'status'], 'integer'],
-            [['sn'], 'required'],
             [['sn', 'name', 'icon'], 'string', 'max' => 50],
             [['url'], 'string', 'max' => 200],
-            [['sn'], 'unique'],
         ];
     }
 
