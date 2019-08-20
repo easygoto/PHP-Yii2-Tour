@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\common\models;
+namespace app\modules\dawn\models;
 
 use Yii;
 
@@ -27,7 +27,7 @@ class User extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'user';
+        return '{{%dawn_user}}';
     }
 
     /**

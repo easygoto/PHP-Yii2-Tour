@@ -4,6 +4,7 @@ namespace app\modules\dawn\controllers\api;
 
 use app\modules\dawn\controllers\ApiController;
 use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\Goods;
 use app\web\Yii;
 use yii\db\Exception;
@@ -62,9 +63,8 @@ class GoodsController extends ApiController
     {
         $data        = Yii::$app->request->post();
         $transaction = Yii::$app->db->beginTransaction();
+        $goods = new Goods;
         try {
-            $goods = new Goods;
-
             $now                  = date('Y-m-d H:i:s');
             $goods->name          = $this->trimValue($data, 'name');
             $goods->wholesale     = isset($data['wholesale']) ? (float)($data['wholesale']) : 0;
@@ -78,14 +78,14 @@ class GoodsController extends ApiController
             $goods->is_delete     = 0;
 
             if (!$goods->save()) {
-                throw new Exception('未保存成功');
+                throw new Exception(Message::CREATE_FAIL);
             }
 
             $transaction->commit();
-            return $this->successJson('保存成功');
+            return $this->successJson(Message::CREATE_SUCCESS);
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return $this->failJson($e->getMessage());
+            return $this->failJson($e->getMessage(), $goods->getErrors());
         }
     }
 

@@ -5,14 +5,14 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%menu}}`.
  */
-class m190819_134140_create_menu_table extends Migration
+class m190819_134140_create_dawn_menu_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%menu}}', [
+        $this->createTable('{{%dawn_menu}}', [
             'id' => $this->bigPrimaryKey()->unsigned(),
             'pid' => $this->bigInteger()->unsigned()->notNull()->defaultValue(0)->comment('父级菜单id'),
             'sn' => $this->string(50)->notNull()->defaultValue('')->comment('编号'),
@@ -29,6 +29,6 @@ class m190819_134140_create_menu_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%menu}}');
+        $this->dropTable('{{%dawn_menu}}');
     }
 }

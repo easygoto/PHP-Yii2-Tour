@@ -9,6 +9,7 @@ use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
 use app\web\Yii;
+use Trink\Core\Helper\Result;
 use yii\db\Exception;
 use yii\db\Query;
 
@@ -38,38 +39,38 @@ class UserService extends BaseService
         $query->limit(Constant::DEFAULT_PAGE_SIZE);
         $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
         $total = $query->count('1');
-        $list  = $query->all();
-        return Yii::$app->result::lists($list, $total, Constant::DEFAULT_PAGE_SIZE);
+        $list = $query->all();
+        return Result::lists($list, $total, Constant::DEFAULT_PAGE_SIZE);
     }
 
     public static function add($data = [])
     {
-        $db          = Yii::$app->db;
+        $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
 
         $user = new User;
         try {
-            $user->user_name     = BaseUtil::getTrimValue($data, 'user_name');
-            $user->real_name     = BaseUtil::getTrimValue($data, 'real_name');
-            $gender              = BaseUtil::getTrimValue($data, 'gender');
-            $user->gender        = array_key_exists($gender, UserUtil::GENDER) ? $gender : 2; // 默认未知
+            $user->user_name = BaseUtil::getTrimValue($data, 'user_name');
+            $user->real_name = BaseUtil::getTrimValue($data, 'real_name');
+            $gender = BaseUtil::getTrimValue($data, 'gender');
+            $user->gender = array_key_exists($gender, UserUtil::GENDER) ? $gender : 2; // 默认未知
             $user->mobile_number = BaseUtil::getTrimValue($data, 'mobile_number');
-            $user->created_at    = date('Y-m-d H:i:s');
-            $user->updated_at    = '';
-            $user->operated_at   = '';
+            $user->created_at = date('Y-m-d H:i:s');
+            $user->updated_at = '';
+            $user->operated_at = '';
             $user->last_login_at = '';
-            $user->status        = 1; // 正常
-            $user->deleted       = Constant::DEFAULT_NOT_DELETE;
+            $user->status = 1; // 正常
+            $user->is_delete = Constant::DEFAULT_NOT_DELETE;
 
             if (!$user->save()) {
                 throw new Exception('记录未保存成功');
             }
 
             $transaction->commit();
-            return Yii::$app->result::success(['id' => $user->id], Message::ADD_SUCCESS);
+            return Result::success(['id' => $user->id], Message::ADD_SUCCESS);
         } catch (Exception $e) {
             $transaction->rollBack();
-            return Yii::$app->result::fail($e->getMessage(), $user->getErrors());
+            return Result::fail($e->getMessage(), $user->getErrors());
         }
     }
 

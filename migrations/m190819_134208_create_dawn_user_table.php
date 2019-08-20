@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%user}}`.
  */
-class m190819_134208_create_user_table extends Migration
+class m190819_134208_create_dawn_user_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,7 @@ class m190819_134208_create_user_table extends Migration
         `status` int(11) DEFAULT NULL COMMENT '状态',
         `is_delete` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否删除',
          */
-        $this->createTable('{{%user}}', [
+        $this->createTable('{{%dawn_user}}', [
             'id' => $this->primaryKey()->unsigned(),
             'user_name' => $this->string(50)->notNull()->defaultValue('')->comment('用户名'),
             'secret_code' => $this->string(50)->notNull()->defaultValue('')->comment('密码'),
@@ -37,6 +37,6 @@ class m190819_134208_create_user_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('{{%dawn_user}}');
     }
 }

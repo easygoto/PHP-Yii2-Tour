@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\common\models;
+namespace app\modules\dawn\models;
 
 use Yii;
 
@@ -23,7 +23,7 @@ class Menu extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'menu';
+        return '{{%dawn_menu}}';
     }
 
     /**

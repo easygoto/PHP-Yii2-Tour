@@ -57,6 +57,10 @@ class RouteRule
                 "{$baseRoute}/<id:\d+>",
                 "{$baseCtrl}/view"
             ),
+            RouteRule::patch(
+                "{$baseRoute}/<id:\d+>",
+                "{$baseCtrl}/update"
+            ),
             RouteRule::put(
                 "{$baseRoute}/<id:\d+>",
                 "{$baseCtrl}/update"

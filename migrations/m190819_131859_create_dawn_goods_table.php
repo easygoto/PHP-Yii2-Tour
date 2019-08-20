@@ -5,14 +5,14 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%goods}}`.
  */
-class m190819_131859_create_goods_table extends Migration
+class m190819_131859_create_dawn_goods_table extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->createTable('{{%goods}}', [
+        $this->createTable('{{%dawn_goods}}', [
             'id' => $this->bigPrimaryKey()->unsigned(),
             'name' => $this->string(100)->notNull()->defaultValue('')->comment('商品'),
             'wholesale' => $this->decimal(10, 2)->unsigned()->notNull()->defaultValue(0.00)->comment('批发价'),
@@ -31,6 +31,6 @@ class m190819_131859_create_goods_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%goods}}');
+        $this->dropTable('{{%dawn_goods}}');
     }
 }
