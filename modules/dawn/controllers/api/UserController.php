@@ -2,15 +2,13 @@
 
 namespace app\modules\dawn\controllers\api;
 
-use app\behaviors\utils\BaseUtil;
-use app\behaviors\utils\CheckUtil;
-use app\modules\dawn\behaviors\services\UserService;
-use app\modules\dawn\behaviors\utils\UserUtil;
 use app\modules\dawn\controllers\ApiController;
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
 use app\web\Yii;
+use Trink\Core\Helper\Arrays;
+use yii\db\Exception;
 use yii\web\Response;
 
 class UserController extends ApiController
@@ -53,8 +51,8 @@ class UserController extends ApiController
         $offset = ($page - 1) * Constant::DEFAULT_PAGE_SIZE;
         $userObj = User::find();
         foreach ($keywords as $key => $value) {
-            if ($key == 'status' && array_key_exists($value, UserUtil::STATUS)) {
-                $userObj = $userObj->where(['status' => UserUtil::STATUS[$value]]);
+            if ($key == 'status' && ($statusValue = Arrays::get(User::STATUS, $value))) {
+                $userObj = $userObj->where(['status' => $statusValue]);
             }
         }
         $userObj = $userObj->offset($offset)->limit(Constant::DEFAULT_PAGE_SIZE);
@@ -106,24 +104,21 @@ class UserController extends ApiController
      */
     public function actionCreate()
     {
-        $request = Yii::$app->request;
-        $data    = $request->post();
-
-        // check data
-        $check_result = CheckUtil::verify($data, [
-            'user_name'     => ['label' => '用户名', 'type' => 'string'],
-            'mobile_number' => ['label' => '手机号', 'type' => 'mobile'],
-        ]);
-        if (!BaseUtil::getTrimValue($check_result, 'success')) {
-            return $this->failJson($check_result);
+        $params = Yii::$app->request->post();
+        $transaction = Yii::$app->db->beginTransaction();
+        $user = new User;
+        try {
+            $user->setAttributes($params);
+            $user->created_at = date('Y-m-d H:i:s');
+            if (!$user->save()) {
+                throw new Exception(Message::CREATE_FAIL);
+            }
+            $transaction->commit();
+            return $this->successJson(Message::CREATE_SUCCESS, ['id' => $user->id]);
+        } catch (Exception $e) {
+            $transaction->rollBack();
+            return $this->failJson($e->getMessage(), $user->getErrors());
         }
-
-        // add to db
-        $result = UserService::add($data);
-        if ($result->isFail()) {
-            return $this->failJson($result);
-        }
-        return $this->successJson(Message::CREATE_SUCCESS, $result);
     }
 
     public function actionUpdate($id)

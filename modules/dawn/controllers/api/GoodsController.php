@@ -7,7 +7,7 @@ use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\Goods;
 use app\web\Yii;
-use yii\db\Exception;
+use Exception;
 use yii\db\Query;
 
 class GoodsController extends ApiController
@@ -61,42 +61,23 @@ class GoodsController extends ApiController
 
     public function actionCreate()
     {
-        $data        = Yii::$app->request->post();
+        $params = Yii::$app->request->post();
         $transaction = Yii::$app->db->beginTransaction();
         $goods = new Goods;
         try {
-            $now                  = date('Y-m-d H:i:s');
-            $goods->name          = $this->trimValue($data, 'name');
-            $goods->wholesale     = isset($data['wholesale']) ? (float)($data['wholesale']) : 0;
-            $goods->selling_price = isset($data['selling_price']) ? (float)($data['selling_price']) : 0;
-            $goods->market_price  = isset($data['market_price']) ? (float)($data['market_price']) : 0;
-            $goods->inventory     = isset($data['inventory']) ? (int)($data['inventory']) : 0;
-            $goods->created_at    = $now;
-            $goods->updated_at    = $now;
-            $goods->operated_at   = $now;
-            $goods->status        = 1;
-            $goods->is_delete     = 0;
-
+            $goods->setAttributes($params);
+            $now = date('Y-m-d H:i:s');
+            $goods->created_at = $now;
+            $goods->updated_at = $now;
+            $goods->operated_at = $now;
             if (!$goods->save()) {
                 throw new Exception(Message::CREATE_FAIL);
             }
-
             $transaction->commit();
             return $this->successJson(Message::CREATE_SUCCESS);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $transaction->rollBack();
             return $this->failJson($e->getMessage(), $goods->getErrors());
         }
-    }
-
-    private function trimValue($arr, $key)
-    {
-        if (!isset($arr[$key])) {
-            return null;
-        }
-        if (is_string($arr[$key])) {
-            return trim($arr[$key]);
-        }
-        return $arr[$key];
     }
 }

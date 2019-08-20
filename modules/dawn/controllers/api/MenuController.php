@@ -47,7 +47,7 @@ class MenuController extends ApiController
         if (!$menu->save(true)) {
             return $this->failJson(Message::CREATE_FAIL, $menu->getErrors());
         }
-        return $this->successJson(Message::CREATE_SUCCESS, ['id' => $menu->getAttribute('id'), 'params' => $params]);
+        return $this->successJson(Message::CREATE_SUCCESS, ['id' => $menu->getAttribute('id')]);
     }
 
     public function actionUpdate($id)
@@ -61,7 +61,7 @@ class MenuController extends ApiController
         if (!$menu->save(true)) {
             return $this->failJson(Message::UPDATE_FAIL, $menu->getErrors());
         }
-        return $this->successJson(Message::UPDATE_SUCCESS, []);
+        return $this->successJson(Message::UPDATE_SUCCESS);
     }
 
     public function actionDelete($id)
