@@ -5,7 +5,7 @@ namespace app\modules\dawn\models;
 use Yii;
 
 /**
- * This is the model class for table "menu".
+ * This is the model class for table "{{%dawn_menu}}".
  *
  * @property string $id
  * @property string $pid 父级菜单id

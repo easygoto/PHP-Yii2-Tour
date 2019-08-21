@@ -10,7 +10,6 @@
 /* @var $queryClassName string query class name */
 /* @var $tableSchema yii\db\TableSchema */
 /* @var $properties array list of properties (property => [type, name. comment]) */
-/* @var $labels string[] list of attribute labels (name => label) */
 /* @var $rules string[] list of validation rules */
 /* @var $relations array list of relations (name => relation declaration) */
 
@@ -68,8 +67,8 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
     public function attributeLabels()
     {
         return [
-<?php foreach ($labels as $name => $label): ?>
-            <?= "'$name' => " . $generator->generateString($label) . ",\n" ?>
+<?php foreach ($properties as $property => $data): ?>
+            <?= "'$property' => " . ($data['comment'] ? "'" . strtr($data['comment'], ["\n" => ' ']) . "'" : $generator->generateString($property)) . ",\n" ?>
 <?php endforeach; ?>
         ];
     }
