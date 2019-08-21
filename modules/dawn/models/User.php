@@ -23,15 +23,14 @@ use Yii;
 class User extends \yii\db\ActiveRecord
 {
     const STATUS = [
-        1 => '正常',
-        2 => '启用',
-        4 => '停用',
+        'NORMAL' => 1,
+        'DISABLE' => 2,
     ];
 
     const GENDER = [
-        0 => '女',
-        1 => '男',
-        2 => '未知',
+        'MALE' => 1,
+        'FEMALE' => 0,
+        'UNKNOWN' => 2,
     ];
 
     /**

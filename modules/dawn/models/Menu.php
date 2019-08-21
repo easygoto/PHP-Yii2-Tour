@@ -19,7 +19,7 @@ use Yii;
 class Menu extends \yii\db\ActiveRecord
 {
     const STATUS = [
-        'ENABLE' => 1,
+        'NORMAL' => 1,
         'DISABLE' => 2,
     ];
 

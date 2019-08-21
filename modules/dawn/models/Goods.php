@@ -21,6 +21,11 @@ use Yii;
  */
 class Goods extends \yii\db\ActiveRecord
 {
+    const STATUS = [
+        'NORMAL' => 1,
+        'DISABLE' => 2,
+    ];
+
     /**
      * {@inheritdoc}
      */
