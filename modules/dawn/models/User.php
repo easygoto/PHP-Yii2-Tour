@@ -5,7 +5,7 @@ namespace app\modules\dawn\models;
 use Yii;
 
 /**
- * This is the model class for table "user".
+ * This is the model class for table "{{%dawn_user}}".
  *
  * @property int $id
  * @property string $user_name 用户名
@@ -61,17 +61,17 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_name' => 'User Name',
-            'secret_code' => 'Secret Code',
-            'real_name' => 'Real Name',
-            'mobile_number' => 'Mobile Number',
-            'gender' => 'Gender',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'operated_at' => 'Operated At',
-            'last_login_at' => 'Last Login At',
-            'status' => 'Status',
-            'is_delete' => 'Is Delete',
+            'user_name' => '用户名',
+            'secret_code' => '密码',
+            'real_name' => '真实姓名',
+            'mobile_number' => '手机号码',
+            'gender' => '性别',
+            'created_at' => '创建时间',
+            'updated_at' => '更新信息时间',
+            'operated_at' => '操作时间',
+            'last_login_at' => '最后一次登录时间',
+            'status' => '状态',
+            'is_delete' => '是否删除',
         ];
     }
 }
