@@ -8,7 +8,8 @@ use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\Goods;
 use app\web\Yii;
 use Exception;
-use yii\db\Query;
+use Trink\Core\Helper\Format;
+use yii\web\Response;
 
 class GoodsController extends ApiController
 {
@@ -27,36 +28,38 @@ class GoodsController extends ApiController
      *       description="successful operation"
      *   )
      * )
+     *
+     * @param $id
+     *
+     * @return Response
      */
     public function actionView($id)
     {
-        $id = max(0, (int)$id);
-        if (!$id) {
-            return $this->failJson('商品不存在(1)');
-        }
         $goods = Goods::findOne($id);
         if (!$goods) {
-            return $this->failJson('商品不存在(2)');
+            return $this->failJson(Message::NOT_EXISTS);
         }
         return $this->successJson('', [
             'goods' => $goods->attributes,
         ]);
     }
 
-    public function actionIndex($page = 1)
+    public function actionIndex($page = Constant::DEFAULT_PAGE)
     {
-        $page = max(1, (int)$page);
+        // 构造条件
+        $offset = ($page - 1) * Constant::DEFAULT_PAGE_SIZE;
+        $goodsObj = Goods::find()->offset($offset)->limit(Constant::DEFAULT_PAGE_SIZE);
+        if (!$goodsObj) {
+            return $this->listJson([], 0);
+        }
 
-        $query = new Query();
-        $query->select('*');
-        $query->from('`goods`');
-        $query->where('is_delete=0');
-        $total = $query->count();
-        $query->limit(Constant::DEFAULT_PAGE_SIZE);
-        $query->offset(($page - 1) * Constant::DEFAULT_PAGE_SIZE);
-        $list = $query->all();
-
-        return $this->listJson($list, $total);
+        // 关键信息
+        $goodsTotal = $goodsObj->count('1');
+        $goodsList = array_map(function (Goods $goods) {
+            return $goods->getAttributes(null, ['is_delete']);
+        }, $goodsObj->all());
+        $goodsList = Format::array2CamelCase($goodsList);
+        return $this->listJson($goodsList, $goodsTotal);
     }
 
     public function actionCreate()

@@ -8,6 +8,7 @@ use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\Menu;
 use app\web\Yii;
+use Trink\Core\Helper\Format;
 
 class MenuController extends ApiController
 {
@@ -22,10 +23,10 @@ class MenuController extends ApiController
 
         // 关键信息
         $menuTotal = $menuObj->count('1');
-        $menuList = [];
-        foreach ($menuObj->all() as $menu) {
-            $menuList[] = $menu->getAttributes(null, ['pid']);
-        }
+        $menuList = array_map(function (Menu $menu) {
+            return $menu->getAttributes(null, ['pid']);
+        }, $menuObj->all());
+        $menuList = Format::array2CamelCase($menuList);
         return $this->listJson($menuList, $menuTotal);
     }
 
