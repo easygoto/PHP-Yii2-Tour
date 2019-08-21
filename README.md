@@ -22,3 +22,10 @@ vendor/yiisoft/yii2/web/UrlManager.php->parseRequest:
 vendor/yiisoft/yii2/web/UrlRule.php->parseRequest:
     1. 规则和 mode 设置相关, PARSING_ONLY, CREATION_ONLY 等, 一些简单的处理
 ```
+
+```php
+vendor/yiisoft/yii2/validators
+    1. 默认所有的验证器都在此文件夹下，可以自定义，但 Validator 中 $builtInValidators 属性也要添加
+    2. 对于各验证器的 message，{attribute} 可以自定义提示信息，而这个值在 Model::attributeLabels 中定义
+```
+

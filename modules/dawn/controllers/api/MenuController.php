@@ -47,7 +47,7 @@ class MenuController extends ApiController
         if (!$menu->save(true)) {
             return $this->failJson(Message::CREATE_FAIL, $menu->getErrors());
         }
-        return $this->successJson(Message::CREATE_SUCCESS, ['id' => $menu->getAttribute('id')]);
+        return $this->successJson(Message::CREATE_SUCCESS, ['id' => $menu->getAttribute('id'), 'menu' => $menu]);
     }
 
     public function actionUpdate($id)
