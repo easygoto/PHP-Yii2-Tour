@@ -29,7 +29,7 @@ class m190819_134208_create_dawn_user_table extends Migration
             'last_login_at' => $this->dateTime()->comment('最后一次登录时间'),
             'status' => $this->integer()->notNull()->defaultValue(1)->comment('状态'),
             'is_delete' => $this->boolean()->notNull()->defaultValue(false)->comment('是否删除'),
-        ]);
+        ], 'COMMENT "用户"');
     }
 
     /**

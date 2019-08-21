@@ -12,7 +12,7 @@ class CreateController extends Controller
 {
     public function actionGoods($nums = 100)
     {
-        print "create goods start ...\n";
+        print "create goods ... ";
         for ($i = 0; $i < $nums; $i ++) {
             $price = rand(200, 999);
             $now = date('Y-m-d H:i:s');
@@ -29,7 +29,7 @@ class CreateController extends Controller
             $goods->is_delete = Constant::DEFAULT_NOT_DELETE;
             $goods->save();
         }
-        print "create goods done ...\n";
+        print "[OK]\n";
         return ExitCode::OK;
     }
 }

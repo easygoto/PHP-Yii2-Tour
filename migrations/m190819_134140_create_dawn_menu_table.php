@@ -21,7 +21,7 @@ class m190819_134140_create_dawn_menu_table extends Migration
             'sort' => $this->smallInteger()->unsigned()->notNull()->defaultValue(0)->comment('排序'),
             'icon' => $this->string(50)->notNull()->defaultValue('')->comment('图标'),
             'status' => $this->tinyInteger()->unsigned()->notNull()->defaultValue(1)->comment('状态(1启用, 0禁用)'),
-        ]);
+        ], 'COMMENT "菜单"');
     }
 
     /**

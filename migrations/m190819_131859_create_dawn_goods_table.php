@@ -24,7 +24,7 @@ class m190819_131859_create_dawn_goods_table extends Migration
             'operated_at' => $this->datetime()->comment('操作时间'),
             'status' => $this->tinyInteger()->unsigned()->notNull()->defaultValue(1)->comment('状态'),
             'is_delete' => $this->boolean()->notNull()->defaultValue(false)->comment('是否删除'),
-        ]);
+        ], 'COMMENT "商品"');
     }
     /**
      * {@inheritdoc}
