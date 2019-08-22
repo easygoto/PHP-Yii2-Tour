@@ -7,12 +7,6 @@ use app\helpers\Constant;
 use Trink\Core\Helper\Result;
 use yii\web\Controller;
 
-/**
- * @OA\Info(
- *   title="接口文档",
- *   version="1.0.0"
- * )
- */
 class ApiController extends Controller
 {
     public $defaultAction = 'index';

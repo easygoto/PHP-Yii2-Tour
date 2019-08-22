@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "{{%dawn_menu}}".
  *
  * @property string $id
- * @property string $pid 父级菜单id
+ * @property string $pid 父级菜单ID
  * @property string $sn 编号
  * @property string $name 名称
  * @property string $url 网址
@@ -36,11 +36,14 @@ class Menu extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        $menuIdList = Menu::find()->select('id')->asArray()->column();
+        $menuIdList = array_merge([0], array_map(function (Menu $menu) {
+            return (int)$menu->id;
+        }, Menu::find()->all()));
         return [
-            [['name'], 'required', 'message' => '{attribute}不可为空'],
+            [['name', 'pid'], 'required', 'message' => '{attribute}不可为空'],
             [['pid', 'sort', 'status'], 'integer', 'min' => 0, 'message' => '{attribute}必须为非负整数'],
             [['pid'], 'in', 'range' => $menuIdList, 'message' => '{attribute}无效'],
+            [['pid'], 'compare', 'compareAttribute' => 'id', 'operator' => '!=', 'message' => '{attribute}不可和ID相同'],
             [['status'], 'in', 'range' => array_values(Menu::STATUS)],
             [['sn', 'name', 'icon'], 'string', 'max' => 50, 'message' => '{attribute}不可超过50个字符'],
             [['url'], 'string', 'max' => 200, 'message' => '{attribute}不可超过200个字符'],
@@ -55,7 +58,7 @@ class Menu extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pid' => '父级菜单id',
+            'pid' => '父级菜单ID',
             'sn' => '编号',
             'name' => '名称',
             'url' => '网址',

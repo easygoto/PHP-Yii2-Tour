@@ -1,0 +1,233 @@
+openapi: 3.0.0
+info:
+  title: 接口文档
+  version: 1.0.0
+paths:
+  '/dawn/v1/product/{goodsId}':
+    get:
+      tags:
+        - 商品相关接口
+      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionView'
+      parameters:
+        -
+          name: goodsId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+  '/dawn/api/menu/list/{page}':
+    get:
+      tags:
+        - 菜单相关接口
+      operationId: 'app\modules\dawn\controllers\api\MenuController::actionIndex'
+      parameters:
+        -
+          name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+  '/dawn/api/menu/{id}':
+    get:
+      tags:
+        - 菜单相关接口
+      operationId: 'app\modules\dawn\controllers\api\MenuController::actionView'
+      parameters:
+        -
+          name: id
+          in: path
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+    put:
+      tags:
+        - 菜单相关接口
+      operationId: 'app\modules\dawn\controllers\api\MenuController::actionUpdate'
+      parameters:
+        -
+          name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        -
+          name: pid
+          in: path
+          required: false
+          schema:
+            type: integer
+        -
+          name: sn
+          in: path
+          required: false
+          schema:
+            type: string
+        -
+          name: name
+          in: path
+          required: false
+          schema:
+            type: string
+        -
+          name: url
+          in: path
+          required: false
+          schema:
+            type: string
+        -
+          name: sort
+          in: path
+          required: false
+          schema:
+            type: integer
+        -
+          name: icon
+          in: path
+          required: false
+          schema:
+            type: integer
+        -
+          name: status
+          in: path
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - 菜单相关接口
+      operationId: 'app\modules\dawn\controllers\api\MenuController::actionDelete'
+      parameters:
+        -
+          name: id
+          in: path
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+  /dawn/api/menu:
+    post:
+      tags:
+        - 菜单相关接口
+      operationId: 'app\modules\dawn\controllers\api\MenuController::actionCreate'
+      parameters:
+        -
+          name: pid
+          in: path
+          required: false
+          schema:
+            type: integer
+        -
+          name: sn
+          in: path
+          required: false
+          schema:
+            type: string
+        -
+          name: name
+          in: path
+          required: false
+          schema:
+            type: string
+        -
+          name: url
+          in: path
+          required: false
+          schema:
+            type: string
+        -
+          name: sort
+          in: path
+          required: false
+          schema:
+            type: integer
+        -
+          name: icon
+          in: path
+          required: false
+          schema:
+            type: integer
+        -
+          name: status
+          in: path
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+      responses:
+        '200':
+          description: ''
+  '/dawn/api/user/list/{page}':
+    get:
+      tags:
+        - 用户相关接口
+      operationId: 'app\modules\dawn\controllers\api\UserController::actionIndex'
+      parameters:
+        -
+          name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+  /dawn/api/user:
+    post:
+      tags:
+        - 用户相关接口
+      operationId: 'app\modules\dawn\controllers\api\UserController::actionCreate'
+      parameters:
+        -
+          name: user_name
+          in: path
+          description: 用户名
+          required: true
+          schema:
+            type: string
+        -
+          name: real_name
+          in: path
+          description: 真实姓名
+          required: false
+          schema:
+            type: string
+        -
+          name: gender
+          in: path
+          description: '0(女),1(男),2(未知)'
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+              - 2
+        -
+          name: mobile_number
+          in: path
+          description: 手机号码
+          required: true
+          schema:
+            type: mobile
+      responses:
+        '200':
+          description: ''

@@ -8,25 +8,18 @@ use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\Goods;
 use app\web\Yii;
 use Exception;
+use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Format;
 use yii\web\Response;
 
 class GoodsController extends ApiController
 {
-
     /**
      * @OA\Get(
-     *   tags={"商品相关接口"},
-     *   path="/api/v1/product/{goodsId}",
-     *   @OA\Parameter(name="goodsId",
-     *     in="path",
-     *     required=true,
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Response(
-     *       response="default",
-     *       description="successful operation"
-     *   )
+     *     tags={"商品相关接口"},
+     *     path="/dawn/api/goods/{id}",
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="")
      * )
      *
      * @param $id

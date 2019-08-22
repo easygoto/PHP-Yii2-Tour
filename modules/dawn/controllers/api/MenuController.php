@@ -8,10 +8,24 @@ use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\Menu;
 use app\web\Yii;
+use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Format;
+use yii\web\Response;
 
 class MenuController extends ApiController
 {
+    /**
+     * @OA\Get(
+     *     tags={"菜单相关接口"},
+     *     path="/dawn/api/menu/list/{page}",
+     *     @OA\Parameter(name="page", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="")
+     * )
+     *
+     * @param int $page
+     *
+     * @return Response
+     */
     public function actionIndex($page = Constant::DEFAULT_PAGE)
     {
         // 构造条件
@@ -30,6 +44,18 @@ class MenuController extends ApiController
         return $this->listJson($menuList, $menuTotal);
     }
 
+    /**
+     * @OA\Get(
+     *     tags={"菜单相关接口"},
+     *     path="/dawn/api/menu/{id}",
+     *     @OA\Parameter(name="id", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="")
+     * )
+     *
+     * @param $id
+     *
+     * @return Response
+     */
     public function actionView($id)
     {
         $menuObj = Menu::findOne($id);
@@ -40,6 +66,22 @@ class MenuController extends ApiController
         return $this->successJson(Message::SUCCESS, $menu);
     }
 
+    /**
+     * @OA\Post(
+     *     tags={"菜单相关接口"},
+     *     path="/dawn/api/menu",
+     *     @OA\Parameter(name="pid", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="sn", in="path", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="name", in="path", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="url", in="path", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="sort", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="icon",in="path",required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="status",in="path",required=false, @OA\Schema(type="integer", enum={1,2})),
+     *     @OA\Response(response=200, description="")
+     * )
+     *
+     * @return Response
+     */
     public function actionCreate()
     {
         $params = Yii::$app->request->post();
@@ -51,6 +93,25 @@ class MenuController extends ApiController
         return $this->successJson(Message::CREATE_SUCCESS, ['id' => $menu->getAttribute('id'), 'menu' => $menu]);
     }
 
+    /**
+     * @OA\Put(
+     *     tags={"菜单相关接口"},
+     *     path="/dawn/api/menu/{id}",
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="pid", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="sn", in="path", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="name", in="path", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="url", in="path", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="sort", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="icon", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="status", in="path", required=false, @OA\Schema(type="integer", enum={1,2})),
+     *     @OA\Response(response=200, description="")
+     * )
+     *
+     * @param $id
+     *
+     * @return Response
+     */
     public function actionUpdate($id)
     {
         $menu = Menu::findOne($id);
@@ -62,9 +123,21 @@ class MenuController extends ApiController
         if (!$menu->save(true)) {
             return $this->failJson(Message::UPDATE_FAIL, $menu->getErrors());
         }
-        return $this->successJson(Message::UPDATE_SUCCESS);
+        return $this->successJson(Message::UPDATE_SUCCESS, ['params' => $params]);
     }
 
+    /**
+     * @OA\Delete(
+     *     tags={"菜单相关接口"},
+     *     path="/dawn/api/menu/{id}",
+     *     @OA\Parameter(name="id", in="path", required=false, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="")
+     * )
+     *
+     * @param $id
+     *
+     * @return Response
+     */
     public function actionDelete($id)
     {
         $menu = Menu::findOne($id);

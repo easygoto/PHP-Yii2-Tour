@@ -7,6 +7,7 @@ use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
 use app\web\Yii;
+use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Arrays;
 use yii\db\Exception;
 use yii\web\Response;
@@ -28,17 +29,10 @@ class UserController extends ApiController
 
     /**
      * @OA\Get(
-     *   tags={"用户相关接口"},
-     *   path="/dawn/api/user/list/{page}",
-     *   @OA\Parameter(name="page",
-     *     in="path",
-     *     required=true,
-     *     @OA\Schema(type="integer")
-     *   ),
-     *   @OA\Response(
-     *       response="default",
-     *       description="successful operation"
-     *   )
+     *     tags={"用户相关接口"},
+     *     path="/dawn/api/user/list/{page}",
+     *     @OA\Parameter(name="page", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="")
      * )
      *
      * @param int $page
@@ -67,39 +61,15 @@ class UserController extends ApiController
 
     /**
      * @OA\Post(
-     *   tags={"用户相关接口"},
-     *   path="/dawn/api/user",
-     *   @OA\Parameter(name="user_name",
-     *     in="path",
-     *     required=true,
-     *     description="用户名",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(name="real_name",
-     *     in="path",
-     *     required=false,
-     *     description="真实姓名",
-     *     @OA\Schema(type="string")
-     *   ),
-     *   @OA\Parameter(name="gender",
-     *     in="path",
-     *     required=false,
-     *     description="0(女),1(男),2(未知)",
-     *     @OA\Schema(
-     *       type="integer",
-     *       enum={0, 1, 2}
-     *     )
-     *   ),
-     *   @OA\Parameter(name="mobile_number",
-     *     in="path",
-     *     required=true,
-     *     description="手机号码",
-     *     @OA\Schema(type="mobile")
-     *   ),
-     *   @OA\Response(
-     *       response="default",
-     *       description="successful operation"
-     *   )
+     *     tags={"用户相关接口"},
+     *     path="/dawn/api/user",
+     *     @OA\Parameter(name="user_name", in="path", required=true, description="用户名", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="real_name", in="path", required=false, description="真实姓名", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="gender", in="path", required=false, description="0(女),1(男),2(未知)", @OA\Schema(
+     *                                  type="integer", enum={0, 1, 2})),
+     *     @OA\Parameter(name="mobile_number", in="path", required=true, description="手机号码",
+     *                                         @OA\Schema(type="mobile")),
+     *     @OA\Response(response=200, description="")
      * )
      */
     public function actionCreate()
@@ -126,7 +96,7 @@ class UserController extends ApiController
         $request = Yii::$app->request;
         if ($request->isPut) {
             $data = $request->bodyParams;
-//            UserService::edit();
+            //            UserService::edit();
             return $this->successJson(Message::UPDATE_SUCCESS, $data);
         } elseif ($request->isPatch) {
             $data = $request->bodyParams;
