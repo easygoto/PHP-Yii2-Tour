@@ -3,14 +3,14 @@ info:
   title: 接口文档
   version: 1.0.0
 paths:
-  '/dawn/v1/product/{goodsId}':
+  '/dawn/api/goods/{id}':
     get:
       tags:
         - 商品相关接口
       operationId: 'app\modules\dawn\controllers\api\GoodsController::actionView'
       parameters:
         -
-          name: goodsId
+          name: id
           in: path
           required: true
           schema:

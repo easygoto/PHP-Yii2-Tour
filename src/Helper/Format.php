@@ -45,6 +45,19 @@ class Format
         return $temp;
     }
 
+    public static function array2UnderScore($list, $separator = '_')
+    {
+        $temp = [];
+        foreach ($list as $key => $value) {
+            $newKey = self::toUnderScore($key, $separator);
+            if (is_array($value)) {
+                $value = self::array2UnderScore($value, $separator);
+            }
+            $temp[$newKey] = $value;
+        }
+        return $temp;
+    }
+
     public static function filterFieldsInclude($list, $include = [])
     {
         $temp = [];

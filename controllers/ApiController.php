@@ -31,7 +31,7 @@ class ApiController extends Controller
 
     public function successJson($msg = '', $data = [])
     {
-        return $this->asJson(Result::success($data, $msg)->asArray());
+        return $this->asJson(Result::success($msg, $data)->asArray());
     }
 
     public function failJson($msg = '', $debug = [], $status = 1)

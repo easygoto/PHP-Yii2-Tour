@@ -115,7 +115,7 @@ class Result
      *
      * @return Result
      */
-    public static function success(array $data = [], string $msg = '', int $status = 0): Result
+    public static function success(string $msg = '', array $data = [], int $status = 0): Result
     {
         return new static($status, $msg, $data);
     }

@@ -10,6 +10,9 @@ $config = [
         'test' => [
             'class' => app\modules\dawn\components\Test::class,
         ],
+        'menuService' => [
+            'class' => app\modules\dawn\components\services\MenuService::class,
+        ],
     ],
 
     'params' => [

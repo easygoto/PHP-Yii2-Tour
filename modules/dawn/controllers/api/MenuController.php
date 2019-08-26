@@ -4,12 +4,8 @@
 namespace app\modules\dawn\controllers\api;
 
 use app\modules\dawn\controllers\ApiController;
-use app\modules\dawn\helpers\Constant;
-use app\modules\dawn\helpers\Message;
-use app\modules\dawn\models\Menu;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
-use Trink\Core\Helper\Format;
 use yii\web\Response;
 
 class MenuController extends ApiController
@@ -26,22 +22,11 @@ class MenuController extends ApiController
      *
      * @return Response
      */
-    public function actionIndex($page = Constant::DEFAULT_PAGE)
+    public function actionIndex()
     {
-        // 构造条件
-        $offset = ($page - 1) * Constant::DEFAULT_PAGE_SIZE;
-        $menuObj = Menu::find()->offset($offset)->limit(Constant::DEFAULT_PAGE_SIZE);
-        if (!$menuObj) {
-            return $this->listJson([], 0);
-        }
-
-        // 关键信息
-        $menuTotal = $menuObj->count('1');
-        $menuList = array_map(function (Menu $menu) {
-            return $menu->getAttributes(null, ['pid']);
-        }, $menuObj->all());
-        $menuList = Format::array2CamelCase($menuList);
-        return $this->listJson($menuList, $menuTotal);
+        $params = Yii::$app->request->get();
+        $result = $this->module->menuService->lists($params);
+        return $this->asJson($result->asArray());
     }
 
     /**
@@ -58,12 +43,8 @@ class MenuController extends ApiController
      */
     public function actionView($id)
     {
-        $menuObj = Menu::findOne($id);
-        if (!$menuObj) {
-            return $this->failJson(Message::NOT_EXISTS);
-        }
-        $menu = $menuObj->getAttributes(null, ['pid']);
-        return $this->successJson(Message::SUCCESS, $menu);
+        $result = $this->module->menuService->get($id);
+        return $this->asJson($result->asArray());
     }
 
     /**
@@ -85,12 +66,8 @@ class MenuController extends ApiController
     public function actionCreate()
     {
         $params = Yii::$app->request->post();
-        $menu = new Menu;
-        $menu->setAttributes($params);
-        if (!$menu->save(true)) {
-            return $this->failJson(Message::CREATE_FAIL, $menu->getErrors());
-        }
-        return $this->successJson(Message::CREATE_SUCCESS, ['id' => $menu->getAttribute('id'), 'menu' => $menu]);
+        $result = $this->module->menuService->add($params);
+        return $this->asJson($result->asArray());
     }
 
     /**
@@ -114,16 +91,9 @@ class MenuController extends ApiController
      */
     public function actionUpdate($id)
     {
-        $menu = Menu::findOne($id);
-        if (!$menu) {
-            return $this->failJson(Message::NOT_EXISTS);
-        }
         $params = Yii::$app->request->post();
-        $menu->setAttributes($params);
-        if (!$menu->save(true)) {
-            return $this->failJson(Message::UPDATE_FAIL, $menu->getErrors());
-        }
-        return $this->successJson(Message::UPDATE_SUCCESS, ['params' => $params]);
+        $result = $this->module->menuService->edit($id, $params);
+        return $this->asJson($result->asArray());
     }
 
     /**
@@ -140,14 +110,7 @@ class MenuController extends ApiController
      */
     public function actionDelete($id)
     {
-        $menu = Menu::findOne($id);
-        if (!$menu) {
-            return $this->failJson(Message::NOT_EXISTS);
-        }
-        $result = Menu::deleteAll(['id' => $id]);
-        if (!$result) {
-            return $this->failJson(Message::DELETE_FAIL);
-        }
-        return $this->successJson(Message::DELETE_SUCCESS);
+        $result = $this->module->menuService->del($id);
+        return $this->asJson($result->asArray());
     }
 }

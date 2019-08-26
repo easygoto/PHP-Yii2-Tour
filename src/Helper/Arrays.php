@@ -5,8 +5,11 @@ namespace Trink\Core\Helper;
 
 class Arrays
 {
-    public static function get($list, string $key, $default = null, $separator = '.')
+    public static function get($list, string $key = null, $default = null, $separator = '.')
     {
+        if ($key === null) {
+            return $list;
+        }
         if (strpos($key, $separator) !== false) {
             $keyMap = explode($separator, $key);
             $temp   = $list;
