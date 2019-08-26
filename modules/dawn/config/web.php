@@ -7,11 +7,8 @@ $config = [
 
     'components' => [
         // list of component configurations
-        'test' => [
-            'class' => app\modules\dawn\components\Test::class,
-        ],
         'menuService' => [
-            'class' => app\modules\dawn\components\services\MenuService::class,
+            'class' => app\modules\dawn\components\services\Menu::class,
         ],
     ],
 
