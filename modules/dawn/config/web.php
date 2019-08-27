@@ -10,6 +10,9 @@ $config = [
         'menuService' => [
             'class' => app\modules\dawn\components\services\Menu::class,
         ],
+        'goodsService' => [
+            'class' => app\modules\dawn\components\services\Goods::class,
+        ],
     ],
 
     'params' => [

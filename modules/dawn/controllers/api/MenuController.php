@@ -18,8 +18,6 @@ class MenuController extends ApiController
      *     @OA\Response(response=200, description="")
      * )
      *
-     * @param int $page
-     *
      * @return Response
      */
     public function actionIndex()

@@ -1,38 +1,34 @@
 <?php
 
 
-namespace app\modules\dawn\components\services;
+namespace app\components;
 
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
-use app\modules\dawn\models\Menu as MenuModel;
-use app\web\Yii;
 use Trink\Core\Helper\Format;
 use Trink\Core\Helper\Result;
+use yii\db\ActiveRecord;
+use yii\db\ActiveQuery;
 
-class Menu
+abstract class BaseService
 {
+    /** @var ActiveRecord */
+    protected $modelClass;
+
+    abstract protected function search(ActiveQuery $query, $keywords): ActiveQuery;
+
     public function lists($keywords)
     {
+        $keywords = Format::array2UnderScore($keywords);
         $page = $keywords['page'] ?? Constant::DEFAULT_PAGE;
         $offset = ($page - 1) * Constant::DEFAULT_PAGE_SIZE;
 
-        $query = MenuModel::find()->offset($offset)->limit(Constant::DEFAULT_PAGE_SIZE);
-        $model = new MenuModel;
-        $model->load($keywords);
-        $query->andFilterWhere([
-            'pid'    => $model->pid,
-            'sn'     => $model->sn,
-            'url'    => $model->url,
-            'sort'   => $model->sort,
-            'status' => $model->status,
-        ]);
-        $query->andFilterWhere(['like', 'name', $model->name]);
-        $query->andFilterWhere(['like', 'icon', $model->icon]);
+        $query = $this->modelClass::find()->offset($offset)->limit(Constant::DEFAULT_PAGE_SIZE);
+        $query = $this->search($query, $keywords);
 
         $total = $query->count('1');
-        $list = array_map(function (MenuModel $item) {
-            return $item->getAttributes();
+        $list = array_map(function (ActiveRecord $item) {
+            return $item->toArray();
         }, $query->all());
         $list = Format::array2CamelCase($list);
 
@@ -41,12 +37,12 @@ class Menu
 
     public function get($id)
     {
-        $object = MenuModel::findOne($id);
+        $object = $this->modelClass::findOne($id);
         if (!$object) {
             return Result::fail(Message::NOT_EXISTS);
         }
 
-        $detail = $object->getAttributes();
+        $detail = $object->toArray();
         $detail = Format::array2CamelCase($detail);
 
         return Result::success(Message::SUCCESS, $detail);
@@ -54,7 +50,8 @@ class Menu
 
     public function add($params)
     {
-        $model = new MenuModel;
+        /** @var ActiveRecord $model */
+        $model = new $this->modelClass;
         $model->setAttributes($params);
         if (!$model->save(true)) {
             return Result::fail(Message::CREATE_FAIL, $model->getErrors());
@@ -69,7 +66,7 @@ class Menu
 
     public function edit($id, $params)
     {
-        $model = MenuModel::findOne($id);
+        $model = $this->modelClass::findOne($id);
         if (!$model) {
             return Result::fail(Message::NOT_EXISTS);
         }
@@ -84,12 +81,12 @@ class Menu
 
     public function del($id)
     {
-        $exists = MenuModel::find()->where(['id' => $id])->exists();
+        $exists = $this->modelClass::find()->where(['id' => $id])->exists();
         if (!$exists) {
             return Result::fail(Message::NOT_EXISTS);
         }
 
-        $result = MenuModel::deleteAll(['id' => $id]);
+        $result = $this->modelClass::deleteAll(['id' => $id]);
         if (!$result) {
             return Result::fail(Message::DELETE_FAIL);
         }
