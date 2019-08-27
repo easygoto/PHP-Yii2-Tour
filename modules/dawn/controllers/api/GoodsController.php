@@ -2,6 +2,7 @@
 
 namespace app\modules\dawn\controllers\api;
 
+use app\modules\dawn\behaviors\CheckTokenFilter;
 use app\modules\dawn\controllers\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
@@ -9,6 +10,17 @@ use yii\web\Response;
 
 class GoodsController extends ApiController
 {
+    public function behaviors()
+    {
+        return [
+            [
+                'class'  => CheckTokenFilter::class,
+                'only'   => ['create', 'update', 'delete'],
+                'except' => ['view', 'index'],
+            ],
+        ];
+    }
+
     /**
      * @OA\Get(
      *     tags={"商品相关接口"},
