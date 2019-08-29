@@ -22,4 +22,5 @@ class Message
 
     const ID_EMPTY   = 'id 为空';
     const NOT_EXISTS = '不存在';
+    const NOT_RESULT = '查询无果';
 }

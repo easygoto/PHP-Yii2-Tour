@@ -4,30 +4,46 @@
 namespace app\modules\dawn\components\services;
 
 use app\components\BaseService;
-use app\modules\dawn\models\Goods as GoodsModel;
 use yii\db\ActiveQuery;
 
 class Goods extends BaseService
 {
-    protected $modelClass = GoodsModel::class;
+    protected $modelClass = \app\modules\dawn\models\Goods::class;
 
-    protected function search(ActiveQuery $query, $keywords): ActiveQuery
+    protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
     {
-        $model = new GoodsModel;
-        $model->load($keywords);
         $query->andFilterWhere([
-            'id'            => $model->id,
-            'wholesale'     => $model->wholesale,
-            'selling_price' => $model->selling_price,
-            'market_price'  => $model->market_price,
-            'inventory'     => $model->inventory,
-            'created_at'    => $model->created_at,
-            'updated_at'    => $model->updated_at,
-            'operated_at'   => $model->operated_at,
-            'status'        => $model->status,
-            'is_delete'     => $model->is_delete,
+            'id'            => $keywords['id'] ?? null,
+            'wholesale'     => $keywords['wholesale'] ?? null,
+            'selling_price' => $keywords['selling_price'] ?? null,
+            'market_price'  => $keywords['market_price'] ?? null,
+            'inventory'     => $keywords['inventory'] ?? null,
+            'created_at'    => $keywords['created_at'] ?? null,
+            'updated_at'    => $keywords['updated_at'] ?? null,
+            'operated_at'   => $keywords['operated_at'] ?? null,
+            'status'        => $keywords['status'] ?? null,
+            'is_delete'     => $keywords['is_delete'] ?? null,
         ]);
-        $query->andFilterWhere(['like', 'name', $model->name]);
+        $query->andFilterWhere(['like', 'name', $keywords['name'] ?? null]);
         return $query;
+    }
+
+    public function lists($keywords, $include = null, $exclude = [])
+    {
+        $keywords['is_delete'] = 0;
+        return parent::lists($keywords, $include, $exclude);
+    }
+
+    public function get($id, $params = [], $include = null, $exclude = [])
+    {
+        $params = ['is_delete' => 0];
+        $exclude = ['is_delete'];
+        return parent::get($id, $params, $include, $exclude);
+    }
+
+    public function del($id, $params = [])
+    {
+        $params = ['is_delete' => 0];
+        return parent::del($id, $params);
     }
 }
