@@ -1,5 +1,7 @@
 <?php
 
+use app\modules\dawn\components\services;
+
 $config = [
     'id' => 'dawn',
     // 'layout' => 'main',
@@ -7,11 +9,14 @@ $config = [
 
     'components' => [
         // list of component configurations
+        'userService' => [
+            'class' => services\User::class
+        ],
         'menuService' => [
-            'class' => app\modules\dawn\components\services\Menu::class,
+            'class' => services\Menu::class,
         ],
         'goodsService' => [
-            'class' => app\modules\dawn\components\services\Goods::class,
+            'class' => services\Goods::class,
         ],
     ],
 

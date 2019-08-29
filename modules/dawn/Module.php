@@ -3,13 +3,13 @@
 
 namespace app\modules\dawn;
 
-use app\modules\dawn\components\services\Goods;
-use app\modules\dawn\components\services\Menu;
+use app\modules\dawn\components\services;
 use app\web\Yii;
 
 /**
- * @property Menu  menuService
- * @property Goods goodsService
+ * @property services\User  userService
+ * @property services\Menu  menuService
+ * @property services\Goods goodsService
  */
 class Module extends \yii\base\Module
 {
