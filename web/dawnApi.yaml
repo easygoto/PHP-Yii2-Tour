@@ -3,6 +3,21 @@ info:
   title: 接口文档
   version: 1.0.0
 paths:
+  '/dawn/api/goods/list/{page}':
+    get:
+      tags:
+        - 商品相关接口
+      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionIndex'
+      parameters:
+        -
+          name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: '{''status'':0,''message''=>''success'',''data'':{''list'':[],''total'':1,''pageTotals'':1}}'
   '/dawn/api/goods/{id}':
     get:
       tags:
@@ -15,6 +30,27 @@ paths:
           required: true
           schema:
             type: integer
+      responses:
+        '200':
+          description: ''
+    put:
+      tags:
+        - 商品相关接口
+      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionUpdate'
+      responses:
+        '200':
+          description: ''
+    post:
+      tags:
+        - 商品相关接口
+      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionCreate'
+      responses:
+        '200':
+          description: ''
+    delete:
+      tags:
+        - 商品相关接口
+      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionDelete'
       responses:
         '200':
           description: ''

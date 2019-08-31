@@ -26,7 +26,7 @@ class GoodsController extends ApiController
      *     tags={"商品相关接口"},
      *     path="/dawn/api/goods/list/{page}",
      *     @OA\Parameter(name="page", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="")
+     *     @OA\Response(response=200, description="{'status':0,'message'=>'success','data':{'list':[],'total':1,'pageTotals':1}}")
      * )
      *
      * @return Response
