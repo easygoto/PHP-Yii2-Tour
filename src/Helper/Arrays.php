@@ -12,7 +12,7 @@ class Arrays
         }
         if (strpos($key, $separator) !== false) {
             $keyMap = explode($separator, $key);
-            $temp   = $list;
+            $temp = $list;
             foreach ($keyMap as $item) {
                 if (is_array($list)) {
                     $temp = $temp[$item] ?? $default;

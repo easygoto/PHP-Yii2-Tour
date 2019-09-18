@@ -5,15 +5,27 @@ namespace app\components;
 
 use app\modules\dawn\helpers\Constant;
 use app\modules\dawn\helpers\Message;
+use Closure;
 use Trink\Core\Helper\Format;
 use Trink\Core\Helper\Result;
-use yii\db\ActiveRecord;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 abstract class BaseService
 {
     /** @var ActiveRecord */
     protected $modelClass;
+
+    /** @var Closure $callback */
+    protected $callback;
+
+    public function __construct()
+    {
+        $this->modelClass = str_replace('components\services', 'models', get_class($this));
+        $this->callback = function (ActiveRecord $item) {
+            return $item->getAttributes();
+        };
+    }
 
     abstract protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery;
 
@@ -23,6 +35,9 @@ abstract class BaseService
         /** @var ActiveRecord $model */
         $model = new $this->modelClass;
         foreach ($sorts as $sort) {
+            if (!$sort) {
+                continue;
+            }
             $orderMethod = $sort[0] == '-' ? 'DESC' : 'ASC';
             $orderColumn = Format::toUnderScore($sort[0] == '-' ? substr($sort, 1) : $sort);
             if ($model->hasAttribute($orderColumn)) {
@@ -39,18 +54,19 @@ abstract class BaseService
         return $query;
     }
 
-    public function lists($keywords, $include = null, $exclude = [])
+    public function lists(array $keywords, Closure $callback = null)
     {
+        $callback = $callback ?: $this->callback;
         $keywords = Format::array2UnderScore($keywords);
-        $page = $keywords['page'] ?? Constant::DEFAULT_PAGE;
+        $page = max(1, $keywords['page'] ?? Constant::DEFAULT_PAGE);
         $offset = ($page - 1) * Constant::DEFAULT_PAGE_SIZE;
 
         $query = $this->modelClass::find()->offset($offset)->limit(Constant::DEFAULT_PAGE_SIZE);
         $query = $this->handleKeywords($query, $keywords);
 
         $total = $query->count('1');
-        $list = array_map(function (ActiveRecord $item) use ($include, $exclude) {
-            return $item->getAttributes($include, $exclude);
+        $list = array_map(function (ActiveRecord $item) use ($callback) {
+            return $callback($item);
         }, $query->all());
         $list = Format::array2CamelCase($list);
 

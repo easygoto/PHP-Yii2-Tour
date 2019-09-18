@@ -20,8 +20,8 @@ class Result
     private function __construct(int $status, string $msg, array $data)
     {
         $this->status = $status;
-        $this->msg    = $msg;
-        $this->data   = $data;
+        $this->msg = $msg;
+        $this->data = $data;
     }
 
     public function __set($name, $value)
@@ -74,12 +74,12 @@ class Result
      */
     public function asArray()
     {
-        $properties      = [];
-        $object          = new ReflectionObject($this);
-        $field_list      = $object->getProperties();
-        $field_name_list = array_column($field_list, 'name');
-        foreach ($field_name_list as $field_name) {
-            $properties[$field_name] = $this->$field_name;
+        $properties = [];
+        $object = new ReflectionObject($this);
+        $fieldList = $object->getProperties();
+        $fieldNameList = array_column($fieldList, 'name');
+        foreach ($fieldNameList as $fieldName) {
+            $properties[$fieldName] = $this->$fieldName;
         }
         return array_merge($properties, get_object_vars($this));
     }
@@ -101,7 +101,7 @@ class Result
      *
      * @return Result
      */
-    public static function fail(string $msg, array $debug = [], int $status = 1): Result
+    public static function fail(string $msg = 'FAIL', array $debug = [], int $status = 1): Result
     {
         return new static($status, $msg, ['debug' => $debug]);
     }
@@ -115,7 +115,7 @@ class Result
      *
      * @return Result
      */
-    public static function success(string $msg = '', array $data = [], int $status = 0): Result
+    public static function success(string $msg = 'OK', array $data = [], int $status = 0): Result
     {
         return new static($status, $msg, $data);
     }
@@ -123,15 +123,15 @@ class Result
     /**
      * 列表成功返回
      *
-     * @param array  $list
-     * @param int    $total
-     * @param int    $pageSize
+     * @param array $list
+     * @param int   $total
+     * @param int   $pageSize
      *
      * @return Result
      */
     public static function lists(array $list, int $total, int $pageSize = 15): self
     {
-        return new static(0, '', [
+        return new static(0, 'OK', [
             'list'       => $list,
             'total'      => $total,
             'totalPages' => ceil($total / $pageSize),

@@ -4,12 +4,11 @@
 namespace app\modules\dawn\components\services;
 
 use app\components\BaseService;
+use app\modules\dawn\models;
 use yii\db\ActiveQuery;
 
 class Goods extends BaseService
 {
-    protected $modelClass = \app\modules\dawn\models\Goods::class;
-
     protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
     {
         $query->andFilterWhere([
@@ -28,10 +27,14 @@ class Goods extends BaseService
         return $query;
     }
 
-    public function lists($keywords, $include = null, $exclude = [])
+    public function listsNotDelete($keywords)
     {
         $keywords['is_delete'] = 0;
-        return parent::lists($keywords, $include, $exclude);
+        return $this->lists($keywords, function (models\Goods $item) {
+            $include = null;
+            $exclude = [];
+            return $item->getAttributes($include, $exclude);
+        });
     }
 
     public function get($id, $params = [], $include = null, $exclude = [])

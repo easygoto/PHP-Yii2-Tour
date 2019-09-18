@@ -25,8 +25,8 @@ class GoodsController extends ApiController
      * @OA\Get(
      *     tags={"商品相关接口"},
      *     path="/dawn/api/goods/list/{page}",
-     *     @OA\Parameter(name="page", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="{'status':0,'message'=>'success','data':{'list':[],'total':1,'pageTotals':1}}")
+     *     @OA\Parameter(name="page", in="path", required=false, description="页码数", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="{'status':0,'msg'=>'success','data':{'list':[],'total':1,'pageTotals':1}}")
      * )
      *
      * @return Response
@@ -34,7 +34,7 @@ class GoodsController extends ApiController
     public function actionIndex()
     {
         $params = Yii::$app->request->get();
-        $result = $this->module->goodsService->lists($params);
+        $result = $this->module->goodsService->listsNotDelete($params);
         return $this->asJson($result->asArray());
     }
 
@@ -42,8 +42,8 @@ class GoodsController extends ApiController
      * @OA\Get(
      *     tags={"商品相关接口"},
      *     path="/dawn/api/goods/{id}",
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="")
+     *     @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="{'status':0,'msg'=>'success','data':{'id':1}}")
      * )
      *
      * @param $id
