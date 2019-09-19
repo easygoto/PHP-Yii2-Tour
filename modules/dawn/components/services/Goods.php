@@ -31,17 +31,17 @@ class Goods extends BaseService
     {
         $keywords['is_delete'] = 0;
         return $this->lists($keywords, function (models\Goods $item) {
-            $include = null;
-            $exclude = [];
-            return $item->getAttributes($include, $exclude);
+            return $item->getAttributes();
         });
     }
 
-    public function get($id, $params = [], $include = null, $exclude = [])
+    public function getNotDelete(int $id)
     {
-        $params = ['is_delete' => 0];
-        $exclude = ['is_delete'];
-        return parent::get($id, $params, $include, $exclude);
+        return $this->get($id, function (models\Goods $item) {
+            return $item->getAttributes(null, ['is_delete']);
+        }, function (ActiveQuery $query) {
+            return $query->andFilterWhere(['is_delete' => 0]);
+        });
     }
 
     public function del($id, $params = [])

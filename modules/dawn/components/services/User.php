@@ -4,24 +4,25 @@
 namespace app\modules\dawn\components\services;
 
 use app\components\BaseService;
+use app\modules\dawn\models;
 use yii\db\ActiveQuery;
 
 class User extends BaseService
 {
-    protected $modelClass = \app\modules\dawn\models\User::class;
+    protected $modelClass = models\User::class;
 
     protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
     {
         $query->andFilterWhere([
-            'id' => $keywords['id'] ?? null,
-            'secret_code' => $keywords['secret_code'] ?? null,
-            'gender' => $keywords['gender'] ?? null,
-            'created_at' => $keywords['created_at'] ?? null,
-            'updated_at' => $keywords['updated_at'] ?? null,
-            'operated_at' => $keywords['operated_at'] ?? null,
+            'id'            => $keywords['id'] ?? null,
+            'secret_code'   => $keywords['secret_code'] ?? null,
+            'gender'        => $keywords['gender'] ?? null,
+            'created_at'    => $keywords['created_at'] ?? null,
+            'updated_at'    => $keywords['updated_at'] ?? null,
+            'operated_at'   => $keywords['operated_at'] ?? null,
             'last_login_at' => $keywords['last_login_at'] ?? null,
-            'status' => $keywords['status'] ?? null,
-            'is_delete' => $keywords['is_delete'] ?? null,
+            'status'        => $keywords['status'] ?? null,
+            'is_delete'     => $keywords['is_delete'] ?? null,
         ]);
         $query->andFilterWhere(['like', 'user_name', $keywords['user_name'] ?? null]);
         $query->andFilterWhere(['like', 'real_name', $keywords['real_name'] ?? null]);
@@ -29,17 +30,19 @@ class User extends BaseService
         return $query;
     }
 
-    public function lists($keywords, $include = null, $exclude = [])
+    public function listsNotDelete(array $keywords)
     {
         $keywords['is_delete'] = 0;
-        return parent::lists($keywords, $include, $exclude);
+        return $this->lists($keywords);
     }
 
-    public function get($id, $params = [], $include = null, $exclude = [])
+    public function getNotDelete(int $id)
     {
-        $params = ['is_delete' => 0];
-        $exclude = ['is_delete'];
-        return parent::get($id, $params, $include, $exclude);
+        return $this->get($id, function (models\User $item) {
+            return $item->getAttributes(null, ['is_delete']);
+        }, function (ActiveQuery $query) {
+            return $query->andFilterWhere(['is_delete' => 0]);
+        });
     }
 
     public function del($id, $params = [])

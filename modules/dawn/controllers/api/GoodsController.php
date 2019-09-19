@@ -52,7 +52,7 @@ class GoodsController extends ApiController
      */
     public function actionView($id)
     {
-        $result = $this->module->goodsService->get($id);
+        $result = $this->module->goodsService->getNotDelete((int)$id);
         return $this->asJson($result->asArray());
     }
 
