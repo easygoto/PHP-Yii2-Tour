@@ -103,7 +103,7 @@ class GoodsController extends ApiController
      */
     public function actionDelete($id)
     {
-        $result = $this->module->goodsService->del($id);
+        $result = $this->module->goodsService->delete($id);
         return $this->asJson($result->asArray());
     }
 }

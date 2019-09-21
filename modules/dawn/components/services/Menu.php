@@ -8,8 +8,6 @@ use yii\db\ActiveQuery;
 
 class Menu extends BaseService
 {
-    protected $modelClass = \app\modules\dawn\models\Menu::class;
-
     protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
     {
         $query->andFilterWhere([

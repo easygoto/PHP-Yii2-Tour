@@ -4,7 +4,8 @@
 namespace app\modules\dawn\components\services;
 
 use app\components\BaseService;
-use app\modules\dawn\models;
+use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\models\Goods as GoodsModel;
 use yii\db\ActiveQuery;
 
 class Goods extends BaseService
@@ -27,26 +28,27 @@ class Goods extends BaseService
         return $query;
     }
 
-    public function listsNotDelete($keywords)
+    public function listsNotDelete(array $keywords)
     {
-        $keywords['is_delete'] = 0;
-        return $this->lists($keywords, function (models\Goods $item) {
+        $keywords['is_delete'] = Constant::NOT_DELETE;
+        return $this->lists($keywords, function (GoodsModel $item) {
             return $item->getAttributes();
         });
     }
 
     public function getNotDelete(int $id)
     {
-        return $this->get($id, function (models\Goods $item) {
+        $result = $this->get($id, function (GoodsModel $item) {
             return $item->getAttributes(null, ['is_delete']);
         }, function (ActiveQuery $query) {
-            return $query->andFilterWhere(['is_delete' => 0]);
+            return $query->andFilterWhere(['is_delete' => Constant::NOT_DELETE]);
         });
+        return $result;
     }
 
-    public function del($id, $params = [])
+    public function delete($id, $params = [])
     {
-        $params = ['is_delete' => 0];
-        return parent::del($id, $params);
+        $params = ['is_delete' => Constant::NOT_DELETE];
+        return parent::delete($id, $params);
     }
 }

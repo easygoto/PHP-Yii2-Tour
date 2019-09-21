@@ -108,7 +108,7 @@ class MenuController extends ApiController
      */
     public function actionDelete($id)
     {
-        $result = $this->module->menuService->del($id);
+        $result = $this->module->menuService->delete($id);
         return $this->asJson($result->asArray());
     }
 }
