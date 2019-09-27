@@ -3,9 +3,9 @@
 use app\web\RouteRule;
 
 return array_merge(
-    RouteRule::base(/*商品*/ 'dawn/api/goods'),
-    RouteRule::base(/*用户*/ 'dawn/api/user'),
-    RouteRule::base(/*菜单*/ 'dawn/api/menu'),
+    RouteRule::base(/*商品*/ 'dawn/v1/api/goods'),
+    RouteRule::base(/*用户*/ 'dawn/v1/api/user'),
+    RouteRule::base(/*菜单*/ 'dawn/v1/api/menu'),
 
     // not restful api
     RouteRule::noRest(['module' => 'dawn', 'category' => 'page']),

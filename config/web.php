@@ -65,9 +65,6 @@ $config = [
     ],
     'params' => $params,
     'modules' => [
-        'common' => [
-            'class' => 'app\modules\common\Module',
-        ],
         'dawn' => [
             'class' => 'app\modules\dawn\Module',
         ],

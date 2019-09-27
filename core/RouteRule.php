@@ -25,10 +25,10 @@ class RouteRule
     public static function rule($verb, $pattern, $route, $defaults)
     {
         return [
-            'pattern'  => $pattern,
-            'route'    => $route,
+            'pattern' => $pattern,
+            'route' => $route,
             'defaults' => $defaults,
-            'verb'     => $verb,
+            'verb' => $verb,
         ];
     }
 
@@ -42,7 +42,8 @@ class RouteRule
      */
     public static function base(string $baseRoute, string $baseCtrl = '')
     {
-        $baseCtrl = $baseCtrl ?: $baseRoute;
+        $pattern = '/(.+\/)(v\d+)\/(\w+)(\/.+)/';
+        $baseCtrl = $baseCtrl ?: preg_replace($pattern, '$1$3_$2$4', 'dawn/v1/api/goods');
         return [
             RouteRule::post(
                 "{$baseRoute}",
@@ -74,30 +75,33 @@ class RouteRule
 
     public static function noRest($options = [])
     {
-        $module = $options['module'] ?? '\w+';
-        $category = $options['category'] ?? '\w+';
-        $controller = $options['controller'] ?? '\w+';
+        $wildcard = '[\w\-]+';
+        $module = $options['module'] ?? $wildcard;
+        $category = $options['category'] ?? $wildcard;
+        $controller = $options['controller'] ?? $wildcard;
 
-        if ($module == '\w+' && $category == '\w+' && $controller == '\w+') {
+        if ($module == $wildcard && $category == $wildcard && $controller == $wildcard) {
             return [];
-        } elseif ($module == '\w+' && $category == '\w+' && $controller != '\w+') {
+        } elseif ($module == $wildcard && $category == $wildcard && $controller != $wildcard) {
             return [
-                "<controller:{$controller}>/<action:\w+>" => "<controller>/<action>",
+                "<controller:{$controller}>/<action:{$wildcard}>" => "<controller>/<action>",
             ];
-        } elseif ($module == '\w+' && $category != '\w+') {
+        } elseif ($module == $wildcard && $category != $wildcard) {
             return [
-                "<controller:{$controller}>/<action:\w+>" => "<controller>/<action>",
-                "<category:{$category}>/<controller:{$controller}>/<action:\w+>" => "<category>/<controller>/<action>"
+                "<controller:{$controller}>/<action:{$wildcard}>" => "<controller>/<action>",
+                "<category:{$category}>/<controller:{$controller}>/<action:{$wildcard}>" =>
+                    "<category>/<controller>/<action>",
             ];
-        } elseif ($module != '\w+' && $category == '\w+') {
+        } elseif ($module != $wildcard && $category == $wildcard) {
             return [
                 "<module:{$module}>" => "<module>",
-                "<module:{$module}>/<controller:{$controller}>/<action:\w+>" => "<module>/<controller>/<action>",
+                "<module:{$module}>/<controller:{$controller}>/<action:{$wildcard}>" =>
+                    "<module>/<controller>/<action>",
             ];
         } else {
             return [
                 "<module:{$module}>" => "<module>",
-                "<module:{$module}>/<category:{$category}>/<controller:{$controller}>/<action:\w+>" =>
+                "<module:{$module}>/<category:{$category}>/<controller:{$controller}>/<action:{$wildcard}>" =>
                     "<module>/<category>/<controller>/<action>",
             ];
         }
