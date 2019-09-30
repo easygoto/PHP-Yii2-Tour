@@ -20,7 +20,7 @@ class UserController extends ApiController
         if (!$userObj) {
             return $this->failJson(Message::NOT_EXISTS);
         }
-        if ($userObj->is_delete === Constant::DEFAULT_IS_DELETE) {
+        if ($userObj->is_delete === Constant::IS_DELETE) {
             return $this->failJson(Message::DELETED);
         }
         $user = $userObj->getAttributes(null, ['secret_code', 'deleted']);

@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\controllers\api;
 
-use app\modules\dawn\behaviors\CheckTokenFilter;
+use app\behaviors\CheckTokenFilter;
 use app\modules\dawn\controllers\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
@@ -14,8 +14,8 @@ class GoodsController extends ApiController
     {
         return [
             [
-                'class'  => CheckTokenFilter::class,
-                'only'   => ['create', 'update', 'delete'],
+                'class' => CheckTokenFilter::class,
+                'only' => ['create', 'update', 'delete'],
                 'except' => ['view', 'index'],
             ],
         ];

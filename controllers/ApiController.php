@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\behaviors\filters\LoginAuthFilter;
+use app\behaviors\LoginAuthFilter;
 use app\helpers\Constant;
 use Trink\Core\Helper\Result;
 use yii\web\Controller;

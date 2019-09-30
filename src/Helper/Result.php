@@ -132,8 +132,9 @@ class Result
     public static function lists(array $list, int $total, int $pageSize = 15): self
     {
         return new static(0, 'OK', [
-            'list'       => $list,
-            'total'      => $total,
+            'list' => $list,
+            'pageSize' => $pageSize,
+            'total' => $total,
             'totalPages' => ceil($total / $pageSize),
         ]);
     }

@@ -5,7 +5,7 @@ use app\modules\dawn\components\services;
 $config = [
     'id' => 'dawn',
     // 'layout' => 'main',
-    'defaultRoute' => 'test/index',
+    // 'defaultRoute' => 'test/index',
 
     'components' => [
         // list of component configurations

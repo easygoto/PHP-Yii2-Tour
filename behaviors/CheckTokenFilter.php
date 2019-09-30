@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\dawn\behaviors;
+namespace app\behaviors;
 
 use app\web\Yii;
 use Trink\Core\Helper\Result;

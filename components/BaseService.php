@@ -68,7 +68,7 @@ abstract class BaseService
 
         $page = (int)$keywords['page'] ?? Constant::DEFAULT_PAGE;
         $page = max($page, Constant::MIN_PAGE);
-        $pageSize = (int)$keywords['pageSize'] ?? Constant::DEFAULT_PAGE_SIZE;
+        $pageSize = (int)($keywords['pageSize'] ?? Constant::DEFAULT_PAGE_SIZE);
         $pageSize = min($pageSize, Constant::MAX_PAGE_SIZE);
         $pageSize = max($pageSize, Constant::MIN_PAGE_SIZE);
         $offset = ($page - 1) * $pageSize;
@@ -83,7 +83,7 @@ abstract class BaseService
         }, $query->all());
         $list = Format::array2CamelCase($list);
 
-        return Result::lists($list, $total);
+        return Result::lists($list, $total, $pageSize);
     }
 
     public function exists(int $id, Closure $handleQuery = null)

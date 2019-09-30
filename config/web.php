@@ -2,15 +2,13 @@
 
 $defaultSiteRoute = 'site/index';
 $params = require_once __DIR__ . '/params.php';
-$rules = require_once __DIR__ . '/route.php';
-
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/yidas/yii2-bower-asset/bower',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'defaultRoute' => $defaultSiteRoute,
 //    'catchAll' => ['site/index'], // 所有的页面都会跳到此动作
@@ -60,7 +58,10 @@ $config = [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true, // 若开启，路由和真实的接口前面不可相同
             'showScriptName' => false,
-            'rules' => $rules,
+            'rules' => array_merge(
+                require dirname(__DIR__) . '/modules/dawn/config/route.php',
+                require __DIR__ . '/route.php'
+            ),
         ],
     ],
     'params' => $params,
@@ -68,7 +69,7 @@ $config = [
         'dawn' => [
             'class' => 'app\modules\dawn\Module',
         ],
-    ]
+    ],
 ];
 
 if (YII_ENV_DEV) {
@@ -87,6 +88,7 @@ if (YII_ENV_DEV) {
         'allowedIPs' => ['127.0.0.1', '172.18.0.1', '::1'],
     ];
 
+    $config['bootstrap'][] = 'gen';
     $config['modules']['gen'] = [
         'class' => 'app\modules\gen\Module',
         'allowedIPs' => ['127.0.0.1', '172.18.0.1', '::1'],

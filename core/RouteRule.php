@@ -33,7 +33,7 @@ class RouteRule
     }
 
     /**
-     * 增删改查
+     * 增删改查的路由
      *
      * @param string $baseRoute
      * @param string $baseCtrl
@@ -42,8 +42,7 @@ class RouteRule
      */
     public static function base(string $baseRoute, string $baseCtrl = '')
     {
-        $pattern = '/(.+\/)(v\d+)\/(\w+)(\/.+)/';
-        $baseCtrl = $baseCtrl ?: preg_replace($pattern, '$1$3_$2$4', 'dawn/v1/api/goods');
+        $baseCtrl = $baseCtrl ?: $baseRoute;
         return [
             RouteRule::post(
                 "{$baseRoute}",
@@ -71,39 +70,5 @@ class RouteRule
                 "{$baseCtrl}/delete"
             ),
         ];
-    }
-
-    public static function noRest($options = [])
-    {
-        $wildcard = '[\w\-]+';
-        $module = $options['module'] ?? $wildcard;
-        $category = $options['category'] ?? $wildcard;
-        $controller = $options['controller'] ?? $wildcard;
-
-        if ($module == $wildcard && $category == $wildcard && $controller == $wildcard) {
-            return [];
-        } elseif ($module == $wildcard && $category == $wildcard && $controller != $wildcard) {
-            return [
-                "<controller:{$controller}>/<action:{$wildcard}>" => "<controller>/<action>",
-            ];
-        } elseif ($module == $wildcard && $category != $wildcard) {
-            return [
-                "<controller:{$controller}>/<action:{$wildcard}>" => "<controller>/<action>",
-                "<category:{$category}>/<controller:{$controller}>/<action:{$wildcard}>" =>
-                    "<category>/<controller>/<action>",
-            ];
-        } elseif ($module != $wildcard && $category == $wildcard) {
-            return [
-                "<module:{$module}>" => "<module>",
-                "<module:{$module}>/<controller:{$controller}>/<action:{$wildcard}>" =>
-                    "<module>/<controller>/<action>",
-            ];
-        } else {
-            return [
-                "<module:{$module}>" => "<module>",
-                "<module:{$module}>/<category:{$category}>/<controller:{$controller}>/<action:{$wildcard}>" =>
-                    "<module>/<category>/<controller>/<action>",
-            ];
-        }
     }
 }

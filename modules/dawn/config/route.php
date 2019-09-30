@@ -7,10 +7,6 @@ return array_merge(
     RouteRule::base(/*用户*/ 'dawn/v1/api/user'),
     RouteRule::base(/*菜单*/ 'dawn/v1/api/menu'),
 
-    // not restful api
-    RouteRule::noRest(['module' => 'dawn', 'category' => 'page']),
-    RouteRule::noRest(['module' => 'dawn', 'controller' => 'test']),
-
     // spacial api
     [
     ]
