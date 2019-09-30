@@ -1,9 +1,9 @@
 <?php
 
 
-namespace app\modules\dawn\controllers\api;
+namespace app\modules\dawn\controllers\v1\api;
 
-use app\modules\dawn\controllers\ApiController;
+use app\modules\dawn\controllers\v1\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
 use yii\web\Response;

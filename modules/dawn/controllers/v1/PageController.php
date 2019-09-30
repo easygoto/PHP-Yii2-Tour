@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\modules\dawn\controllers;
+namespace app\modules\dawn\controllers\v1;
 
 use app\modules\dawn\Module;
 

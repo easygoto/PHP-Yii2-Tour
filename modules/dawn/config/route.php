@@ -3,9 +3,12 @@
 use app\web\RouteRule;
 
 return array_merge(
-    RouteRule::base(/*商品*/ 'dawn/v1/api/goods'),
-    RouteRule::base(/*用户*/ 'dawn/v1/api/user'),
-    RouteRule::base(/*菜单*/ 'dawn/v1/api/menu'),
+    RouteRule::baseApi(/*商品*/ 'dawn/v1/api/goods'),
+    RouteRule::baseApi(/*用户*/ 'dawn/v1/api/user'),
+    RouteRule::baseApi(/*菜单*/ 'dawn/v1/api/menu'),
+
+    // page
+    RouteRule::basePage(['module' => 'dawn', 'category' => 'page']),
 
     // spacial api
     [

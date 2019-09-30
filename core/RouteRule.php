@@ -40,7 +40,7 @@ class RouteRule
      *
      * @return array
      */
-    public static function base(string $baseRoute, string $baseCtrl = '')
+    public static function baseApi(string $baseRoute, string $baseCtrl = '')
     {
         $baseCtrl = $baseCtrl ?: $baseRoute;
         return [
@@ -70,5 +70,62 @@ class RouteRule
                 "{$baseCtrl}/delete"
             ),
         ];
+    }
+
+    /**
+     * 页面的网址
+     *
+     * @param $options
+     *
+     * @return array
+     */
+    public static function basePage(array $options)
+    {
+        $wildcard = '[\w\-]+';
+        $ver = 'v\d+';
+        $act = $wildcard;
+        $mod = $options['module'] ?? $wildcard;
+        $cate = $options['category'] ?? $wildcard;
+        $ctrl = $options['controller'] ?? $wildcard;
+
+        if ($mod == $wildcard) {
+            if ($cate == $wildcard) {
+                if ($ctrl == $wildcard) {
+                    return [];
+                } else {
+                    return [
+                        "<controller:{$ctrl}>/<action:{$act}>" => "<controller>/<action>",
+                        "<version:{$ver}>/<controller:{$ctrl}>/<action:{$act}>" => "<version>/<controller>/<action>",
+                    ];
+                }
+            } else {
+                return [
+                    "<controller:{$ctrl}>/<action:{$act}>" => "<controller>/<action>",
+                    "<version:{$ver}>/<controller:{$ctrl}>/<action:{$act}>" => "<version>/<controller>/<action>",
+                    "<category:{$cate}>/<controller:{$ctrl}>/<action:{$act}>" =>
+                        "<category>/<controller>/<action>",
+                    "<version:{$ver}>/<category:{$cate}>/<controller:{$ctrl}>/<action:{$act}>" =>
+                        "<version>/<category>/<controller>/<action>",
+                ];
+            }
+        } else {
+            if ($cate == $wildcard) {
+                return [
+                    "<module:{$mod}>" => "<module>",
+                    "<module:{$mod}>/<controller:{$ctrl}>/<action:{$act}>" =>
+                        "<module>/<controller>/<action>",
+                    "<module:{$mod}>/<version:{$ver}>/<controller:{$ctrl}>/<action:{$act}>" =>
+                        "<module>/<version>/<controller>/<action>",
+                ];
+            } else {
+                return [
+                    "<module:{$mod}>" => "<module>",
+                    "<module:{$mod}>/<category:{$cate}>/<controller:{$ctrl}>/<action:{$act}>" =>
+                        "<module>/<category>/<controller>/<action>",
+                    "<module:{$mod}>/<version:{$ver}>/<category:{$cate}>/<controller:{$ctrl}>/<action:{$act}>" =>
+                        "<module>/<version>/<category>/<controller>/<action>",
+                ];
+            }
+        }
     }
 }

@@ -1,9 +1,8 @@
 <?php
 
-namespace app\modules\dawn\controllers\page;
+namespace app\modules\dawn\controllers\v1\page;
 
-use app\behaviors\filters\LoginAuthFilter;
-use app\modules\dawn\controllers\PageController;
+use app\modules\dawn\controllers\v1\PageController;
 use app\web\Yii;
 use app\modules\dawn\models\Goods;
 use app\modules\dawn\models\GoodsSearch;
