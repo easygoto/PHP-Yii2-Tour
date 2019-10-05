@@ -2,9 +2,9 @@
 
 namespace app\modules\dawn\controllers\v1\api;
 
+use app\helpers\Message;
 use app\modules\dawn\controllers\v1\ApiController;
 use app\modules\dawn\helpers\Constant;
-use app\modules\dawn\helpers\Message;
 use app\modules\dawn\models\User;
 use app\web\Yii;
 use OpenApi\Annotations as OA;

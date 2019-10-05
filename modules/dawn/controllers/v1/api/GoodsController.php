@@ -24,7 +24,7 @@ class GoodsController extends ApiController
     /**
      * @OA\Get(
      *     tags={"商品相关接口"},
-     *     path="/dawn/api/goods/list/{page}",
+     *     path="/dawn/v1/api/goods/list/{page}",
      *     @OA\Parameter(name="page", in="path", required=false, description="页码数", @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="{'status':0,'msg'=>'success','data':{'list':[],'total':1,'pageTotals':1}}")
      * )
@@ -41,7 +41,7 @@ class GoodsController extends ApiController
     /**
      * @OA\Get(
      *     tags={"商品相关接口"},
-     *     path="/dawn/api/goods/{id}",
+     *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="{'status':0,'msg'=>'success','data':{'id':1}}")
      * )
@@ -59,7 +59,7 @@ class GoodsController extends ApiController
     /**
      * @OA\Post(
      *     tags={"商品相关接口"},
-     *     path="/dawn/api/goods/{id}",
+     *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="")
      * )
      *
@@ -75,7 +75,7 @@ class GoodsController extends ApiController
     /**
      * @OA\Put(
      *     tags={"商品相关接口"},
-     *     path="/dawn/api/goods/{id}",
+     *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="")
      * )
      *
@@ -93,7 +93,7 @@ class GoodsController extends ApiController
     /**
      * @OA\Delete(
      *     tags={"商品相关接口"},
-     *     path="/dawn/api/goods/{id}",
+     *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="")
      * )
      *

@@ -26,7 +26,7 @@ class CreateController extends Controller
             $goods->inventory = rand(2, 12) * 100;
             $goods->created_at = $now;
             $goods->status = Goods::STATUS['NORMAL'];
-            $goods->is_delete = Constant::DEFAULT_NOT_DELETE;
+            $goods->is_delete = Constant::NOT_DELETE;
             $goods->save();
         }
         print "[OK]\n";

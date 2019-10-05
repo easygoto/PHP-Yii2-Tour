@@ -10,29 +10,24 @@ use yii\db\ActiveQuery;
 
 class Goods extends BaseService
 {
-    protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
-    {
-        $query->andFilterWhere([
-            'id'            => $keywords['id'] ?? null,
-            'wholesale'     => $keywords['wholesale'] ?? null,
-            'selling_price' => $keywords['selling_price'] ?? null,
-            'market_price'  => $keywords['market_price'] ?? null,
-            'inventory'     => $keywords['inventory'] ?? null,
-            'created_at'    => $keywords['created_at'] ?? null,
-            'updated_at'    => $keywords['updated_at'] ?? null,
-            'operated_at'   => $keywords['operated_at'] ?? null,
-            'status'        => $keywords['status'] ?? null,
-            'is_delete'     => $keywords['is_delete'] ?? null,
-        ]);
-        $query->andFilterWhere(['like', 'name', $keywords['name'] ?? null]);
-        return $query;
-    }
-
     public function listsNotDelete(array $keywords)
     {
         $keywords['is_delete'] = Constant::NOT_DELETE;
         return $this->lists($keywords, function (GoodsModel $item) {
             return $item->getAttributes();
+        }, function (ActiveQuery $query) {
+            return $query->andFilterWhere([
+                'id' => $keywords['id'] ?? null,
+                'wholesale' => $keywords['wholesale'] ?? null,
+                'selling_price' => $keywords['sellingPrice'] ?? null,
+                'market_price' => $keywords['marketPrice'] ?? null,
+                'inventory' => $keywords['inventory'] ?? null,
+                'created_at' => $keywords['createdAt'] ?? null,
+                'updated_at' => $keywords['updatedAt'] ?? null,
+                'operated_at' => $keywords['operatedAt'] ?? null,
+                'status' => $keywords['status'] ?? null,
+                'is_delete' => Constant::NOT_DELETE,
+            ])->andFilterWhere(['like', 'name', $keywords['name'] ?? null]);
         });
     }
 
