@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\helpers;
+namespace app\core\containers;
 
 use ReflectionClass;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Trink\Core\Helper;
+namespace Trink\Core\Library;
 
 use ReflectionObject;
 
@@ -64,7 +64,7 @@ class Result
     /**
      * @return bool
      */
-    public function isFail()
+    public function isError()
     {
         return $this->status !== 0;
     }
@@ -125,16 +125,18 @@ class Result
      *
      * @param array $list
      * @param int   $total
+     * @param int   $page
      * @param int   $pageSize
      *
      * @return Result
      */
-    public static function lists(array $list, int $total, int $pageSize = 15): self
+    public static function lists(array $list, int $total, int $page, int $pageSize = 15): self
     {
         return new static(0, 'OK', [
             'list' => $list,
-            'pageSize' => $pageSize,
+            'page' => $page,
             'total' => $total,
+            'pageSize' => $pageSize,
             'totalPages' => ceil($total / $pageSize),
         ]);
     }

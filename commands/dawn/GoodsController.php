@@ -3,8 +3,8 @@
 
 namespace app\commands\dawn;
 
-use app\modules\dawn\components\services\Goods as GoodsService;
-use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\services\Goods as GoodsService;
+use app\modules\dawn\containers\Constant;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\db\ActiveQuery;

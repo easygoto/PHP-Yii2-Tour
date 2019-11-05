@@ -1,10 +1,10 @@
 <?php
 
 
-namespace app\modules\dawn\components\services;
+namespace app\modules\dawn\core\services;
 
-use app\components\BaseService;
-use app\modules\dawn\helpers\Constant;
+use app\core\components\BaseService;
+use app\modules\dawn\core\containers\Constant;
 use app\modules\dawn\models\Goods as GoodsModel;
 use yii\db\ActiveQuery;
 

@@ -1,9 +1,9 @@
 <?php
 
 
-namespace app\modules\dawn\components\services;
+namespace app\modules\dawn\core\services;
 
-use app\components\BaseService;
+use app\core\components\BaseService;
 use yii\db\ActiveQuery;
 
 class Menu extends BaseService

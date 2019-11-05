@@ -1,12 +1,12 @@
 <?php
 
 
-namespace app\helpers;
+namespace app\core\containers;
 
 class Constant
 {
-    const IS_DELETE  = 1;
-    const NOT_DELETE = 0;
+    const IS_DELETE  = true;
+    const NOT_DELETE = false;
 
     const MIN_PAGE          = 1;
     const DEFAULT_PAGE      = 1;

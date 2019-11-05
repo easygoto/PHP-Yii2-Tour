@@ -1,13 +1,14 @@
 <?php
 
 
-namespace app\components;
+namespace app\core\components;
 
-use app\helpers\Constant;
-use app\helpers\Message;
+use app\core\containers\Constant;
+use app\core\containers\Message;
+use app\core\helpers\SortHandle;
 use Closure;
-use Trink\Core\Helper\Format;
-use Trink\Core\Helper\Result;
+use Trink\Core\Library\Format;
+use Trink\Core\Library\Result;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -29,9 +30,18 @@ abstract class BaseService
 
     public function __construct()
     {
-        $this->modelClass = str_replace('components\services', 'models', get_class($this));
-        $messageClass = str_replace('components\services', 'helpers\messages', get_class($this));
+        $this->init();
+    }
+
+    /**
+     * 初始化
+     */
+    protected function init()
+    {
+        $this->modelClass = str_replace('core\services', 'models', get_class($this));
+        $messageClass = str_replace('core\services', 'helpers\messages', get_class($this));
         $this->messageClass = class_exists($messageClass) ? $messageClass : Message::class;
+
         $this->handleResult = function (ActiveRecord $item) {
             return $item->getAttributes();
         };
@@ -40,26 +50,37 @@ abstract class BaseService
         };
     }
 
-    protected function handleSort(ActiveQuery $query, array $keywords): ActiveQuery
+    /**
+     * 处理排序
+     *
+     * @param ActiveQuery $query
+     * @param SortHandle  $sort
+     *
+     * @return ActiveQuery
+     */
+    protected function handleSort(ActiveQuery $query, SortHandle $sort): ActiveQuery
     {
         /** @var ActiveRecord $model */
         $model = new $this->modelClass;
-        $sorts = explode(',', $keywords['sort'] ?? '');
-        foreach ($sorts as $sort) {
-            $firstChar = $sort[0] ?? '';
-            if (!$firstChar) {
-                continue;
-            }
-            $orderColumn = Format::toUnderScore(ltrim($sort, '-'));
-            if ($model->hasAttribute($orderColumn)) {
-                $orderMethod = $firstChar == '-' ? 'DESC' : 'ASC';
-                $query->addOrderBy("{$orderColumn} {$orderMethod}");
+        $query->addOrderBy("{$model->primaryKey} DESC");
+        foreach ($sort->getProps() as $column => $method) {
+            if ($model->hasAttribute($column)) {
+                $query->addOrderBy("{$column} {$method}");
             }
         }
         return $query;
     }
 
-    public function all(array $keywords = [], Closure $handleResult = null, Closure $handleQuery = null)
+    /**
+     * 根据查询获取全部记录
+     *
+     * @param array        $keywords
+     * @param Closure|null $handleQuery  构造查询条件
+     * @param Closure|null $handleResult 处理结果集
+     *
+     * @return Result
+     */
+    public function allByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
@@ -67,14 +88,14 @@ abstract class BaseService
         $query = $this->modelClass::find();
         $query = $handleQuery($query);
         $total = $query->count('1');
-        $query = $this->handleSort($query, $keywords['sort'] ?? '');
+        $query = $this->handleSort($query, SortHandle::load($keywords));
         $list = array_map(function (ActiveRecord $item) use ($handleResult) {
             return $handleResult($item);
         }, $query->all());
         $list = Format::array2CamelCase($list);
 
         return Result::success($this->messageClass::get('SUCCESS'), [
-            'list' => $list,
+            'list'  => $list,
             'total' => $total,
         ]);
     }
@@ -94,7 +115,7 @@ abstract class BaseService
 
         $query = $this->modelClass::find()->offset($offset)->limit($pageSize);
         $query = $handleQuery($query);
-        $query = $this->handleSort($query, $keywords);
+        $query = $this->handleSort($query, SortHandle::load($keywords));
 
         $total = $query->count('1');
         $list = array_map(function (ActiveRecord $item) use ($handleResult) {
@@ -102,7 +123,7 @@ abstract class BaseService
         }, $query->all());
         $list = Format::array2CamelCase($list);
 
-        return Result::lists($list, $total);
+        return Result::lists($list, $total, $page, $pageSize);
     }
 
     public function exists(int $id, Closure $handleQuery = null)

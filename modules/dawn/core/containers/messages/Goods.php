@@ -1,9 +1,9 @@
 <?php
 
 
-namespace app\modules\dawn\helpers\messages;
+namespace app\modules\dawn\core\containers\messages;
 
-use app\helpers\Message;
+use app\modules\dawn\core\containers\Message;
 
 class Goods extends Message
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Trink\Core\Helper;
+namespace Trink\Core\Library;
 
 class Arrays
 {

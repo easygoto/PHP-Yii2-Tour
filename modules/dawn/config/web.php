@@ -1,6 +1,6 @@
 <?php
 
-use app\modules\dawn\components\services;
+use app\modules\dawn\core\services;
 
 $config = [
     'id' => 'dawn',

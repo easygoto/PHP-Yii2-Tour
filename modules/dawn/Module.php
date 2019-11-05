@@ -3,7 +3,7 @@
 
 namespace app\modules\dawn;
 
-use app\modules\dawn\components\services;
+use app\modules\dawn\core\services;
 use app\web\Yii;
 
 /**

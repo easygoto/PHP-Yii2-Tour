@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\controllers\v1\api;
 
-use app\behaviors\CheckTokenFilter;
+use app\core\helpers\CheckTokenFilter;
 use app\modules\dawn\controllers\v1\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;

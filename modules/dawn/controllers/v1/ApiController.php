@@ -2,7 +2,7 @@
 
 namespace app\modules\dawn\controllers\v1;
 
-use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\core\containers\Constant;
 use app\modules\dawn\Module;
 
 /**

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace app\behaviors;
+namespace app\core\helpers;
 
 use app\web\Yii;
-use Trink\Core\Helper\Result;
+use Trink\Core\Library\Result;
 use yii\base\ActionFilter;
 use yii\web\Response;
 

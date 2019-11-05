@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\dawn\components\action;
+namespace app\modules\dawn\core\components\action;
 
 use app\web\Yii;
 use yii\grid\ActionColumn;
