@@ -7,9 +7,9 @@ use app\modules\dawn\core\services;
 use app\web\Yii;
 
 /**
- * @property services\User  userService
- * @property services\Menu  menuService
- * @property services\Goods goodsService
+ * @property services\User         userService
+ * @property services\Menu         menuService
+ * @property services\GoodsService goodsService
  */
 class Module extends \yii\base\Module
 {

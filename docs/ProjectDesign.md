@@ -47,19 +47,18 @@
 
 #### BaseService
 
-- allByAttr
-- lists
-- listsByAttr
-- exists
-- existsByAttr
-- get
-- getByAttr
-- save
-- add
-- edit
-- editByAttr
-- delete
-- deleteByAttr
+- [x] allByAttr
+- [x] listsByAttr
+- [ ] exists
+- [ ] existsByAttr
+- [ ] get
+- [ ] getByAttr
+- [ ] save
+- [ ] add
+- [ ] edit
+- [ ] editByAttr
+- [ ] delete
+- [ ] deleteByAttr
 
 
 

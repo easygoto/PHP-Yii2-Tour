@@ -16,7 +16,7 @@ $config = [
             'class' => services\Menu::class,
         ],
         'goodsService' => [
-            'class' => services\Goods::class,
+            'class' => services\GoodsService::class,
         ],
     ],
 

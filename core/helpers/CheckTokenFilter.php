@@ -4,7 +4,7 @@
 namespace app\core\helpers;
 
 use app\web\Yii;
-use Trink\Core\Library\Result;
+use Trink\Core\Helper\Result;
 use yii\base\ActionFilter;
 use yii\web\Response;
 

@@ -5,10 +5,10 @@ namespace app\core\components;
 
 use app\core\containers\Constant;
 use app\core\containers\Message;
-use app\core\helpers\SortHandle;
+use app\core\helpers\SortHandler;
 use Closure;
-use Trink\Core\Library\Format;
-use Trink\Core\Library\Result;
+use Trink\Core\Helper\Format;
+use Trink\Core\Helper\Result;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -45,7 +45,7 @@ abstract class BaseService
         $this->handleResult = function (ActiveRecord $item) {
             return $item->getAttributes();
         };
-        $this->handleQuery = function (ActiveQuery $query) {
+        $this->handleQuery = function (ActiveQuery $query, array $keywords = []) {
             return $query;
         };
     }
@@ -54,16 +54,19 @@ abstract class BaseService
      * 处理排序
      *
      * @param ActiveQuery $query
-     * @param SortHandle  $sort
+     * @param SortHandler $sorter
      *
      * @return ActiveQuery
      */
-    protected function handleSort(ActiveQuery $query, SortHandle $sort): ActiveQuery
+    protected function handleSort(ActiveQuery $query, SortHandler $sorter): ActiveQuery
     {
         /** @var ActiveRecord $model */
         $model = new $this->modelClass;
-        $query->addOrderBy("{$model->primaryKey} DESC");
-        foreach ($sort->getProps() as $column => $method) {
+        $primaryKey = $model->primaryKey;
+        if (!$sorter->hasRule($primaryKey)) {
+            $sorter->addRule($primaryKey, 'DESC');
+        }
+        foreach ($sorter->getProps() as $column => $method) {
             if ($model->hasAttribute($column)) {
                 $query->addOrderBy("{$column} {$method}");
             }
@@ -82,25 +85,33 @@ abstract class BaseService
      */
     public function allByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
+        $keywords = Format::array2UnderScore($keywords);
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
 
         $query = $this->modelClass::find();
-        $query = $handleQuery($query);
+        $query = $this->handleSort($query, SortHandler::load($keywords));
+        $query = $handleQuery($query, $keywords);
+
         $total = $query->count('1');
-        $query = $this->handleSort($query, SortHandle::load($keywords));
         $list = array_map(function (ActiveRecord $item) use ($handleResult) {
             return $handleResult($item);
         }, $query->all());
         $list = Format::array2CamelCase($list);
 
-        return Result::success($this->messageClass::get('SUCCESS'), [
-            'list'  => $list,
-            'total' => $total,
-        ]);
+        return Result::success('OK', ['list' => $list, 'total' => $total]);
     }
 
-    public function lists(array $keywords = [], Closure $handleResult = null, Closure $handleQuery = null)
+    /**
+     * 根据查询获取列表记录
+     *
+     * @param array        $keywords
+     * @param Closure|null $handleQuery  构造查询条件
+     * @param Closure|null $handleResult 处理结果集
+     *
+     * @return Result
+     */
+    public function listsByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
         $keywords = Format::array2UnderScore($keywords);
         $handleQuery = $handleQuery ?: $this->handleQuery;
@@ -114,8 +125,8 @@ abstract class BaseService
         $offset = ($page - 1) * $pageSize;
 
         $query = $this->modelClass::find()->offset($offset)->limit($pageSize);
-        $query = $handleQuery($query);
-        $query = $this->handleSort($query, SortHandle::load($keywords));
+        $query = $this->handleSort($query, SortHandler::load($keywords));
+        $query = $handleQuery($query, $keywords);
 
         $total = $query->count('1');
         $list = array_map(function (ActiveRecord $item) use ($handleResult) {
@@ -137,7 +148,7 @@ abstract class BaseService
         return Result::success();
     }
 
-    public function get(int $id, Closure $handleResult = null, Closure $handleQuery = null)
+    public function get(int $id, Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         return $this->getByAttr($handleResult, function (ActiveQuery $query) use ($id, $handleQuery) {

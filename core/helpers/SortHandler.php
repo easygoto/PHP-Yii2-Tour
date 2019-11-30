@@ -3,24 +3,19 @@
 
 namespace app\core\helpers;
 
-use Trink\Core\Library\Format;
+use Trink\Core\Helper\Format;
 
-class SortHandle
+class SortHandler
 {
     protected static $instance;
 
     private $props = [];
 
-    /**
-     * @param array|string $keywords
-     *
-     * @return SortHandle
-     */
-    public static function load($keywords): SortHandle
+    public static function load($keywords): SortHandler
     {
         $instance = new static();
         if (is_array($keywords)) {
-            $instance->parse($keywords['sort'] ?? '');
+            $instance->parse($keywords['_sort'] ?? '');
         } elseif (is_string($keywords)) {
             $instance->parse($keywords);
         }
@@ -41,8 +36,35 @@ class SortHandle
         }
     }
 
+    public function setProps(array $props): SortHandler
+    {
+        $this->props = $props;
+        return $this;
+    }
+
     public function getProps(): array
     {
         return $this->props;
+    }
+
+    public function hasRule($column)
+    {
+        return array_key_exists($column, $this->props);
+    }
+
+    public function addRule($column, $type = 'ASC')
+    {
+        switch (strtoupper($type)) {
+            case 0:
+            case 'ASC':
+            default:
+                $this->props[$column] = 'ASC';
+                break;
+            case 1:
+            case 'DESC':
+                $this->props[$column] = 'DESC';
+                break;
+        }
+        return $this;
     }
 }

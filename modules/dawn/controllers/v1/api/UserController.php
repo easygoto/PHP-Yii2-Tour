@@ -8,7 +8,7 @@ use app\modules\dawn\controllers\v1\ApiController;
 use app\modules\dawn\models\User;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
-use Trink\Core\Library\Arrays;
+use Trink\Core\Helper\Arrays;
 use yii\db\Exception;
 use yii\web\Response;
 

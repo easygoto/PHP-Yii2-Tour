@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use app\core\helpers\LoginAuthFilter;
 use app\core\containers\Constant;
-use Trink\Core\Library\Result;
+use Trink\Core\Helper\Result;
 use yii\web\Controller;
 
 class ApiController extends Controller

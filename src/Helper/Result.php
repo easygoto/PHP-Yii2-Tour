@@ -1,6 +1,6 @@
 <?php
 
-namespace Trink\Core\Library;
+namespace Trink\Core\Helper;
 
 use ReflectionObject;
 
