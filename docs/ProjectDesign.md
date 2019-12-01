@@ -43,22 +43,38 @@
 - [ ] 改变其他的参数不得改变接口本身的作用, 操作若涉及多功能必须在后端封装成一个事务安全的接口
 - [ ] 后端所有业务功能均使用 Result 传输, 需要一个检查链
 
+### 请求/响应
+
+```puml
+@startuml
+(*)  --> "路由 RouteRule"
+--> "校验是否登录 CheckTokenFilter"
+--> "校验参数合法性 Validator"
+--> "流程链条 ProcessChain"
+--> "基础服务方法 BaseService"
+--> "结果注入 InjectionTool"
+--> "日志记录器 LogBehaviors"
+--> "返回结果 ReturnResult"
+-->(*)
+@enduml
+```
+
 ### 组件
 
 #### BaseService
 
-- [x] allByAttr
-- [x] listsByAttr
-- [ ] exists
-- [ ] existsByAttr
-- [ ] get
-- [ ] getByAttr
-- [ ] save
-- [ ] add
-- [ ] edit
-- [ ] editByAttr
-- [ ] delete
-- [ ] deleteByAttr
+- [x] allByAttr 获取所有, 有条目限制
+- [x] listsByAttr 根据条件获取列表
+- [ ] exists 根据ID判断是否存在
+- [ ] existsByAttr 根据条件判断是否存在
+- [ ] get 根据ID获取详情
+- [ ] getByAttr 根据条件获取详情
+- [ ] save 保存(无则添加, 有则编辑)
+- [ ] add 添加
+- [ ] edit 根据ID编辑
+- [ ] editByAttr 根据条件编辑
+- [ ] delete 根据ID删除
+- [ ] deleteByAttr 根据条件删除
 
 
 

@@ -3,9 +3,9 @@
 
 namespace app\modules\dawn\core\containers\messages;
 
-use app\modules\dawn\core\containers\Message;
+use app\core\containers\Message;
 
-class Goods extends Message
+class GoodsMessage extends Message
 {
     protected static function prefix(): string
     {

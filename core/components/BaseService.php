@@ -38,8 +38,9 @@ abstract class BaseService
      */
     protected function init()
     {
-        $this->modelClass = str_replace('core\services', 'models', get_class($this));
-        $messageClass = str_replace('core\services', 'helpers\messages', get_class($this));
+        $thisServiceName = rtrim(get_class($this), 'Service');
+        $this->modelClass = str_replace('core\services', 'models', $thisServiceName);
+        $messageClass = str_replace('core\services', 'core\containers\messages', $thisServiceName . 'Message');
         $this->messageClass = class_exists($messageClass) ? $messageClass : Message::class;
 
         $this->handleResult = function (ActiveRecord $item) {

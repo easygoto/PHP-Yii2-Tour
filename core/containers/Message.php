@@ -5,7 +5,7 @@ namespace app\core\containers;
 
 use ReflectionClass;
 
-abstract class Message
+class Message
 {
     const FAIL    = '失败';
     const ERROR   = '错误';
@@ -31,7 +31,10 @@ abstract class Message
     const NOT_EXISTS = '不存在';
     const NOT_RESULT = '查询无果';
 
-    abstract protected static function prefix(): string;
+    protected static function prefix(): string
+    {
+        return '';
+    }
 
     public static function get($constName = '')
     {
