@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
 
 class GoodsController extends Controller
 {
-    private $goodsService;
+    private GoodsService $goodsService;
 
     public function __construct($id, $module, $config = [])
     {

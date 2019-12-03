@@ -2,8 +2,8 @@
 
 namespace app\modules\dawn\controllers\v1\api;
 
+use app\core\containers\Message;
 use app\modules\dawn\core\containers\Constant;
-use app\modules\dawn\core\containers\Message;
 use app\modules\dawn\controllers\v1\ApiController;
 use app\modules\dawn\models\User;
 use app\web\Yii;

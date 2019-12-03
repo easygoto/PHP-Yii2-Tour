@@ -3,7 +3,7 @@
 
 namespace app\commands\dawn;
 
-use app\modules\dawn\helpers\Constant;
+use app\modules\dawn\core\containers\Constant;
 use app\modules\dawn\models\Goods;
 use yii\console\Controller;
 use yii\console\ExitCode;
