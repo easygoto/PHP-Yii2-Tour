@@ -9,7 +9,7 @@ use yii\web\Controller;
 
 class ApiController extends Controller
 {
-    public $defaultAction = 'index';
+    public string $defaultAction = 'index';
 
     // 过滤器
     public function behaviors()

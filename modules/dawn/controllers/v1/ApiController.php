@@ -13,8 +13,7 @@ use app\modules\dawn\Module;
  */
 class ApiController extends \app\controllers\ApiController
 {
-    /** @var Module */
-    public $module;
+    public Module $module;
 
     public function listJson($list, $total, $pageSize = Constant::DEFAULT_PAGE_SIZE)
     {

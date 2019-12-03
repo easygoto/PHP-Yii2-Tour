@@ -38,7 +38,7 @@ class GoodsService extends BaseService
         return $this->listsByAttr($keywords, function (ActiveQuery $query, array $keywords = []) {
             $keywords['is_delete'] = Constant::NOT_DELETE;
             return $this->handleFilter($query, $keywords);
-        }, fn (Goods $item) => (fn ($keywords) => $keywords));
+        }, fn (Goods $item) => $this->handleResult($item, 'list'));
     }
 
     public function getNotDelete(int $id)
