@@ -1,31 +1,21 @@
-# YII2 BASIC 源码之旅
+## 安全性
 
-## 心得(以后再整理系列)
+### 首先保证输入的数据的正确性
 
-```php
-vendor/yiisoft/yii2/web/Application.php->handleRequest:
-    1. 判断 $this->catchAll 是否要拦截所有页面
-    2. 解析网址和参数
-    3. 通过 $this->runAction($route, $params) 运行 route
+> 前端校验是用户体验, 后端校验才是真正的校验
 
-vendor/yiisoft/yii2/web/Request.php->resolve:
-    1. 直接委托 Yii::$app->getUrlManager()->parseRequest($this) 来处理网址
-    2. $_GET = $params + $_GET, 存疑点: 数组相加是合并?
+> 数字要有范围(逻辑安全)
 
-vendor/yiisoft/yii2/web/UrlManager.php->parseRequest:
-    1. $this->enablePrettyUrl 两条路. false 是根据网址, true 是根据路由列表
-    2. 如果根据路由列表, 框架会遍历所有路由, 根据正则匹配(貌似是最左匹配原则), 交给路由对象自己来处理(UrlRule->parseRequest)
-        2.1 buildRules: 生成路由规则, 规则为 "/^((?:(GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS),)*(GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS))\\s+(.*)$/"
-        2.2 组件的路由优先匹配
-    3. 列表中没有匹配到, 若开启 enableStrictParsing, 则立即返回 false, 若关闭, 还会去 normalizer 组件中寻找
+> 字符串不得有注入SQL的语句(数据安全)
 
-vendor/yiisoft/yii2/web/UrlRule.php->parseRequest:
-    1. 规则和 mode 设置相关, PARSING_ONLY, CREATION_ONLY 等, 一些简单的处理
-```
+### 记录关键操作(建议)
 
-```php
-vendor/yiisoft/yii2/validators
-    1. 默认所有的验证器都在此文件夹下，可以自定义，但 Validator 中 $builtInValidators 属性也要添加
-    2. 对于各验证器的 message，{attribute} 可以自定义提示信息，而这个值在 Model::attributeLabels 中定义
-```
+> 删除数据需要记录到日志中
 
+> 编辑数据需要记录编辑前和编辑后的内容详细
+
+### 返回结果的保密性
+
+> 只给用户展现用户需要看到的
+
+> 对于错误的输入需要返回提示

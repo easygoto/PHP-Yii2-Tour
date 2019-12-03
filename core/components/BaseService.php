@@ -7,7 +7,6 @@ use app\core\containers\Constant;
 use app\core\containers\Message;
 use app\core\helpers\SortHandler;
 use Closure;
-use Trink\Core\Helper\Format;
 use Trink\Core\Helper\Result;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -16,17 +15,13 @@ abstract class BaseService
 {
     use InjectionTool;
 
-    /** @var ActiveRecord */
-    protected $modelClass;
+    protected ActiveRecord $model;
 
-    /** @var Message */
-    protected $messageClass;
+    protected Message $message;
 
-    /** @var Closure */
-    protected $handleResult;
+    protected Closure $handleResult;
 
-    /** @var Closure */
-    protected $handleQuery;
+    protected Closure $handleQuery;
 
     public function __construct()
     {
@@ -38,11 +33,13 @@ abstract class BaseService
      */
     protected function init()
     {
-        $thisServiceName = rtrim(get_class($this), 'Service');
-        $this->modelClass = str_replace('core\services', 'models', $thisServiceName);
-        $messageClass = str_replace('core\services', 'core\containers\messages', $thisServiceName . 'Message');
-        $this->messageClass = class_exists($messageClass) ? $messageClass : Message::class;
+        $serviceClassName = rtrim(get_class($this), 'Service');
+        $modelClassName = str_replace('core\services', 'models', $serviceClassName);
+        $messageClassName = str_replace('core\services', 'core\containers\messages', $serviceClassName . 'Message');
+        $messageClassName = class_exists($messageClassName) ? $messageClassName : Message::class;
 
+        $this->model = new $modelClassName;
+        $this->message = new $messageClassName;
         $this->handleResult = function (ActiveRecord $item) {
             return $item->getAttributes();
         };
@@ -62,7 +59,7 @@ abstract class BaseService
     protected function handleSort(ActiveQuery $query, SortHandler $sorter): ActiveQuery
     {
         /** @var ActiveRecord $model */
-        $model = new $this->modelClass;
+        $model = $this->model;
         $primaryKey = $model->primaryKey;
         if (!$sorter->hasRule($primaryKey)) {
             $sorter->addRule($primaryKey, 'DESC');
@@ -86,11 +83,10 @@ abstract class BaseService
      */
     public function allByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
-        $keywords = Format::array2UnderScore($keywords);
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
 
-        $query = $this->modelClass::find();
+        $query = $this->model::find();
         $query = $this->handleSort($query, SortHandler::load($keywords));
         $query = $handleQuery($query, $keywords);
 
@@ -98,8 +94,6 @@ abstract class BaseService
         $list = array_map(function (ActiveRecord $item) use ($handleResult) {
             return $handleResult($item);
         }, $query->all());
-        $list = Format::array2CamelCase($list);
-
         return Result::success('OK', ['list' => $list, 'total' => $total]);
     }
 
@@ -114,7 +108,6 @@ abstract class BaseService
      */
     public function listsByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
-        $keywords = Format::array2UnderScore($keywords);
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
 
@@ -125,7 +118,7 @@ abstract class BaseService
         $pageSize = max($pageSize, Constant::MIN_PAGE_SIZE);
         $offset = ($page - 1) * $pageSize;
 
-        $query = $this->modelClass::find()->offset($offset)->limit($pageSize);
+        $query = $this->model::find()->offset($offset)->limit($pageSize);
         $query = $this->handleSort($query, SortHandler::load($keywords));
         $query = $handleQuery($query, $keywords);
 
@@ -133,7 +126,6 @@ abstract class BaseService
         $list = array_map(function (ActiveRecord $item) use ($handleResult) {
             return $handleResult($item);
         }, $query->all());
-        $list = Format::array2CamelCase($list);
 
         return Result::lists($list, $total, $page, $pageSize);
     }
@@ -141,10 +133,10 @@ abstract class BaseService
     public function exists(int $id, Closure $handleQuery = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
-        $query = $this->modelClass::find()->where(['id' => $id]);
+        $query = $this->model::find()->where(['id' => $id]);
         $query = $handleQuery($query);
         if ($query->exists() === false) {
-            return Result::fail($this->messageClass::get('NOT_EXISTS'));
+            return Result::fail($this->message::get('NOT_EXISTS'));
         }
         return Result::success();
     }
@@ -162,14 +154,13 @@ abstract class BaseService
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
 
-        $query = $this->modelClass::find();
+        $query = $this->model::find();
         $object = ($handleQuery($query))->one();
         if (!$object) {
-            return Result::fail($this->messageClass::get('NOT_EXISTS'));
+            return Result::fail($this->message::get('NOT_EXISTS'));
         }
 
         $detail = $handleResult($object);
-        $detail = Format::array2CamelCase($detail);
         return Result::success('OK', $detail);
     }
 
@@ -178,17 +169,17 @@ abstract class BaseService
         $modelId = (int)($params['id'] ?? 0);
         $result = $this->exists($modelId);
         if ($result->isSuccess()) {
-            $model = new $this->modelClass;
+            $model = new $this->model;
         } else {
-            $model = $this->modelClass::findOne($modelId);
+            $model = $this->model::findOne($modelId);
         }
 
         $model->setAttributes($params);
         if (!$model->save(true)) {
-            return Result::fail($this->messageClass::get('SAVE_FAIL'), $model->getErrors());
+            return Result::fail($this->message::get('SAVE_FAIL'), $model->getErrors());
         }
 
-        return Result::success($this->messageClass::get('SAVE_SUCCESS'), [
+        return Result::success($this->message::get('SAVE_SUCCESS'), [
             'id' => $model->getAttribute('id'),
         ]);
     }
@@ -196,50 +187,50 @@ abstract class BaseService
     public function add(array $params)
     {
         /** @var ActiveRecord $model */
-        $model = new $this->modelClass;
+        $model = $this->model;
         $model->setAttributes($params);
         if (!$model->save(true)) {
-            return Result::fail($this->messageClass::get('CREATE_FAIL'), $model->getErrors());
+            return Result::fail($this->message::get('CREATE_FAIL'), $model->getErrors());
         }
 
-        return Result::success($this->messageClass::get('CREATE_SUCCESS'), [
+        return Result::success($this->message::get('CREATE_SUCCESS'), [
             'id' => $model->getAttribute('id'),
         ]);
     }
 
     public function edit(int $id, array $params)
     {
-        $model = $this->modelClass::findOne($id);
+        $model = $this->model::findOne($id);
         if (!$model) {
-            return Result::fail($this->messageClass::get('NOT_EXISTS'));
+            return Result::fail($this->message::get('NOT_EXISTS'));
         }
 
         $model->setAttributes($params);
         if (!$model->save(true)) {
-            return Result::fail($this->messageClass::get('UPDATE_FAIL'), $model->getErrors());
+            return Result::fail($this->message::get('UPDATE_FAIL'), $model->getErrors());
         }
 
-        return Result::success($this->messageClass::get('UPDATE_SUCCESS'));
+        return Result::success($this->message::get('UPDATE_SUCCESS'));
     }
 
     public function delete(int $id, array $params = [])
     {
-        $query = $this->modelClass::find()->where(['id' => $id]);
+        $query = $this->model::find()->where(['id' => $id]);
         $exists = $query->exists();
         if (!$exists) {
-            return Result::fail($this->messageClass::get('NOT_EXISTS'));
+            return Result::fail($this->message::get('NOT_EXISTS'));
         }
 
         $exists = $query->andFilterWhere($params)->exists();
         if (!$exists) {
-            return Result::success($this->messageClass::get('DELETED'));
+            return Result::success($this->message::get('DELETED'));
         }
 
-        $result = $this->modelClass::deleteAll(['id' => $id]);
+        $result = $this->model::deleteAll(['id' => $id]);
         if (!$result) {
-            return Result::fail($this->messageClass::get('DELETE_FAIL'));
+            return Result::fail($this->message::get('DELETE_FAIL'));
         }
 
-        return Result::success($this->messageClass::get('DELETE_SUCCESS'));
+        return Result::success($this->message::get('DELETE_SUCCESS'));
     }
 }

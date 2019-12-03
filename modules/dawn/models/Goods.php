@@ -9,9 +9,9 @@ use app\web\Yii;
  *
  * @property string $id
  * @property string $name 商品
- * @property string $wholesale 批发价
- * @property string $selling_price 出售价
- * @property string $market_price 市场价
+ * @property float $wholesale 批发价
+ * @property float $selling_price 出售价
+ * @property float $market_price 市场价
  * @property int $inventory 库存
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间

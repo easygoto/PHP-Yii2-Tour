@@ -2,6 +2,8 @@
 
 namespace app\web;
 
+use app\core\containers\Constant;
+
 /**
  * Class RouteRule
  *
@@ -17,7 +19,7 @@ class RouteRule
 {
     public static function __callStatic($name, $arguments)
     {
-        list($pattern, $route) = $arguments;
+        [$pattern, $route] = $arguments;
         $defaults = $arguments[2] ?? [];
         return self::rule(strtoupper($name), $pattern, $route, $defaults);
     }
@@ -25,10 +27,10 @@ class RouteRule
     public static function rule($verb, $pattern, $route, $defaults)
     {
         return [
-            'pattern' => $pattern,
-            'route' => $route,
+            'pattern'  => $pattern,
+            'route'    => $route,
             'defaults' => $defaults,
-            'verb' => $verb,
+            'verb'     => $verb,
         ];
     }
 
@@ -44,31 +46,13 @@ class RouteRule
     {
         $baseCtrl = $baseCtrl ?: $baseRoute;
         return [
-            RouteRule::post(
-                "{$baseRoute}",
-                "{$baseCtrl}/create"
-            ),
-            RouteRule::get(
-                "{$baseRoute}/list/<page:\d+>",
-                "{$baseCtrl}/index",
-                ['page' => 1]
-            ),
-            RouteRule::get(
-                "{$baseRoute}/<id:\d+>",
-                "{$baseCtrl}/view"
-            ),
-            RouteRule::patch(
-                "{$baseRoute}/<id:\d+>",
-                "{$baseCtrl}/update"
-            ),
-            RouteRule::put(
-                "{$baseRoute}/<id:\d+>",
-                "{$baseCtrl}/update"
-            ),
-            RouteRule::delete(
-                "{$baseRoute}/<id:\d+>",
-                "{$baseCtrl}/delete"
-            ),
+            RouteRule::get("{$baseRoute}/all/<limit:\d+?>", "{$baseCtrl}/all", ['limit' => Constant::DEFAULT_LIMIT]),
+            RouteRule::get("{$baseRoute}/list/<page:\d+>", "{$baseCtrl}/index", ['page' => Constant::DEFAULT_PAGE]),
+            RouteRule::get("{$baseRoute}/<id:\d+>", "{$baseCtrl}/view"),
+            RouteRule::post("{$baseRoute}", "{$baseCtrl}/create"),
+            RouteRule::put("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),
+            RouteRule::patch("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),
+            RouteRule::delete("{$baseRoute}/<id:\d+>", "{$baseCtrl}/delete"),
         ];
     }
 

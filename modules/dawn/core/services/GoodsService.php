@@ -6,7 +6,7 @@ namespace app\modules\dawn\core\services;
 use app\core\components\BaseService;
 use app\core\helpers\FilterHandler;
 use app\modules\dawn\core\containers\Constant;
-use app\modules\dawn\models\Goods as GoodsModel;
+use app\modules\dawn\models\Goods;
 use yii\db\ActiveQuery;
 
 class GoodsService extends BaseService
@@ -23,7 +23,7 @@ class GoodsService extends BaseService
         return $query;
     }
 
-    private function handleResult(GoodsModel $item, $scope = 'list')
+    protected function handleResult(Goods $item, $scope = 'list')
     {
         switch ($scope) {
             default:
@@ -38,18 +38,15 @@ class GoodsService extends BaseService
         return $this->listsByAttr($keywords, function (ActiveQuery $query, array $keywords = []) {
             $keywords['is_delete'] = Constant::NOT_DELETE;
             return $this->handleFilter($query, $keywords);
-        }, function (GoodsModel $item) {
-            return $this->handleResult($item, 'list');
-        });
+        }, fn (Goods $item) => (fn ($keywords) => $keywords));
     }
 
     public function getNotDelete(int $id)
     {
-        return $this->get($id, function (ActiveQuery $query) {
-            return $query->andFilterWhere(['is_delete' => Constant::NOT_DELETE]);
-        }, function (GoodsModel $item) {
-            return $this->handleResult($item, 'detail');
-        });
+        return $this->getByAttr(
+            fn (Goods $item) => $this->handleResult($item, 'detail'),
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => Constant::NOT_DELETE])
+        );
     }
 
     public function delete($id, $params = [])

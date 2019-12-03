@@ -85,6 +85,15 @@ class Result
     }
 
     /**
+     * @return array
+     */
+    public function asCamelDataArray()
+    {
+        $this->data = Format::array2CamelCase($this->data);
+        return $this->asArray();
+    }
+
+    /**
      * @return false|mixed|string
      */
     public function asJson()

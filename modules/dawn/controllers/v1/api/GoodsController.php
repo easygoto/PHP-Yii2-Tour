@@ -6,6 +6,7 @@ use app\core\helpers\CheckTokenFilter;
 use app\modules\dawn\controllers\v1\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
+use Trink\Core\Helper\Format;
 use yii\web\Response;
 
 class GoodsController extends ApiController
@@ -14,8 +15,8 @@ class GoodsController extends ApiController
     {
         return [
             [
-                'class' => CheckTokenFilter::class,
-                'only' => ['create', 'update', 'delete'],
+                'class'  => CheckTokenFilter::class,
+                'only'   => ['create', 'update', 'delete'],
                 'except' => ['view', 'index'],
             ],
         ];
@@ -35,7 +36,7 @@ class GoodsController extends ApiController
     {
         $params = Yii::$app->request->get();
         $result = $this->module->goodsService->listsNotDelete($params);
-        return $this->asJson($result->asArray());
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -53,7 +54,7 @@ class GoodsController extends ApiController
     public function actionView($id)
     {
         $result = $this->module->goodsService->getNotDelete((int)$id);
-        return $this->asJson($result->asArray());
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -68,8 +69,9 @@ class GoodsController extends ApiController
     public function actionCreate()
     {
         $params = Yii::$app->request->post();
+        $params = Format::array2UnderScore($params);
         $result = $this->module->goodsService->add($params);
-        return $this->asJson($result->asArray());
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -87,7 +89,7 @@ class GoodsController extends ApiController
     {
         $params = Yii::$app->request->post();
         $result = $this->module->goodsService->edit($id, $params);
-        return $this->asJson($result->asArray());
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -104,6 +106,6 @@ class GoodsController extends ApiController
     public function actionDelete($id)
     {
         $result = $this->module->goodsService->delete($id);
-        return $this->asJson($result->asArray());
+        return $this->asJson($result->asCamelDataArray());
     }
 }
