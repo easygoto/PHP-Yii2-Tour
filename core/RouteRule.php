@@ -2,8 +2,6 @@
 
 namespace app\web;
 
-use app\core\containers\Constant;
-
 /**
  * Class RouteRule
  *
@@ -46,8 +44,8 @@ class RouteRule
     {
         $baseCtrl = $baseCtrl ?: $baseRoute;
         return [
-            RouteRule::get("{$baseRoute}/all/<limit:\d+?>", "{$baseCtrl}/all", ['limit' => Constant::DEFAULT_LIMIT]),
-            RouteRule::get("{$baseRoute}/list/<page:\d+>", "{$baseCtrl}/index", ['page' => Constant::DEFAULT_PAGE]),
+            RouteRule::get("{$baseRoute}/all/<limit:\d+?>", "{$baseCtrl}/all", ['limit' => 0]),
+            RouteRule::get("{$baseRoute}/list/<page:\d+>", "{$baseCtrl}/index", ['page' => 1]),
             RouteRule::get("{$baseRoute}/<id:\d+>", "{$baseCtrl}/view"),
             RouteRule::post("{$baseRoute}", "{$baseCtrl}/create"),
             RouteRule::put("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),

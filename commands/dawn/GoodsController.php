@@ -3,8 +3,8 @@
 
 namespace app\commands\dawn;
 
-use app\modules\dawn\services\Goods as GoodsService;
-use app\modules\dawn\containers\Constant;
+use app\modules\dawn\core\containers\Constant;
+use app\modules\dawn\core\services\GoodsService;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\db\ActiveQuery;
@@ -23,9 +23,7 @@ class GoodsController extends Controller
     /** 获取商品列表 */
     public function actionList()
     {
-        $result = $this->goodsService->lists([], function (ActiveRecord $item) {
-            return $item->getAttributes(['id']);
-        });
+        $result = $this->goodsService->listsByAttr([], fn (ActiveRecord $item) => $item->getAttributes(['id']));
         print_r($result->asArray());
         return ExitCode::OK;
     }
