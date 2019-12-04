@@ -7,9 +7,9 @@ use Trink\Core\Helper\Format;
 
 class SortHandler
 {
-    protected static $instance;
+    protected static SortHandler $instance;
 
-    private $props = [];
+    protected array $props = [];
 
     public static function load($keywords): SortHandler
     {

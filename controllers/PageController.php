@@ -8,6 +8,6 @@ class PageController extends Controller
 {
     public function actionIndex()
     {
-        return $this->render('index');
+        return '<h1>Base Page Index ...</h1>';
     }
 }

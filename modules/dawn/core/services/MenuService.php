@@ -6,7 +6,7 @@ namespace app\modules\dawn\core\services;
 use app\core\components\BaseService;
 use yii\db\ActiveQuery;
 
-class Menu extends BaseService
+class MenuService extends BaseService
 {
     protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
     {

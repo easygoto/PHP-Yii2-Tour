@@ -7,17 +7,13 @@ use yii\db\ActiveQuery;
 
 class FilterHandler
 {
-    /** @var array */
-    private $keywords = [];
+    private array $keywords = [];
 
-    /** @var array */
-    private $range = [];
+    private array $range = [];
 
-    /** @var array */
-    private $equals = [];
+    private array $equals = [];
 
-    /** @var array */
-    private $like = [];
+    private array $like = [];
 
     public function setKeywords(array $keywords): FilterHandler
     {

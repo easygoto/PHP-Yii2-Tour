@@ -4,10 +4,10 @@
 namespace app\modules\dawn\core\services;
 
 use app\core\components\BaseService;
-use app\modules\dawn\models\User as UserModel;
+use app\modules\dawn\models\User;
 use yii\db\ActiveQuery;
 
-class User extends BaseService
+class UserService extends BaseService
 {
     protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
     {
@@ -31,16 +31,15 @@ class User extends BaseService
     public function listsNotDelete(array $keywords)
     {
         $keywords['is_delete'] = 0;
-        return $this->lists($keywords);
+        return $this->listsByAttr($keywords);
     }
 
     public function getNotDelete(int $id)
     {
-        return $this->get($id, function (UserModel $item) {
-            return $item->getAttributes(null, ['is_delete']);
-        }, function (ActiveQuery $query) {
-            return $query->andFilterWhere(['is_delete' => 0]);
-        });
+        return $this->getByAttr(
+            fn (User $item) => $item->getAttributes(null, ['is_delete']),
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => 0])
+        );
     }
 
     public function delete($id, $params = [])

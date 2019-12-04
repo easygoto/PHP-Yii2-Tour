@@ -3,7 +3,7 @@
 namespace app\modules\dawn\controllers\v1\api;
 
 use app\core\helpers\CheckTokenFilter;
-use app\modules\dawn\controllers\v1\ApiController;
+use app\modules\dawn\controllers\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Format;

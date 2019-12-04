@@ -10,10 +10,10 @@ $config = [
     'components' => [
         // list of component configurations
         'userService' => [
-            'class' => services\User::class
+            'class' => services\UserService::class
         ],
         'menuService' => [
-            'class' => services\Menu::class,
+            'class' => services\MenuService::class,
         ],
         'goodsService' => [
             'class' => services\GoodsService::class,

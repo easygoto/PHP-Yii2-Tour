@@ -4,11 +4,12 @@ namespace app\modules\dawn\controllers\v1\api;
 
 use app\core\containers\Message;
 use app\modules\dawn\core\containers\Constant;
-use app\modules\dawn\controllers\v1\ApiController;
+use app\modules\dawn\controllers\ApiController;
 use app\modules\dawn\models\User;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Arrays;
+use Trink\Core\Helper\Result;
 use yii\db\Exception;
 use yii\web\Response;
 
@@ -18,13 +19,13 @@ class UserController extends ApiController
     {
         $userObj = User::findOne($id);
         if (!$userObj) {
-            return $this->failJson(Message::NOT_EXISTS);
+            return $this->asJson(Result::fail(Message::NOT_EXISTS)->asArray());
         }
         if ($userObj->is_delete === Constant::IS_DELETE) {
-            return $this->failJson(Message::DELETED);
+            return $this->asJson(Result::fail(Message::DELETED)->asArray());
         }
         $user = $userObj->getAttributes(null, ['secret_code', 'deleted']);
-        return $this->successJson(Message::SUCCESS, $user);
+        return $this->asJson(Result::success(Message::SUCCESS, $user)->asArray());
     }
 
     /**
@@ -56,7 +57,7 @@ class UserController extends ApiController
         foreach ($userObj->all() as $user) {
             $userList[] = $user->getAttributes(null, ['secret_code', 'is_delete']);
         }
-        return $this->listJson($userList, $userTotal);
+        return $this->asJson(Result::lists($userList, $userTotal, $page)->asArray());
     }
 
     /**
@@ -84,10 +85,10 @@ class UserController extends ApiController
                 throw new Exception(Message::CREATE_FAIL);
             }
             $transaction->commit();
-            return $this->successJson(Message::CREATE_SUCCESS, ['id' => $user->id]);
+            return $this->asJson(Result::success(Message::CREATE_SUCCESS, ['id' => $user->id])->asArray());
         } catch (Exception $e) {
             $transaction->rollBack();
-            return $this->failJson($e->getMessage(), $user->getErrors());
+            return $this->asJson(Result::fail($e->getMessage(), $user->getErrors())->asArray());
         }
     }
 
@@ -97,12 +98,12 @@ class UserController extends ApiController
         if ($request->isPut) {
             $data = $request->bodyParams;
             //            UserService::edit();
-            return $this->successJson(Message::UPDATE_SUCCESS, $data);
+            return $this->asJson(Result::success(Message::UPDATE_SUCCESS, $data)->asArray());
         } elseif ($request->isPatch) {
             $data = $request->bodyParams;
-            return $this->successJson(Message::UPDATE_SUCCESS, $data);
+            return $this->asJson(Result::success(Message::UPDATE_SUCCESS, $data)->asArray());
         } else {
-            return $this->failJson('未接受的请求');
+            return $this->asJson(Result::fail('未接受的请求')->asArray());
         }
     }
 
@@ -110,12 +111,12 @@ class UserController extends ApiController
     {
         $user = User::findOne($id);
         if (!$user) {
-            return $this->failJson(Message::NOT_EXISTS);
+            return $this->asJson(Result::fail(Message::NOT_EXISTS)->asArray());
         }
         $user->is_delete = 1;
         if (!$user->save(true, ['is_delete'])) {
-            return $this->failJson(Message::DELETE_FAIL, $user->getErrors());
+            return $this->asJson(Result::fail(Message::DELETE_FAIL, $user->getErrors())->asArray());
         }
-        return $this->successJson(Message::DELETE_SUCCESS);
+        return $this->asJson(Result::success(Message::DELETE_SUCCESS)->asArray());
     }
 }

@@ -7,5 +7,6 @@ use app\modules\dawn\Module;
 
 class PageController extends \app\controllers\PageController
 {
-    public Module $module;
+    /** @var Module $module */
+    public $module;
 }

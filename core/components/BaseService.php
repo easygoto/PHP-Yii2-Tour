@@ -13,8 +13,6 @@ use yii\db\ActiveRecord;
 
 abstract class BaseService
 {
-    use InjectionTool;
-
     protected ActiveRecord $model;
 
     protected Message $message;
@@ -25,14 +23,6 @@ abstract class BaseService
 
     public function __construct()
     {
-        $this->init();
-    }
-
-    /**
-     * 初始化
-     */
-    protected function init()
-    {
         $serviceClassName = rtrim(get_class($this), 'Service');
         $modelClassName = str_replace('core\services', 'models', $serviceClassName);
         $messageClassName = str_replace('core\services', 'core\containers\messages', $serviceClassName . 'Message');
@@ -40,12 +30,8 @@ abstract class BaseService
 
         $this->model = new $modelClassName;
         $this->message = new $messageClassName;
-        $this->handleResult = function (ActiveRecord $item) {
-            return $item->getAttributes();
-        };
-        $this->handleQuery = function (ActiveQuery $query, array $keywords = []) {
-            return $query;
-        };
+        $this->handleResult = fn (ActiveRecord $item) => $item->getAttributes();
+        $this->handleQuery = fn (ActiveQuery $query, array $keywords = []) => $query;
     }
 
     /**
@@ -58,14 +44,12 @@ abstract class BaseService
      */
     protected function handleSort(ActiveQuery $query, SortHandler $sorter): ActiveQuery
     {
-        /** @var ActiveRecord $model */
-        $model = $this->model;
-        $primaryKey = $model->primaryKey;
+        $primaryKey = $this->model->primaryKey;
         if (!$sorter->hasRule($primaryKey)) {
             $sorter->addRule($primaryKey, 'DESC');
         }
         foreach ($sorter->getProps() as $column => $method) {
-            if ($model->hasAttribute($column)) {
+            if ($this->model->hasAttribute($column)) {
                 $query->addOrderBy("{$column} {$method}");
             }
         }
@@ -91,9 +75,7 @@ abstract class BaseService
         $query = $handleQuery($query, $keywords);
 
         $total = $query->count('1');
-        $list = array_map(function (ActiveRecord $item) use ($handleResult) {
-            return $handleResult($item);
-        }, $query->all());
+        $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
         return Result::success('OK', ['list' => $list, 'total' => $total]);
     }
 
@@ -123,10 +105,7 @@ abstract class BaseService
         $query = $handleQuery($query, $keywords);
 
         $total = $query->count('1');
-        $list = array_map(function (ActiveRecord $item) use ($handleResult) {
-            return $handleResult($item);
-        }, $query->all());
-
+        $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
         return Result::lists($list, $total, $page, $pageSize);
     }
 
@@ -144,9 +123,7 @@ abstract class BaseService
     public function get(int $id, Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
-        return $this->getByAttr($handleResult, function (ActiveQuery $query) use ($id, $handleQuery) {
-            return ($handleQuery($query))->andFilterWhere(['id' => $id]);
-        });
+        return $this->getByAttr($handleResult, fn (ActiveQuery $query) => ($handleQuery($query))->andFilterWhere(['id' => $id]));
     }
 
     public function getByAttr(Closure $handleResult = null, Closure $handleQuery = null)
@@ -186,15 +163,13 @@ abstract class BaseService
 
     public function add(array $params)
     {
-        /** @var ActiveRecord $model */
-        $model = $this->model;
-        $model->setAttributes($params);
-        if (!$model->save(true)) {
-            return Result::fail($this->message::get('CREATE_FAIL'), $model->getErrors());
+        $this->model->setAttributes($params);
+        if (!$this->model->save(true)) {
+            return Result::fail($this->message::get('CREATE_FAIL'), $this->model->getErrors());
         }
 
         return Result::success($this->message::get('CREATE_SUCCESS'), [
-            'id' => $model->getAttribute('id'),
+            'id' => $this->model->getAttribute('id'),
         ]);
     }
 
