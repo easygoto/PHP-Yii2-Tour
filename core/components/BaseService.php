@@ -7,6 +7,7 @@ use app\core\containers\Constant;
 use app\core\containers\Message;
 use app\core\helpers\SortHandler;
 use Closure;
+use Throwable;
 use Trink\Core\Helper\Result;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -30,8 +31,8 @@ abstract class BaseService
 
         $this->model = new $modelClassName;
         $this->message = new $messageClassName;
+        $this->handleQuery = fn (ActiveQuery $query) => $query;
         $this->handleResult = fn (ActiveRecord $item) => $item->getAttributes();
-        $this->handleQuery = fn (ActiveQuery $query, array $keywords = []) => $query;
     }
 
     /**
@@ -57,7 +58,7 @@ abstract class BaseService
     }
 
     /**
-     * 根据查询获取全部记录
+     * 根据条件获取全部记录
      *
      * @param array        $keywords
      * @param Closure|null $handleQuery  构造查询条件
@@ -70,9 +71,10 @@ abstract class BaseService
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
 
+        /** @var ActiveQuery $query */
         $query = $this->model::find();
         $query = $this->handleSort($query, SortHandler::load($keywords));
-        $query = $handleQuery($query, $keywords);
+        $query = $handleQuery($query);
 
         $total = $query->count('1');
         $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
@@ -80,7 +82,7 @@ abstract class BaseService
     }
 
     /**
-     * 根据查询获取列表记录
+     * 根据条件获取列表记录
      *
      * @param array        $keywords
      * @param Closure|null $handleQuery  构造查询条件
@@ -100,19 +102,28 @@ abstract class BaseService
         $pageSize = max($pageSize, Constant::MIN_PAGE_SIZE);
         $offset = ($page - 1) * $pageSize;
 
+        /** @var ActiveQuery $query */
         $query = $this->model::find()->offset($offset)->limit($pageSize);
         $query = $this->handleSort($query, SortHandler::load($keywords));
-        $query = $handleQuery($query, $keywords);
+        $query = $handleQuery($query);
 
         $total = $query->count('1');
         $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
         return Result::lists($list, $total, $page, $pageSize);
     }
 
-    public function exists(int $id, Closure $handleQuery = null)
+    /**
+     * 根据条件判断记录是否存在
+     *
+     * @param Closure|null $handleQuery
+     *
+     * @return Result
+     */
+    public function existsByAttr(?Closure $handleQuery)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
-        $query = $this->model::find()->where(['id' => $id]);
+        /** @var ActiveQuery $query */
+        $query = $this->model::find();
         $query = $handleQuery($query);
         if ($query->exists() === false) {
             return Result::fail($this->message::get('NOT_EXISTS'));
@@ -126,13 +137,23 @@ abstract class BaseService
         return $this->getByAttr($handleResult, fn (ActiveQuery $query) => ($handleQuery($query))->andFilterWhere(['id' => $id]));
     }
 
-    public function getByAttr(Closure $handleResult = null, Closure $handleQuery = null)
+    /**
+     * 根据条件获取记录详情
+     *
+     * @param Closure|null $handleQuery
+     * @param Closure|null $handleResult
+     *
+     * @return Result
+     */
+    public function getByAttr(Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
 
+        /** @var ActiveQuery $query */
         $query = $this->model::find();
-        $object = ($handleQuery($query))->one();
+        $query = $handleQuery($query);
+        $object = $query->one();
         if (!$object) {
             return Result::fail($this->message::get('NOT_EXISTS'));
         }
@@ -188,24 +209,29 @@ abstract class BaseService
         return Result::success($this->message::get('UPDATE_SUCCESS'));
     }
 
-    public function delete(int $id, array $params = [])
+    /**
+     * 根据条件彻底删除记录
+     *
+     * @param Closure|null $handleQuery
+     *
+     * @return Result
+     */
+    public function deleteByAttr(?Closure $handleQuery)
     {
-        $query = $this->model::find()->where(['id' => $id]);
-        $exists = $query->exists();
-        if (!$exists) {
-            return Result::fail($this->message::get('NOT_EXISTS'));
-        }
+        $handleQuery = $handleQuery ?: $this->handleQuery;
 
-        $exists = $query->andFilterWhere($params)->exists();
-        if (!$exists) {
+        /** @var ActiveQuery $query */
+        $query = $this->model::find();
+        $query = $handleQuery($query);
+        $object = $query->one();
+        if (!$object) {
             return Result::success($this->message::get('DELETED'));
         }
-
-        $result = $this->model::deleteAll(['id' => $id]);
-        if (!$result) {
-            return Result::fail($this->message::get('DELETE_FAIL'));
+        try {
+            $object->delete();
+            return Result::success($this->message::get('DELETE_SUCCESS'));
+        } catch (Throwable $e) {
+            return Result::fail($this->message::get('DELETE_FAIL'), $object->getErrors());
         }
-
-        return Result::success($this->message::get('DELETE_SUCCESS'));
     }
 }

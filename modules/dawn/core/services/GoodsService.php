@@ -27,13 +27,24 @@ class GoodsService extends BaseService
     {
         switch ($scope) {
             default:
+            case 'all':
             case 'list':
             case 'detail':
                 return $item->getAttributes(null, ['is_delete', 'created_at']);
         }
     }
 
-    public function listsNotDelete(array $keywords)
+    public function allNotDelete(array $keywords = [])
+    {
+        $keywords['is_delete'] = Constant::NOT_DELETE;
+        return $this->allByAttr(
+            $keywords,
+            fn (ActiveQuery $query) => $this->handleFilter($query, $keywords),
+            fn (Goods $item) => $this->handleResult($item, 'all')
+        );
+    }
+
+    public function listsNotDelete(array $keywords = [])
     {
         $keywords['is_delete'] = Constant::NOT_DELETE;
         return $this->listsByAttr(
@@ -43,17 +54,32 @@ class GoodsService extends BaseService
         );
     }
 
-    public function getNotDelete(int $id)
+    public function existsByIdNotDelete(int $id)
+    {
+        return $this->existsByAttr(fn (ActiveQuery $query) => $query->andFilterWhere([
+            'id'        => $id,
+            'is_delete' => Constant::NOT_DELETE,
+        ]));
+    }
+
+    public function getByIdNotDelete(int $id)
     {
         return $this->getByAttr(
-            fn (Goods $item) => $this->handleResult($item, 'detail'),
-            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => Constant::NOT_DELETE])
+            fn (ActiveQuery $query) => $query->andFilterWhere([
+                'id'        => $id,
+                'is_delete' => Constant::NOT_DELETE,
+            ]),
+            fn (Goods $item) => $this->handleResult($item, 'detail')
         );
     }
 
-    public function delete($id, $params = [])
+    public function removeById(int $id)
     {
-        $params = ['is_delete' => Constant::NOT_DELETE];
-        return parent::delete($id, $params);
+        return $this->edit($id, []);
+    }
+
+    public function deleteById(int $id)
+    {
+        return $this->deleteByAttr(fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
     }
 }
