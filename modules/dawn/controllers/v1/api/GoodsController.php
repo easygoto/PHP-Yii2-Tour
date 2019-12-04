@@ -70,7 +70,7 @@ class GoodsController extends ApiController
     {
         $params = Yii::$app->request->post();
         $params = Format::array2UnderScore($params);
-        $result = $this->module->goodsService->add($params);
+        $result = $this->module->goodsService->addOne($params);
         return $this->asJson($result->asCamelDataArray());
     }
 
@@ -89,7 +89,7 @@ class GoodsController extends ApiController
     {
         $params = Yii::$app->request->post();
         $params = Format::array2UnderScore($params);
-        $result = $this->module->goodsService->edit((int)$id, $params);
+        $result = $this->module->goodsService->editOneById((int)$id, $params);
         return $this->asJson($result->asCamelDataArray());
     }
 
@@ -106,7 +106,7 @@ class GoodsController extends ApiController
      */
     public function actionDelete($id)
     {
-        $result = $this->module->goodsService->deleteById((int)$id);
+        $result = $this->module->goodsService->deleteOneById((int)$id);
         return $this->asJson($result->asCamelDataArray());
     }
 }

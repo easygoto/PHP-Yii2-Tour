@@ -15,6 +15,9 @@
 - [x] existsByAttr 根据条件判断是否存在
 - [x] getByAttr 根据条件获取详情
 - [ ] save 保存(无则添加, 有则编辑)
-- [ ] add 添加
-- [ ] editByAttr 根据条件编辑
-- [x] deleteByAttr 根据条件删除
+- [x] add 添加
+- [ ] addAll 添加
+- [ ] editAllByAttr 根据条件编辑
+- [x] editOneByAttr 根据条件编辑
+- [ ] deleteAllByAttr 根据条件删除
+- [x] deleteOneByAttr 根据条件删除

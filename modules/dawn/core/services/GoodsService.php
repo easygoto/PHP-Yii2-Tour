@@ -73,13 +73,18 @@ class GoodsService extends BaseService
         );
     }
 
-    public function removeById(int $id)
+    public function editOneById(int $id, array $params)
     {
-        return $this->edit($id, []);
+        return $this->editOneByAttr($params, fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
     }
 
-    public function deleteById(int $id)
+    public function removeById(int $id)
     {
-        return $this->deleteByAttr(fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+        return $this->editOneByAttr([]);
+    }
+
+    public function deleteOneById(int $id)
+    {
+        return $this->deleteOneByAttr(fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
     }
 }

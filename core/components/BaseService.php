@@ -15,13 +15,15 @@ use yii\db\ActiveRecord;
 
 abstract class BaseService
 {
-    protected ActiveRecord $model;
+    protected string $modelClassName;
+    protected string $messageClassName;
+
+    protected Closure $handleResult;
+    protected Closure $handleQuery;
 
     protected Message $message;
 
-    protected Closure $handleResult;
-
-    protected Closure $handleQuery;
+    protected ActiveRecord $model;
 
     public function __construct()
     {
@@ -32,6 +34,8 @@ abstract class BaseService
 
         $this->model = new $modelClassName;
         $this->message = new $messageClassName;
+        $this->modelClassName = $modelClassName;
+        $this->messageClassName = $messageClassName;
         $this->handleQuery = fn (ActiveQuery $query) => $query;
         $this->handleResult = fn (ActiveRecord $item) => $item->getAttributes();
     }
@@ -177,41 +181,60 @@ abstract class BaseService
         ]);
     }
 
-    public function add(array $params)
+    /**
+     * 添加一条记录
+     *
+     * @param array $params
+     *
+     * @return Result
+     */
+    public function addOne(array $params)
     {
-        $this->model->setAttributes($params);
-        if (!$this->model->save(true)) {
-            return Result::fail($this->message::get('CREATE_FAIL'), $this->model->getErrors());
-        }
-
-        return Result::success($this->message::get('CREATE_SUCCESS'), [
-            'id' => $this->model->getAttribute('id'),
-        ]);
-    }
-
-    public function edit(int $id, array $params)
-    {
-        $model = $this->model::findOne($id);
-        if (!$model) {
-            return Result::fail($this->message::get('NOT_EXISTS'));
-        }
-
+        /** @var ActiveRecord $model */
+        $model = new $this->modelClassName;
         $model->setAttributes($params);
         if (!$model->save(true)) {
-            return Result::fail($this->message::get('UPDATE_FAIL'), $model->getErrors());
+            return Result::fail($this->message::get('CREATE_FAIL'), $model->getErrors());
         }
-
-        return Result::success($this->message::get('UPDATE_SUCCESS'));
+        return Result::success($this->message::get('CREATE_SUCCESS'), $model->getAttributes());
     }
 
     /**
-     * 根据条件彻底删除记录
+     * 根据条件编辑一条记录
+     *
+     * @param array   $params
+     * @param Closure $handleQuery
+     *
+     * @return Result
+     */
+    public function editOneByAttr(array $params, Closure $handleQuery = null)
+    {
+        $handleQuery = $handleQuery ?: $this->handleQuery;
+
+        /** @var ActiveQuery $query */
+        $query = $this->model::find();
+        $query = $handleQuery($query);
+        $object = $query->one();
+        if (!$object) {
+            return Result::fail($this->message::get('NOT_EXISTS'));
+        }
+
+        $object->setAttributes($params);
+        if (!$object->save(true)) {
+            return Result::fail($this->message::get('UPDATE_FAIL'), $object->getErrors());
+        }
+
+        return Result::success($this->message::get('UPDATE_SUCCESS'), $object->getAttributes());
+    }
+
+    /**
+     * 根据条件彻底删除一条记录
      *
      * @param Closure|null $handleQuery
      *
      * @return Result
      */
-    public function deleteByAttr(?Closure $handleQuery)
+    public function deleteOneByAttr(?Closure $handleQuery)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
 
