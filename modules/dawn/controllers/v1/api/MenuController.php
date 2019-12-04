@@ -41,7 +41,7 @@ class MenuController extends ApiController
      */
     public function actionView($id)
     {
-        $result = $this->module->menuService->get($id);
+        $result = $this->module->menuService->getByAttr();
         return $this->asJson($result->asArray());
     }
 

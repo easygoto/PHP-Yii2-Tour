@@ -7,6 +7,7 @@ use app\core\containers\Constant;
 use app\core\containers\Message;
 use app\core\helpers\SortHandler;
 use Closure;
+use Exception;
 use Throwable;
 use Trink\Core\Helper\Result;
 use yii\db\ActiveQuery;
@@ -131,12 +132,6 @@ abstract class BaseService
         return Result::success();
     }
 
-    public function get(int $id, Closure $handleQuery = null, Closure $handleResult = null)
-    {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
-        return $this->getByAttr($handleResult, fn (ActiveQuery $query) => ($handleQuery($query))->andFilterWhere(['id' => $id]));
-    }
-
     /**
      * 根据条件获取记录详情
      *
@@ -228,10 +223,13 @@ abstract class BaseService
             return Result::success($this->message::get('DELETED'));
         }
         try {
-            $object->delete();
+            $result = $object->delete();
+            if ($result === false) {
+                throw new Exception($this->message::get('DELETE_FAIL'));
+            }
             return Result::success($this->message::get('DELETE_SUCCESS'));
         } catch (Throwable $e) {
-            return Result::fail($this->message::get('DELETE_FAIL'), $object->getErrors());
+            return Result::fail($e->getMessage(), $object->getErrors());
         }
     }
 }

@@ -12,9 +12,9 @@
 
 - [x] allByAttr 根据条件获取所有, 有条目限制
 - [x] listsByAttr 根据条件获取列表
-- [ ] existsByAttr 根据条件判断是否存在
-- [ ] getByAttr 根据条件获取详情
+- [x] existsByAttr 根据条件判断是否存在
+- [x] getByAttr 根据条件获取详情
 - [ ] save 保存(无则添加, 有则编辑)
 - [ ] add 添加
 - [ ] editByAttr 根据条件编辑
-- [ ] deleteByAttr 根据条件删除
+- [x] deleteByAttr 根据条件删除
