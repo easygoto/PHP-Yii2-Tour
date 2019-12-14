@@ -8,6 +8,7 @@ use app\core\helpers\FilterHandler;
 use app\modules\dawn\core\containers\Constant;
 use app\modules\dawn\models\Goods;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 class GoodsService extends BaseService
 {
@@ -30,7 +31,7 @@ class GoodsService extends BaseService
             case 'all':
             case 'list':
             case 'detail':
-                return $item->getAttributes(null, ['is_delete', 'created_at']);
+                return $item->getAttributes(null, ['is_delete']);
         }
     }
 
@@ -73,8 +74,22 @@ class GoodsService extends BaseService
         );
     }
 
+    public function addOne(array $params)
+    {
+        $nowTime = date('Y-m-d H:i:s');
+        $params['created_at'] = $nowTime;
+        $params['updated_at'] = $nowTime;
+        $params['operated_at'] = $nowTime;
+        $params['is_delete'] = Constant::NOT_DELETE;
+        $params['status'] = ArrayHelper::getValue($params, 'status', Goods::STATUS['NORMAL']);
+        return parent::addOne($params);
+    }
+
     public function editOneById(int $id, array $params)
     {
+        $nowTime = date('Y-m-d H:i:s');
+        $params['updated_at'] = $nowTime;
+        unset($params['created_at'], $params['operated_at']);
         return $this->editOneByAttr($params, fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
     }
 

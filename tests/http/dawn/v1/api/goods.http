@@ -26,12 +26,7 @@ Content-Type: application/json
   "wholesale": 40.2,
   "sellingPrice": 79.9,
   "marketPrice": 56.3,
-  "inventory": 100,
-  "createdAt": "2019-10-01 18:00:00",
-  "updatedAt": "2019-10-01 18:00:00",
-  "operatedAt": "2019-10-01 18:00:00",
-  "status": 0,
-  "isDelete": 0
+  "inventory": 100
 }
 
 ###
