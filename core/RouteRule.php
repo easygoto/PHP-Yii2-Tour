@@ -37,21 +37,26 @@ class RouteRule
      *
      * @param string $baseRoute
      * @param string $baseCtrl
+     * @param array  $options
      *
      * @return array
      */
-    public static function baseApi(string $baseRoute, string $baseCtrl = '')
+    public static function baseApi(string $baseRoute, string $baseCtrl = '', $options = [])
     {
         $baseCtrl = $baseCtrl ?: $baseRoute;
-        return [
-            RouteRule::get("{$baseRoute}/all/<limit:\d+?>", "{$baseCtrl}/all", ['limit' => 0]),
+        $extraMethods = $options['extra_method'] ?? [];
+        $routes = [];
+        if (in_array('all', $extraMethods)) {
+            $routes[] = RouteRule::get("{$baseRoute}/all/<limit:\d+?>", "{$baseCtrl}/all", ['limit' => 0]);
+        }
+        return array_merge([
             RouteRule::get("{$baseRoute}/list/<page:\d+>", "{$baseCtrl}/index", ['page' => 1]),
             RouteRule::get("{$baseRoute}/<id:\d+>", "{$baseCtrl}/view"),
             RouteRule::post("{$baseRoute}", "{$baseCtrl}/create"),
             RouteRule::put("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),
             RouteRule::patch("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),
             RouteRule::delete("{$baseRoute}/<id:\d+>", "{$baseCtrl}/delete"),
-        ];
+        ], $routes);
     }
 
     /**

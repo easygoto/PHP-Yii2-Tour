@@ -1,0 +1,65 @@
+GET /dawn/v1/api/goods/all/5 HTTP/1.1
+Host: {{host}}
+Authorization: token
+
+###
+
+GET /dawn/v1/api/goods/list HTTP/1.1
+Host: {{host}}
+Authorization: token
+
+###
+
+GET /dawn/v1/api/goods/2 HTTP/1.1
+Host: {{host}}
+Authorization: token
+
+###
+
+POST /dawn/v1/api/goods HTTP/1.1
+Host: {{host}}
+Authorization: token
+Content-Type: application/json
+
+{
+  "name": "测试商品cesium",
+  "wholesale": 40.2,
+  "sellingPrice": 79.9,
+  "marketPrice": 56.3,
+  "inventory": 100,
+  "createdAt": "2019-10-01 18:00:00",
+  "updatedAt": "2019-10-01 18:00:00",
+  "operatedAt": "2019-10-01 18:00:00",
+  "status": 0,
+  "isDelete": 0
+}
+
+###
+
+PUT /dawn/v1/api/goods HTTP/1.1
+Host: {{host}}
+Authorization: token
+Content-Type: application/json
+
+{
+  "name": "name"
+}
+
+###
+
+PATCH /dawn/v1/api/goods HTTP/1.1
+Host: {{host}}
+Authorization: token
+Content-Type: application/json
+
+{
+  "name": "name"
+}
+
+###
+
+DELETE /dawn/v1/api/goods/1 HTTP/1.1
+Host: {{host}}
+Authorization: token
+
+###

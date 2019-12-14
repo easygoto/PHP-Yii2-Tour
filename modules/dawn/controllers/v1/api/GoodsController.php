@@ -25,9 +25,28 @@ class GoodsController extends ApiController
     /**
      * @OA\Get(
      *     tags={"商品相关接口"},
+     *     description="获取所有商品",
+     *     path="/dawn/v1/api/goods/all/{limit}",
+     *     @OA\Parameter(name="page", in="path", required=false, description="限度", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'list':[{'id':'2','name':'测试商品6177','wholesale':'421.30','sellingPrice':'490.24','marketPrice':'517.05','inventory':1200,'updatedAt':'2019-08-2114:05:54','operatedAt':'2019-08-2114:05:54','status':1},...],'limit':5,'total':78}}")
+     * )
+     *
+     * @return Response
+     */
+    public function actionAll()
+    {
+        $params = Yii::$app->request->get();
+        $result = $this->module->goodsService->allNotDelete($params);
+        return $this->asJson($result->asCamelDataArray());
+    }
+
+    /**
+     * @OA\Get(
+     *     tags={"商品相关接口"},
+     *     description="获取商品列表",
      *     path="/dawn/v1/api/goods/list/{page}",
      *     @OA\Parameter(name="page", in="path", required=false, description="页码数", @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="{'status':0,'msg'=>'success','data':{'list':[],'total':1,'pageTotals':1}}")
+     *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'list':[{'id':'2','name':'测试商品6177','wholesale':'421.30','sellingPrice':'490.24','marketPrice':'517.05','inventory':1200,'updatedAt':'2019-08-21 14:05:54','operatedAt':'2019-08-21 14:05:54','status':1},...],'page':1,'total':78,'pagesize':10,'totalpages':8}}")
      * )
      *
      * @return Response
@@ -42,9 +61,10 @@ class GoodsController extends ApiController
     /**
      * @OA\Get(
      *     tags={"商品相关接口"},
+     *     description="获取商品详情",
      *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
-     *     @OA\Response(response=200, description="{'status':0,'msg'=>'success','data':{'id':1}}")
+     *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'id':'2','name':'测试商品6177','wholesale':'421.30','sellingPrice':'490.24','marketPrice':'517.05',inventory':1200,'updatedAt':'2019-08-21 14:05:54','operatedAt':'2019-08-2114:05:54','status':1}}")
      * )
      *
      * @param $id
@@ -60,15 +80,19 @@ class GoodsController extends ApiController
     /**
      * @OA\Post(
      *     tags={"商品相关接口"},
-     *     path="/dawn/v1/api/goods/{id}",
-     *     @OA\Response(response=200, description="")
+     *     description="添加商品",
+     *     path="/dawn/v1/api/goods",
+     *     @OA\JsonContent(
+     *         @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
+     *     ),
+     *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'id':2,'name':'测试商品6177','wholesale':421.30,'sellingPrice':490.24,'marketPrice':517.05,'inventory':1200,'updatedAt':'2019-08-21 14:05:54','operatedAt':'2019-08-21 14:05:54','status':1}}")
      * )
      *
      * @return Response
      */
     public function actionCreate()
     {
-        $params = Yii::$app->request->post();
+        $params = json_decode(file_get_contents('php://input'), 1) ?: [];
         $params = Format::array2UnderScore($params);
         $result = $this->module->goodsService->addOne($params);
         return $this->asJson($result->asCamelDataArray());
@@ -77,6 +101,7 @@ class GoodsController extends ApiController
     /**
      * @OA\Put(
      *     tags={"商品相关接口"},
+     *     description="修改商品",
      *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="")
      * )
@@ -96,8 +121,9 @@ class GoodsController extends ApiController
     /**
      * @OA\Delete(
      *     tags={"商品相关接口"},
+     *     description="删除商品",
      *     path="/dawn/v1/api/goods/{id}",
-     *     @OA\Response(response=200, description="")
+     *     @OA\Response(response=200, description="{'status':0,'msg':'商品已删除','data':[]}")
      * )
      *
      * @param $id

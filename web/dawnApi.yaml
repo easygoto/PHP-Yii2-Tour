@@ -3,62 +3,87 @@ info:
   title: 接口文档
   version: 1.0.0
 paths:
-  '/dawn/api/goods/list/{page}':
+  '/dawn/v1/api/goods/all/{limit}':
     get:
       tags:
         - 商品相关接口
-      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionIndex'
+      description: 获取所有商品
+      operationId: 'app\modules\dawn\controllers\v1\api\GoodsController::actionAll'
       parameters:
         -
           name: page
           in: path
-          required: true
+          description: 限度
+          required: false
           schema:
             type: integer
       responses:
         '200':
-          description: '{''status'':0,''message''=>''success'',''data'':{''list'':[],''total'':1,''pageTotals'':1}}'
-  '/dawn/api/goods/{id}':
+          description: '{''status'':0,''msg'':''OK'',''data'':{''list'':[{''id'':''2'',''name'':''测试商品6177'',''wholesale'':''421.30'',''sellingPrice'':''490.24'',''marketPrice'':''517.05'',''inventory'':1200,''updatedAt'':''2019-08-2114:05:54'',''operatedAt'':''2019-08-2114:05:54'',''status'':1},...],''limit'':5,''total'':78}}'
+  '/dawn/v1/api/goods/list/{page}':
     get:
       tags:
         - 商品相关接口
-      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionView'
+      description: 获取商品列表
+      operationId: 'app\modules\dawn\controllers\v1\api\GoodsController::actionIndex'
+      parameters:
+        -
+          name: page
+          in: path
+          description: 页码数
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: '{''status'':0,''msg'':''OK'',''data'':{''list'':[{''id'':''2'',''name'':''测试商品6177'',''wholesale'':''421.30'',''sellingPrice'':''490.24'',''marketPrice'':''517.05'',''inventory'':1200,''updatedAt'':''2019-08-21 14:05:54'',''operatedAt'':''2019-08-21 14:05:54'',''status'':1},...],''page'':1,''total'':78,''pagesize'':10,''totalpages'':8}}'
+  '/dawn/v1/api/goods/{id}':
+    get:
+      tags:
+        - 商品相关接口
+      description: 获取商品详情
+      operationId: 'app\modules\dawn\controllers\v1\api\GoodsController::actionView'
       parameters:
         -
           name: id
           in: path
+          description: 商品ID
           required: true
           schema:
             type: integer
       responses:
         '200':
-          description: ''
+          description: '{''status'':0,''msg'':''OK'',''data'':{''id'':''2'',''name'':''测试商品6177'',''wholesale'':''421.30'',''sellingPrice'':''490.24'',''marketPrice'':''517.05'',inventory'':1200,''updatedAt'':''2019-08-21 14:05:54'',''operatedAt'':''2019-08-2114:05:54'',''status'':1}}'
     put:
       tags:
         - 商品相关接口
-      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionUpdate'
-      responses:
-        '200':
-          description: ''
-    post:
-      tags:
-        - 商品相关接口
-      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionCreate'
+      description: 修改商品
+      operationId: 'app\modules\dawn\controllers\v1\api\GoodsController::actionUpdate'
       responses:
         '200':
           description: ''
     delete:
       tags:
         - 商品相关接口
-      operationId: 'app\modules\dawn\controllers\api\GoodsController::actionDelete'
+      description: 删除商品
+      operationId: 'app\modules\dawn\controllers\v1\api\GoodsController::actionDelete'
       responses:
         '200':
-          description: ''
+          description: '{''status'':0,''msg'':''商品已删除'',''data'':[]}'
+  /dawn/v1/api/goods:
+    post:
+      tags:
+        - 商品相关接口
+      description: 添加商品
+      operationId: 'app\modules\dawn\controllers\v1\api\GoodsController::actionCreate'
+      responses:
+        '200':
+          description: '{''status'':0,''msg''=>''OK'',''data'':{''id'':1}}'
   '/dawn/api/menu/list/{page}':
     get:
       tags:
         - 菜单相关接口
-      operationId: 'app\modules\dawn\controllers\api\MenuController::actionIndex'
+      operationId: 'app\modules\dawn\controllers\v1\api\MenuController::actionIndex'
       parameters:
         -
           name: page
@@ -73,7 +98,7 @@ paths:
     get:
       tags:
         - 菜单相关接口
-      operationId: 'app\modules\dawn\controllers\api\MenuController::actionView'
+      operationId: 'app\modules\dawn\controllers\v1\api\MenuController::actionView'
       parameters:
         -
           name: id
@@ -87,7 +112,7 @@ paths:
     put:
       tags:
         - 菜单相关接口
-      operationId: 'app\modules\dawn\controllers\api\MenuController::actionUpdate'
+      operationId: 'app\modules\dawn\controllers\v1\api\MenuController::actionUpdate'
       parameters:
         -
           name: id
@@ -146,7 +171,7 @@ paths:
     delete:
       tags:
         - 菜单相关接口
-      operationId: 'app\modules\dawn\controllers\api\MenuController::actionDelete'
+      operationId: 'app\modules\dawn\controllers\v1\api\MenuController::actionDelete'
       parameters:
         -
           name: id
@@ -161,7 +186,7 @@ paths:
     post:
       tags:
         - 菜单相关接口
-      operationId: 'app\modules\dawn\controllers\api\MenuController::actionCreate'
+      operationId: 'app\modules\dawn\controllers\v1\api\MenuController::actionCreate'
       parameters:
         -
           name: pid
@@ -215,7 +240,7 @@ paths:
     get:
       tags:
         - 用户相关接口
-      operationId: 'app\modules\dawn\controllers\api\UserController::actionIndex'
+      operationId: 'app\modules\dawn\controllers\v1\api\UserController::actionIndex'
       parameters:
         -
           name: page
@@ -230,7 +255,7 @@ paths:
     post:
       tags:
         - 用户相关接口
-      operationId: 'app\modules\dawn\controllers\api\UserController::actionCreate'
+      operationId: 'app\modules\dawn\controllers\v1\api\UserController::actionCreate'
       parameters:
         -
           name: user_name

@@ -77,13 +77,15 @@ abstract class BaseService
         $handleResult = $handleResult ?: $this->handleResult;
 
         /** @var ActiveQuery $query */
+        $limit = (int)($keywords['limit'] ?? Constant::DEFAULT_LIMIT);
         $query = $this->model::find();
         $query = $this->handleSort($query, SortHandler::load($keywords));
+        $query = $limit > 0 ? $query->limit($limit) : $query;
         $query = $handleQuery($query);
 
-        $total = $query->count('1');
+        $total = (int)$query->count('1');
         $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
-        return Result::success('OK', ['list' => $list, 'total' => $total]);
+        return Result::success('OK', ['list' => $list, 'limit' => $limit ?: $total, 'total' => $total]);
     }
 
     /**
@@ -161,7 +163,7 @@ abstract class BaseService
         return Result::success('OK', $detail);
     }
 
-    public function save(array $params)
+    /*public function save(array $params)
     {
         $modelId = (int)($params['id'] ?? 0);
         $result = $this->exists($modelId);
@@ -179,7 +181,7 @@ abstract class BaseService
         return Result::success($this->message::get('SAVE_SUCCESS'), [
             'id' => $model->getAttribute('id'),
         ]);
-    }
+    }*/
 
     /**
      * 添加一条记录

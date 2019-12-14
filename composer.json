@@ -31,6 +31,7 @@
     "yiisoft/yii2-redis": "^2.0",
     "yidas/yii2-bower-asset": "^2.0",
     "zircote/swagger-php": "^3.0",
+    "yiisoft/yii2-imagine": "^2.2",
     "ext-json": "*"
   },
   "require-dev": {
