@@ -27,9 +27,10 @@ class Message
     const DELETE_FAIL    = '删除失败';
     const DELETE_SUCCESS = '删除成功';
 
-    const ID_EMPTY   = 'ID无效';
-    const NOT_EXISTS = '不存在';
-    const NOT_RESULT = '查询无果';
+    const ID_EMPTY       = 'ID无效';
+    const NOT_EXISTS     = '不存在';
+    const NOT_RESULT     = '查询无果';
+    const NO_SUCH_ACTION = '无此操作';
 
     protected static function prefix(): string
     {

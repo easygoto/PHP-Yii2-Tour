@@ -54,7 +54,7 @@ class RouteRule
             RouteRule::get("{$baseRoute}/<id:\d+>", "{$baseCtrl}/view"),
             RouteRule::post("{$baseRoute}", "{$baseCtrl}/create"),
             RouteRule::put("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),
-            RouteRule::patch("{$baseRoute}/<id:\d+>", "{$baseCtrl}/update"),
+            RouteRule::patch("{$baseRoute}/<id:\d+>", "{$baseCtrl}/modify"),
             RouteRule::delete("{$baseRoute}/<id:\d+>", "{$baseCtrl}/delete"),
         ], $routes);
     }

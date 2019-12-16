@@ -2,11 +2,13 @@
 
 namespace app\modules\dawn\controllers\v1\api;
 
+use app\core\containers\Message;
 use app\core\helpers\CheckTokenFilter;
 use app\modules\dawn\controllers\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Format;
+use Trink\Core\Helper\Result;
 use yii\web\Response;
 
 class GoodsController extends ApiController
@@ -116,6 +118,36 @@ class GoodsController extends ApiController
         $params = Format::array2UnderScore($params);
         $result = $this->module->goodsService->editOneById((int)$id, $params);
         return $this->asJson($result->asCamelDataArray());
+    }
+
+    /**
+     * @OA\Patch(
+     *     tags={"商品相关接口"},
+     *     description="操作商品",
+     *     path="/dawn/v1/api/goods/{id}",
+     *     @OA\Response(response=200, description="")
+     * )
+     *
+     * @param $id
+     * @param $verb
+     *
+     * @return Response
+     */
+    public function actionModify($id, $verb)
+    {
+        switch ($verb) {
+            case 'enable':
+                $result = $this->module->goodsService->enableById((int)$id);
+                return $this->asJson($result->asCamelDataArray());
+            case 'disable':
+                $result = $this->module->goodsService->disableById((int)$id);
+                return $this->asJson($result->asCamelDataArray());
+            case 'remove':
+                $result = $this->module->goodsService->removeById((int)$id);
+                return $this->asJson($result->asCamelDataArray());
+            default:
+                return $this->asJson(Result::fail(Message::NO_SUCH_ACTION)->asArray());
+        }
     }
 
     /**

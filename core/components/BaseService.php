@@ -41,6 +41,36 @@ abstract class BaseService
     }
 
     /**
+     * 处理返回类型
+     *
+     * @param $item
+     *
+     * @return array
+     */
+    protected function handleModelType($item)
+    {
+        if ($item instanceof ActiveRecord) {
+            $itemArray = $item->getAttributes();
+        } else {
+            $itemArray = $item;
+        }
+        if (!defined($this->modelClassName . '::FIELD_TYPE')) {
+            return $itemArray;
+        }
+        foreach ($this->modelClassName::FIELD_TYPE as $field => $type) {
+            if (!array_key_exists($field, $itemArray)) {
+                continue;
+            }
+            if ($type == 'float') {
+                $itemArray[$field] = (float)$itemArray[$field];
+            } elseif ($type == 'int') {
+                $itemArray[$field] = (int)$itemArray[$field];
+            }
+        }
+        return $itemArray;
+    }
+
+    /**
      * 处理排序
      *
      * @param ActiveQuery $query

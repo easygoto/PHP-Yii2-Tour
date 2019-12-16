@@ -31,7 +31,7 @@ class GoodsService extends BaseService
             case 'all':
             case 'list':
             case 'detail':
-                return $item->getAttributes(null, ['is_delete']);
+                return $this->handleModelType($item->getAttributes(null, ['is_delete']));
         }
     }
 
@@ -78,11 +78,16 @@ class GoodsService extends BaseService
     {
         $nowTime = date('Y-m-d H:i:s');
         $params['created_at'] = $nowTime;
-        $params['updated_at'] = $nowTime;
-        $params['operated_at'] = $nowTime;
+        $params['updated_at'] = null;
+        $params['operated_at'] = null;
         $params['is_delete'] = Constant::NOT_DELETE;
         $params['status'] = ArrayHelper::getValue($params, 'status', Goods::STATUS['NORMAL']);
         return parent::addOne($params);
+    }
+
+    public function addAll()
+    {
+        // TODO
     }
 
     public function editOneById(int $id, array $params)
@@ -95,11 +100,58 @@ class GoodsService extends BaseService
 
     public function removeById(int $id)
     {
-        return $this->editOneByAttr([]);
+        $nowTime = date('Y-m-d H:i:s');
+        return $this->editOneByAttr([
+            'is_delete'   => Constant::IS_DELETE,
+            'operated_at' => $nowTime,
+        ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+    }
+
+    public function enableById(int $id)
+    {
+        $nowTime = date('Y-m-d H:i:s');
+        return $this->editOneByAttr([
+            'status'   => Goods::STATUS['NORMAL'],
+            'operated_at' => $nowTime,
+        ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+    }
+
+    public function disableById(int $id)
+    {
+        $nowTime = date('Y-m-d H:i:s');
+        return $this->editOneByAttr([
+            'status'   => Goods::STATUS['DISABLE'],
+            'operated_at' => $nowTime,
+        ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+    }
+
+    public function editAllByIdList()
+    {
+        // TODO
+    }
+
+    public function removeAllByIdList()
+    {
+        // TODO
+    }
+
+    public function enableAllByIdList()
+    {
+        // TODO
+    }
+
+    public function disableAllByIdList()
+    {
+        // TODO
     }
 
     public function deleteOneById(int $id)
     {
         return $this->deleteOneByAttr(fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+    }
+
+    public function deleteAllByIdList()
+    {
+        // TODO
     }
 }
