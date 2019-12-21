@@ -16,8 +16,8 @@
 - [x] getByAttr 根据条件获取详情
 - [ ] save 保存(无则添加, 有则编辑)
 - [x] addOne 添加
-- [ ] addAll 添加
 - [x] editOneByAttr 根据条件编辑
-- [ ] editAllByAttr 根据条件编辑
 - [x] deleteOneByAttr 根据条件删除
-- [ ] deleteAllByAttr 根据条件删除
+- [ ] addAll 批量添加
+- [ ] editAllByAttr 根据条件批量编辑
+- [ ] deleteAllByAttr 根据条件批量删除

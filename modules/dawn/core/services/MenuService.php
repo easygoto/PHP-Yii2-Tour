@@ -4,21 +4,16 @@
 namespace app\modules\dawn\core\services;
 
 use app\core\components\BaseService;
+use app\core\helpers\FilterHandler;
 use yii\db\ActiveQuery;
 
 class MenuService extends BaseService
 {
-    protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
+    protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery
     {
-        $query->andFilterWhere([
-            'pid'    => $keywords['pid'] ?? null,
-            'sn'     => $keywords['sn'] ?? null,
-            'url'    => $keywords['url'] ?? null,
-            'sort'   => $keywords['sort'] ?? null,
-            'status' => $keywords['status'] ?? null,
-        ]);
-        $query->andFilterWhere(['like', 'name', $keywords['name'] ?? null]);
-        $query->andFilterWhere(['like', 'icon', $keywords['icon'] ?? null]);
+        $query = (new FilterHandler())
+            ->setLike(['pid', 'sn', 'url', 'sort', 'status', 'name', 'icon'])
+            ->buildQuery($query);
         return $query;
     }
 }

@@ -19,9 +19,9 @@ class Message
     const CREATE_FAIL    = '创建失败';
     const CREATE_SUCCESS = '创建成功';
 
-    const UPDATED        = '已更新';
-    const UPDATE_FAIL    = '更新失败';
-    const UPDATE_SUCCESS = '更新成功';
+    const UPDATED        = '已修改';
+    const UPDATE_FAIL    = '修改失败';
+    const UPDATE_SUCCESS = '修改成功';
 
     const DELETED        = '已删除';
     const DELETE_FAIL    = '删除失败';

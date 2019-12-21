@@ -114,7 +114,7 @@ class GoodsController extends ApiController
      */
     public function actionUpdate($id)
     {
-        $params = Yii::$app->request->post();
+        $params = json_decode(file_get_contents('php://input'), 1) ?: [];
         $params = Format::array2UnderScore($params);
         $result = $this->module->goodsService->editOneById((int)$id, $params);
         return $this->asJson($result->asCamelDataArray());

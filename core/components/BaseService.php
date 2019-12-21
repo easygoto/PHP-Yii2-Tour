@@ -40,6 +40,8 @@ abstract class BaseService
         $this->handleResult = fn (ActiveRecord $item) => $item->getAttributes();
     }
 
+    abstract protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery;
+
     /**
      * 处理返回类型
      *

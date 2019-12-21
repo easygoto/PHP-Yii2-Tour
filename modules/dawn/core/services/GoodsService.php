@@ -66,10 +66,7 @@ class GoodsService extends BaseService
     public function getByIdNotDelete(int $id)
     {
         return $this->getByAttr(
-            fn (ActiveQuery $query) => $query->andFilterWhere([
-                'id'        => $id,
-                'is_delete' => Constant::NOT_DELETE,
-            ]),
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => Constant::NOT_DELETE]),
             fn (Goods $item) => $this->handleResult($item, 'detail')
         );
     }

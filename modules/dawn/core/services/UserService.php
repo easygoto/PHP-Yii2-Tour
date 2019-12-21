@@ -4,47 +4,54 @@
 namespace app\modules\dawn\core\services;
 
 use app\core\components\BaseService;
+use app\core\helpers\FilterHandler;
+use app\modules\dawn\core\containers\Constant;
 use app\modules\dawn\models\User;
 use yii\db\ActiveQuery;
 
 class UserService extends BaseService
 {
-    protected function handleFilter(ActiveQuery $query, $keywords): ActiveQuery
+    protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery
     {
-        $query->andFilterWhere([
-            'id'            => $keywords['id'] ?? null,
-            'secret_code'   => $keywords['secret_code'] ?? null,
-            'gender'        => $keywords['gender'] ?? null,
-            'created_at'    => $keywords['created_at'] ?? null,
-            'updated_at'    => $keywords['updated_at'] ?? null,
-            'operated_at'   => $keywords['operated_at'] ?? null,
-            'last_login_at' => $keywords['last_login_at'] ?? null,
-            'status'        => $keywords['status'] ?? null,
-            'is_delete'     => $keywords['is_delete'] ?? null,
-        ]);
-        $query->andFilterWhere(['like', 'user_name', $keywords['user_name'] ?? null]);
-        $query->andFilterWhere(['like', 'real_name', $keywords['real_name'] ?? null]);
-        $query->andFilterWhere(['like', 'mobile_number', $keywords['mobile_number'] ?? null]);
+        $query = (new FilterHandler())
+            ->setEquals(['gender', 'status', 'is_delete'])
+            ->setLike(['id', 'user_name', 'real_name', 'mobile_number'])
+            ->setRange(['created_at', 'updated_at', 'operated_at', 'last_login_at'])
+            ->buildQuery($query);
         return $query;
     }
 
-    public function listsNotDelete(array $keywords)
+    protected function handleResult(User $item, $scope = 'list')
+    {
+        switch ($scope) {
+            default:
+            case 'all':
+            case 'list':
+            case 'detail':
+                return $this->handleModelType($item->getAttributes(null, ['is_delete']));
+        }
+    }
+
+    public function listsNotDelete(array $keywords = [])
     {
         $keywords['is_delete'] = 0;
-        return $this->listsByAttr($keywords);
+        return $this->listsByAttr(
+            $keywords,
+            fn (ActiveQuery $query) => $this->handleFilter($query, $keywords),
+            fn (User $item) => $this->handleResult($item, 'list')
+        );
     }
 
     public function getNotDelete(int $id)
     {
         return $this->getByAttr(
-            fn (User $item) => $item->getAttributes(null, ['is_delete']),
-            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => 0])
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => Constant::NOT_DELETE]),
+            fn (User $item) => $this->handleResult($item, 'detail')
         );
     }
 
-    public function delete($id, $params = [])
+    public function deleteOneById(int $id)
     {
-        $params = ['is_delete' => 0];
-        return parent::delete($id, $params);
+        return $this->deleteOneByAttr(fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
     }
 }

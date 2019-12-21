@@ -89,7 +89,9 @@ class Result
      */
     public function asCamelDataArray()
     {
-        $this->data = Format::array2CamelCase($this->data);
+        if (property_exists($this, 'data')) {
+            $this->data = Format::array2CamelCase($this->data);
+        }
         return $this->asArray();
     }
 
