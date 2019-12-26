@@ -8,19 +8,30 @@ use app\web\Yii;
  * This is the model class for table "{{%dawn_menu}}".
  *
  * @property string $id
- * @property string $pid 父级菜单ID
- * @property string $sn 编号
- * @property string $name 名称
- * @property string $url 网址
- * @property int $sort 排序
- * @property string $icon 图标
- * @property int $status 状态(1启用, 0禁用)
+ * @property string $pid    父级菜单ID
+ * @property string $sn     编号
+ * @property string $name   名称
+ * @property string $url    网址
+ * @property int    $sort   排序
+ * @property string $icon   图标
+ * @property int    $status 状态(1启用, 0禁用)
  */
 class Menu extends \yii\db\ActiveRecord
 {
     const STATUS = [
-        'NORMAL' => 1,
+        'NORMAL'  => 1,
         'DISABLE' => 2,
+    ];
+
+    const FIELD_DETAIL = [
+        'id'     => ['type' => 'string', 'filter' => 'like'],
+        'pid'    => ['type' => 'string', 'filter' => 'like'],
+        'sn'     => ['type' => 'string', 'filter' => 'like'],
+        'name'   => ['type' => 'string', 'filter' => 'like'],
+        'url'    => ['type' => 'string', 'filter' => 'like'],
+        'sort'   => ['type' => 'int', 'filter' => 'like'],
+        'icon'   => ['type' => 'string', 'filter' => 'like'],
+        'status' => ['type' => 'int', 'filter' => 'equals'],
     ];
 
     /**
@@ -57,13 +68,13 @@ class Menu extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'pid' => '父级菜单ID',
-            'sn' => '编号',
-            'name' => '名称',
-            'url' => '网址',
-            'sort' => '排序',
-            'icon' => '图标',
+            'id'     => 'ID',
+            'pid'    => '父级菜单ID',
+            'sn'     => '编号',
+            'name'   => '名称',
+            'url'    => '网址',
+            'sort'   => '排序',
+            'icon'   => '图标',
             'status' => '状态',
         ];
     }

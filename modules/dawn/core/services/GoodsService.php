@@ -4,7 +4,6 @@
 namespace app\modules\dawn\core\services;
 
 use app\core\components\BaseService;
-use app\core\helpers\FilterHandler;
 use app\modules\dawn\core\containers\Constant;
 use app\modules\dawn\models\Goods;
 use yii\db\ActiveQuery;
@@ -12,29 +11,6 @@ use yii\helpers\ArrayHelper;
 
 class GoodsService extends BaseService
 {
-    protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery
-    {
-        $query = (new FilterHandler)
-            ->setKeywords($keywords)
-            ->setLike(['name'])
-            ->setEquals(['id', 'status', 'is_delete'])
-            ->addRange(['created_at', 'updated_at', 'operated_at'])
-            ->addRange(['selling_price', 'market_price', 'wholesale', 'inventory'])
-            ->buildQuery($query);
-        return $query;
-    }
-
-    protected function handleResult(Goods $item, $scope = 'list')
-    {
-        switch ($scope) {
-            default:
-            case 'all':
-            case 'list':
-            case 'detail':
-                return $this->handleModelType($item->getAttributes(null, ['is_delete']));
-        }
-    }
-
     public function allNotDelete(array $keywords = [])
     {
         $keywords['is_delete'] = Constant::NOT_DELETE;
@@ -82,11 +58,6 @@ class GoodsService extends BaseService
         return parent::addOne($params);
     }
 
-    public function addAll()
-    {
-        // TODO
-    }
-
     public function editOneById(int $id, array $params)
     {
         $nowTime = date('Y-m-d H:i:s');
@@ -122,33 +93,8 @@ class GoodsService extends BaseService
         ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
     }
 
-    public function editAllByIdList()
-    {
-        // TODO
-    }
-
-    public function removeAllByIdList()
-    {
-        // TODO
-    }
-
-    public function enableAllByIdList()
-    {
-        // TODO
-    }
-
-    public function disableAllByIdList()
-    {
-        // TODO
-    }
-
     public function deleteOneById(int $id)
     {
         return $this->deleteOneByAttr(fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
-    }
-
-    public function deleteAllByIdList()
-    {
-        // TODO
     }
 }

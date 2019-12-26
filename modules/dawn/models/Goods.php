@@ -26,18 +26,33 @@ class Goods extends \yii\db\ActiveRecord
         'DISABLE' => 2,
     ];
 
-    const FIELD_TYPE = [
-        'id'            => 'string',
-        'name'          => 'string',
-        'wholesale'     => 'float',
-        'selling_price' => 'float',
-        'market_price'  => 'float',
-        'inventory'     => 'int',
-        'created_at'    => 'string',
-        'updated_at'    => 'string',
-        'operated_at'   => 'string',
-        'status'        => 'int',
-        'is_delete'     => 'int',
+    const FIELD_DETAIL = [
+        'id'            => ['type' => 'string', 'filter' => 'like'],
+        'name'          => ['type' => 'string', 'filter' => 'like'],
+        'wholesale'     => ['type' => 'float', 'filter' => 'range'],
+        'selling_price' => ['type' => 'float', 'filter' => 'range'],
+        'market_price'  => ['type' => 'float', 'filter' => 'range'],
+        'inventory'     => ['type' => 'int', 'filter' => 'range'],
+        'created_at'    => ['type' => 'string', 'filter' => 'range'],
+        'updated_at'    => ['type' => 'string', 'filter' => 'range'],
+        'operated_at'   => ['type' => 'string', 'filter' => 'range'],
+        'status'        => ['type' => 'int', 'filter' => 'equals'],
+        'is_delete'     => ['type' => 'int', 'filter' => 'equals'],
+    ];
+
+    const RESULT_FILTER = [
+        'all'    => [
+            'include' => null,
+            'exclude' => ['is_delete'],
+        ],
+        'list'   => [
+            'include' => null,
+            'exclude' => ['is_delete'],
+        ],
+        'detail' => [
+            'include' => null,
+            'exclude' => ['is_delete'],
+        ],
     ];
 
     /**

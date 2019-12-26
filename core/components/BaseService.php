@@ -5,6 +5,7 @@ namespace app\core\components;
 
 use app\core\containers\Constant;
 use app\core\containers\Message;
+use app\core\helpers\FilterHandler;
 use app\core\helpers\SortHandler;
 use Closure;
 use Exception;
@@ -12,6 +13,7 @@ use Throwable;
 use Trink\Core\Helper\Result;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 abstract class BaseService
 {
@@ -40,29 +42,30 @@ abstract class BaseService
         $this->handleResult = fn (ActiveRecord $item) => $item->getAttributes();
     }
 
-    abstract protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery;
-
     /**
-     * 处理返回类型
+     * 处理返回结果
      *
-     * @param $item
+     * @param ActiveRecord $item
+     * @param string       $scope
      *
      * @return array
      */
-    protected function handleModelType($item)
+    protected function handleResult(ActiveRecord $item, $scope = 'list')
     {
-        if ($item instanceof ActiveRecord) {
+        if (!defined($this->modelClassName . '::RESULT_FILTER') || isset($this->modelClassName::RESULT_FILTER[$scope])) {
             $itemArray = $item->getAttributes();
         } else {
-            $itemArray = $item;
+            ['include' => $include, 'exclude' => $exclude] = $this->modelClassName::RESULT_FILTER[$scope];
+            $itemArray = $item->getAttributes($include, $exclude);
         }
-        if (!defined($this->modelClassName . '::FIELD_TYPE')) {
+        if (!defined($this->modelClassName . '::FIELD_DETAIL')) {
             return $itemArray;
         }
-        foreach ($this->modelClassName::FIELD_TYPE as $field => $type) {
+        foreach ($this->modelClassName::FIELD_DETAIL as $field => $detail) {
             if (!array_key_exists($field, $itemArray)) {
                 continue;
             }
+            $type = ArrayHelper::getValue($detail, 'type', 'string');
             if ($type == 'float') {
                 $itemArray[$field] = (float)$itemArray[$field];
             } elseif ($type == 'int') {
@@ -70,6 +73,38 @@ abstract class BaseService
             }
         }
         return $itemArray;
+    }
+
+    /**
+     * 处理过滤字段
+     *
+     * @param ActiveQuery $query
+     * @param array       $keywords
+     *
+     * @return ActiveQuery
+     */
+    protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery
+    {
+        $likeFieldList = $equalsFieldList = $rangeFieldList = [];
+        if (defined($this->modelClassName . '::FIELD_DETAIL')) {
+            foreach ($this->modelClassName::FIELD_DETAIL as $field => $detail) {
+                $filterType = ArrayHelper::getValue($detail, 'filter', 'none');
+                if ($filterType == 'range') {
+                    $rangeFieldList[] = $field;
+                } elseif ($filterType == 'equals') {
+                    $equalsFieldList[] = $field;
+                } elseif ($filterType == 'like') {
+                    $likeFieldList[] = $field;
+                }
+            }
+        }
+        $query = (new FilterHandler)
+            ->setKeywords($keywords)
+            ->setLike($likeFieldList)
+            ->setEquals($equalsFieldList)
+            ->setRange($rangeFieldList)
+            ->buildQuery($query);
+        return $query;
     }
 
     /**
@@ -233,6 +268,12 @@ abstract class BaseService
         return Result::success($this->message::get('CREATE_SUCCESS'), $model->getAttributes());
     }
 
+    public function addAll()
+    {
+        // TODO
+        return Result::success();
+    }
+
     /**
      * 根据条件编辑一条记录
      *
@@ -259,6 +300,12 @@ abstract class BaseService
         }
 
         return Result::success($this->message::get('UPDATE_SUCCESS'), $object->getAttributes());
+    }
+
+    public function editAllByAttr()
+    {
+        // TODO
+        return Result::success();
     }
 
     /**
@@ -288,5 +335,11 @@ abstract class BaseService
         } catch (Throwable $e) {
             return Result::fail($e->getMessage(), $object->getErrors());
         }
+    }
+
+    public function deleteAllByAttr()
+    {
+        // TODO
+        return Result::success();
     }
 }

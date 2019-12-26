@@ -6,6 +6,7 @@ namespace app\modules\dawn\controllers\v1\api;
 use app\modules\dawn\controllers\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
+use Trink\Core\Helper\Format;
 use yii\web\Response;
 
 class MenuController extends ApiController
@@ -23,8 +24,8 @@ class MenuController extends ApiController
     public function actionIndex()
     {
         $params = Yii::$app->request->get();
-        $result = $this->module->menuService->listsByAttr($params);
-        return $this->asJson($result->asArray());
+        $result = $this->module->menuService->lists($params);
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -41,8 +42,8 @@ class MenuController extends ApiController
      */
     public function actionView($id)
     {
-        $result = $this->module->menuService->getByAttr();
-        return $this->asJson($result->asArray());
+        $result = $this->module->menuService->getById((int)$id);
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -63,9 +64,10 @@ class MenuController extends ApiController
      */
     public function actionCreate()
     {
-        $params = Yii::$app->request->post();
-        $result = $this->module->menuService->add($params);
-        return $this->asJson($result->asArray());
+        $params = json_decode(file_get_contents('php://input'), 1) ?: [];
+        $params = Format::array2UnderScore($params);
+        $result = $this->module->menuService->addOne($params);
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -89,9 +91,10 @@ class MenuController extends ApiController
      */
     public function actionUpdate($id)
     {
-        $params = Yii::$app->request->post();
-        $result = $this->module->menuService->edit($id, $params);
-        return $this->asJson($result->asArray());
+        $params = json_decode(file_get_contents('php://input'), 1) ?: [];
+        $params = Format::array2UnderScore($params);
+        $result = $this->module->menuService->editOneById((int)$id, $params);
+        return $this->asJson($result->asCamelDataArray());
     }
 
     /**
@@ -108,7 +111,7 @@ class MenuController extends ApiController
      */
     public function actionDelete($id)
     {
-        $result = $this->module->menuService->delete($id);
-        return $this->asJson($result->asArray());
+        $result = $this->module->menuService->deleteOneById((int)$id);
+        return $this->asJson($result->asCamelDataArray());
     }
 }
