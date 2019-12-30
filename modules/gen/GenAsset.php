@@ -5,20 +5,18 @@ namespace app\modules\gen;
 use yii\web\AssetBundle;
 
 /**
- * This declares the asset files required by Gii.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * This declares the asset files required by Gen.
  */
-class GiiAsset extends AssetBundle
+class GenAsset extends AssetBundle
 {
-    public $sourcePath = '@yii/gii/assets';
+    public $sourcePath = '@app/modules/gen/assets';
     public $css = [
         'css/main.css',
+        'css/style.css',
     ];
     public $js = [
         'js/bs4-native.min.js',
-        'js/gii.js',
+        'js/gen.js',
     ];
     public $depends = [
         'yii\web\YiiAsset'

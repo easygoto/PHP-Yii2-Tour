@@ -36,6 +36,27 @@ use app\web\Yii;
  */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
 {
+    const FIELD_DETAIL = [
+<?php foreach ($properties as $property => $data): ?>
+        '<?= $property ?>' => ['type' => '<?= $data['type'] ?>', 'filter' => 'like'],
+<?php endforeach; ?>
+    ];
+
+    const RESULT_FILTER = [
+        'all' => [
+            'include' => null,
+            'exclude' => []
+        ],
+        'list' => [
+            'include' => null,
+            'exclude' => []
+        ],
+        'detail' => [
+            'include' => null,
+            'exclude' => []
+        ],
+    ];
+
     /**
      * {@inheritdoc}
      */

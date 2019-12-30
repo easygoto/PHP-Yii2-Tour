@@ -12,18 +12,14 @@ use yii\base\InlineAction;
 use yii\console\Controller;
 
 /**
- * This is the command line version of Gii - a code generator.
+ * This is the command line version of Gen - a code generator.
  *
  * You can use this command to generate models, controllers, etc. For example,
  * to generate an ActiveRecord model based on a DB table, you can run:
  *
  * ```
- * $ ./yii gii/model --tableName=city --modelClass=City
+ * $ ./yii gen/model --tableName=city --modelClass=City
  * ```
- *
- * @author Tobias Munk <schmunk@usrbin.de>
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
  */
 class GenerateController extends Controller
 {
@@ -105,7 +101,7 @@ class GenerateController extends Controller
 
     public function actionIndex()
     {
-        $this->run('/help', ['gii']);
+        $this->run('/help', ['gen']);
     }
 
     /**

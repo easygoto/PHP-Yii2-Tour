@@ -234,7 +234,7 @@ abstract class Generator extends Model
      */
     public function getStickyDataFile()
     {
-        return Yii::$app->getRuntimePath() . '/gii-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
+        return Yii::$app->getRuntimePath() . '/gen-' . Yii::getVersion() . '/' . str_replace('\\', '-', get_class($this)) . '.json';
     }
 
     /**

@@ -1,0 +1,25 @@
+@media (min-width: 1840px) {
+    .container {
+        max-width: 1800px;
+    }
+
+    .default-index .generator.generator-home {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+
+    .container.content-container .generator-nav {
+        flex: 0 0 15%;
+        max-width: 15%;
+    }
+
+    .container.content-container .generator-main {
+        flex: 0 0 85%;
+        max-width: 85%;
+    }
+
+    .generator-form#form-fields {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

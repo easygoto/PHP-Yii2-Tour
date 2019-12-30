@@ -9,9 +9,9 @@ use yii\helpers\Html;
 $generators = Yii::$app->controller->module->generators;
 $activeGenerator = Yii::$app->controller->generator;
 ?>
-<?php $this->beginContent('@yii/gii/views/layouts/main.php'); ?>
+<?php $this->beginContent('@app/modules/gen/views/layouts/main.php'); ?>
 <div class="row">
-    <div class="col-md-3 col-sm-4">
+    <div class="col-md-3 col-sm-4 generator-nav">
         <div class="list-group">
             <?php
             $classes = ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-center'];
@@ -24,7 +24,7 @@ $activeGenerator = Yii::$app->controller->generator;
             ?>
         </div>
     </div>
-    <div class="col-md-9 col-sm-8">
+    <div class="col-md-9 col-sm-8 generator-main">
         <?= $content ?>
     </div>
 </div>

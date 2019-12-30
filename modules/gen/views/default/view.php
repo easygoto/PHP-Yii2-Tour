@@ -37,7 +37,7 @@ foreach ($generator->templates as $name => $path) {
         ],
     ]); ?>
         <div class="row">
-            <div class="col-lg-8 col-md-10" id="form-fields">
+            <div class="col-lg-8 col-md-10 generator-form" id="form-fields">
                 <?= $this->renderFile($generator->formView(), [
                     'generator' => $generator,
                     'form' => $form,

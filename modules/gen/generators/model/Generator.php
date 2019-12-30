@@ -31,8 +31,8 @@ class Generator extends \app\modules\gen\Generator
     public $baseClass = 'yii\db\ActiveRecord';
     public $generateRelations = self::RELATIONS_ALL;
     public $generateRelationsFromCurrentSchema = true;
-    public $generateLabelsFromComments = false;
-    public $useTablePrefix = false;
+    public $generateLabelsFromComments = true;
+    public $useTablePrefix = true;
     public $standardizeCapitals = false;
     public $singularize = false;
     public $useSchemaName = true;

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$asset = app\modules\gen\GiiAsset::register($this);
+$asset = app\modules\gen\GenAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
