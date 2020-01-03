@@ -138,7 +138,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function allByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
+    protected function allByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
@@ -164,7 +164,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function listsByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
+    protected function listsByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
@@ -193,7 +193,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function existsByAttr(?Closure $handleQuery)
+    protected function existsByAttr(?Closure $handleQuery)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         /** @var ActiveQuery $query */
@@ -213,7 +213,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function getByAttr(Closure $handleQuery = null, Closure $handleResult = null)
+    protected function getByAttr(Closure $handleQuery = null, Closure $handleResult = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
         $handleResult = $handleResult ?: $this->handleResult;
@@ -230,7 +230,7 @@ abstract class BaseService
         return Result::success('OK', $detail);
     }
 
-    /*public function save(array $params)
+    /*protected function save(array $params)
     {
         $modelId = (int)($params['id'] ?? 0);
         $result = $this->exists($modelId);
@@ -257,7 +257,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function addOne(array $params)
+    protected function addOne(array $params)
     {
         /** @var ActiveRecord $model */
         $model = new $this->modelClassName;
@@ -268,7 +268,7 @@ abstract class BaseService
         return Result::success($this->message::get('CREATE_SUCCESS'), $model->getAttributes());
     }
 
-    public function addAll()
+    protected function addAll()
     {
         // TODO
         return Result::success();
@@ -282,7 +282,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function editOneByAttr(array $params, Closure $handleQuery = null)
+    protected function editOneByAttr(array $params, Closure $handleQuery = null)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
 
@@ -302,7 +302,7 @@ abstract class BaseService
         return Result::success($this->message::get('UPDATE_SUCCESS'), $object->getAttributes());
     }
 
-    public function editAllByAttr()
+    protected function editAllByAttr()
     {
         // TODO
         return Result::success();
@@ -315,7 +315,7 @@ abstract class BaseService
      *
      * @return Result
      */
-    public function deleteOneByAttr(?Closure $handleQuery)
+    protected function deleteOneByAttr(?Closure $handleQuery)
     {
         $handleQuery = $handleQuery ?: $this->handleQuery;
 
@@ -337,7 +337,7 @@ abstract class BaseService
         }
     }
 
-    public function deleteAllByAttr()
+    protected function deleteAllByAttr()
     {
         // TODO
         return Result::success();

@@ -3,14 +3,32 @@
 
 namespace app\modules\dawn\controllers\v1\api;
 
+use app\core\containers\Message;
 use app\modules\dawn\controllers\ApiController;
 use app\web\Yii;
 use OpenApi\Annotations as OA;
 use Trink\Core\Helper\Format;
+use Trink\Core\Helper\Result;
 use yii\web\Response;
 
 class MenuController extends ApiController
 {
+    /**
+     * @OA\Get(
+     *     tags={"菜单相关接口"},
+     *     description="获取所有菜单",
+     *     path="/dawn/v1/api/menu/all/{limit}"
+     * )
+     *
+     * @return Response
+     */
+    public function actionAll()
+    {
+        $params = Yii::$app->request->get();
+        $result = $this->module->menuService->allWithStratify($params);
+        return $this->asJson($result->asCamelDataArray());
+    }
+
     /**
      * @OA\Get(
      *     tags={"菜单相关接口"},
@@ -95,6 +113,32 @@ class MenuController extends ApiController
         $params = Format::array2UnderScore($params);
         $result = $this->module->menuService->editOneById((int)$id, $params);
         return $this->asJson($result->asCamelDataArray());
+    }
+
+    /**
+     * @OA\Patch(
+     *     tags={"菜单相关接口"},
+     *     description="操作菜单",
+     *     path="/dawn/api/menu/{id}"
+     * )
+     *
+     * @param $id
+     * @param $verb
+     *
+     * @return Response
+     */
+    public function actionModify($id, $verb)
+    {
+        switch ($verb) {
+            case 'enable':
+                $result = $this->module->menuService->enableById((int)$id);
+                return $this->asJson($result->asCamelDataArray());
+            case 'disable':
+                $result = $this->module->menuService->disableById((int)$id);
+                return $this->asJson($result->asCamelDataArray());
+            default:
+                return $this->asJson(Result::fail(Message::NO_SUCH_ACTION)->asArray());
+        }
     }
 
     /**
