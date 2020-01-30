@@ -12,7 +12,7 @@ use app\web\RouteRule;
 
 return array_merge(
     // not restful api
-    RouteRule::noRest(['module' => '<?= $generator->moduleID ?>']),
+    RouteRule::basePage(['module' => '<?= $generator->moduleID ?>']),
 
     // spacial api
     [

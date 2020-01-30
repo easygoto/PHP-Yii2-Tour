@@ -10,7 +10,7 @@ echo "<?php\n";
 
 $config = [
     'id' => '<?= $generator->moduleID ?>',
-    'defaultRoute' => 'default/index',
+    'defaultRoute' => 'v1/default/index',
 
     'components' => [
         // list of component configurations

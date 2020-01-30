@@ -108,7 +108,7 @@ EOD;
         $code2 = <<<EOD
 <?php
     ......
-    require_once dirname(__DIR__) . '/modules/{$this->moduleID}/config/route.php',
+    require dirname(__DIR__) . '/modules/{$this->moduleID}/config/route.php',
     ......
 EOD;
 
@@ -128,7 +128,14 @@ EOD;
      */
     public function requiredTemplates()
     {
-        return ['module.php', 'controllers/default.php', 'views/default.php'];
+        return [
+            'config/route.php',
+            'controllers/api.php',
+            'controllers/page.php',
+            'controllers/v1/default.php',
+            'module.php',
+            'views/v1/default.php',
+        ];
     }
 
     /**
@@ -151,12 +158,20 @@ EOD;
             $this->render('config/route.php')
         );
         $files[] = new CodeFile(
-            $modulePath . '/controllers/DefaultController.php',
-            $this->render("controllers/default.php")
+            $modulePath . '/controllers/v1/DefaultController.php',
+            $this->render("controllers/v1/default.php")
         );
         $files[] = new CodeFile(
-            $modulePath . '/views/default/index.php',
-            $this->render("views/default.php")
+            $modulePath . '/controllers/ApiController.php',
+            $this->render("controllers/api.php")
+        );
+        $files[] = new CodeFile(
+            $modulePath . '/controllers/PageController.php',
+            $this->render("controllers/page.php")
+        );
+        $files[] = new CodeFile(
+            $modulePath . '/views/v1/default/index.php',
+            $this->render("views/v1/default.php")
         );
 
         return $files;
