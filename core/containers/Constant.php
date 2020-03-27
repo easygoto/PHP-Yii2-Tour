@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\core\containers;
 
 class Constant

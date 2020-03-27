@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\core\helpers;
 
 use yii\db\ActiveQuery;

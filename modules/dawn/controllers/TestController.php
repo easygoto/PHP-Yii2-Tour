@@ -1,10 +1,8 @@
 <?php
 
-
 namespace app\modules\dawn\controllers;
 
 use app\modules\dawn\Module;
-use yii\db\ActiveRecord;
 use yii\web\Controller;
 
 class TestController extends Controller
@@ -19,9 +17,7 @@ class TestController extends Controller
 
     public function actionGoods()
     {
-        $result = $this->module->goodsService->lists([], function (ActiveRecord $item) {
-            return $item->getAttributes();
-        });
+        $result = $this->module->goodsService->listsNotDelete();
         $this->asJson($result->asArray());
     }
 }

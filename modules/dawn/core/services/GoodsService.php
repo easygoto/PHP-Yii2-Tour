@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\modules\dawn\core\services;
 
 use app\core\components\BaseService;
@@ -14,37 +13,25 @@ class GoodsService extends BaseService
     public function allNotDelete(array $keywords = [])
     {
         $keywords['is_delete'] = Constant::NOT_DELETE;
-        return $this->allByAttr(
-            $keywords,
-            fn (ActiveQuery $query) => $this->handleFilter($query, $keywords),
-            fn (Goods $item) => $this->handleResult($item, 'all')
-        );
+        return $this->allByAttr($keywords, fn (ActiveQuery $query) => $this->handleFilter($query, $keywords));
     }
 
     public function listsNotDelete(array $keywords = [])
     {
         $keywords['is_delete'] = Constant::NOT_DELETE;
-        return $this->listsByAttr(
-            $keywords,
-            fn (ActiveQuery $query) => $this->handleFilter($query, $keywords),
-            fn (Goods $item) => $this->handleResult($item, 'list')
-        );
+        return $this->listsByAttr($keywords, fn (ActiveQuery $query) => $this->handleFilter($query, $keywords));
     }
 
     public function existsByIdNotDelete(int $id)
     {
-        return $this->existsByAttr(fn (ActiveQuery $query) => $query->andFilterWhere([
-            'id'        => $id,
-            'is_delete' => Constant::NOT_DELETE,
-        ]));
+        $where = ['id' => $id, 'is_delete' => Constant::NOT_DELETE];
+        return $this->existsByAttr(fn (ActiveQuery $query) => $query->andFilterWhere($where));
     }
 
     public function getByIdNotDelete(int $id)
     {
-        return $this->getByAttr(
-            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id, 'is_delete' => Constant::NOT_DELETE]),
-            fn (Goods $item) => $this->handleResult($item, 'detail')
-        );
+        $where = ['id' => $id, 'is_delete' => Constant::NOT_DELETE];
+        return $this->getByAttr(fn (ActiveQuery $query) => $query->andFilterWhere($where));
     }
 
     public function addOne(array $params)
@@ -69,28 +56,37 @@ class GoodsService extends BaseService
     public function removeById(int $id)
     {
         $nowTime = date('Y-m-d H:i:s');
-        return $this->editOneByAttr([
-            'is_delete'   => Constant::IS_DELETE,
-            'operated_at' => $nowTime,
-        ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+        return $this->editOneByAttr(
+            [
+                'is_delete' => Constant::IS_DELETE,
+                'operated_at' => $nowTime,
+            ],
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id])
+        );
     }
 
     public function enableById(int $id)
     {
         $nowTime = date('Y-m-d H:i:s');
-        return $this->editOneByAttr([
-            'status'   => Goods::STATUS['NORMAL'],
-            'operated_at' => $nowTime,
-        ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+        return $this->editOneByAttr(
+            [
+                'status' => Goods::STATUS['NORMAL'],
+                'operated_at' => $nowTime,
+            ],
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id])
+        );
     }
 
     public function disableById(int $id)
     {
         $nowTime = date('Y-m-d H:i:s');
-        return $this->editOneByAttr([
-            'status'   => Goods::STATUS['DISABLE'],
-            'operated_at' => $nowTime,
-        ], fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id]));
+        return $this->editOneByAttr(
+            [
+                'status' => Goods::STATUS['DISABLE'],
+                'operated_at' => $nowTime,
+            ],
+            fn (ActiveQuery $query) => $query->andFilterWhere(['id' => $id])
+        );
     }
 
     public function deleteOneById(int $id)

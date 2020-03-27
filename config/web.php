@@ -56,12 +56,8 @@ $config = [
         'redis' => require __DIR__ . '/redis.php',
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => true, // 若开启，路由和真实的接口前面不可相同
-            'showScriptName' => false,
-            'rules' => array_merge(
-                require dirname(__DIR__) . '/modules/dawn/config/route.php',
-                require __DIR__ . '/route.php'
-            ),
+            'enableStrictParsing' => false,
+            'showScriptName' => false
         ],
     ],
     'params' => $params,

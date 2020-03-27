@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Trink\Core\Helper;
 
 class Arrays

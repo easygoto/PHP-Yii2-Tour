@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\core\components;
 
 use app\core\containers\Constant;
@@ -9,6 +8,7 @@ use app\core\helpers\FilterHandler;
 use app\core\helpers\SortHandler;
 use Closure;
 use Exception;
+use Swoole\Process;
 use Throwable;
 use Trink\Core\Helper\Result;
 use yii\db\ActiveQuery;
@@ -17,11 +17,8 @@ use yii\helpers\ArrayHelper;
 
 abstract class BaseService
 {
-    protected string $modelClassName;
-    protected string $messageClassName;
-
-    protected Closure $handleResult;
-    protected Closure $handleQuery;
+    protected string $modelClass;
+    protected string $messageClass;
 
     protected Message $message;
 
@@ -29,17 +26,15 @@ abstract class BaseService
 
     public function __construct()
     {
-        $serviceClassName = rtrim(get_class($this), 'Service');
-        $modelClassName = str_replace('core\services', 'models', $serviceClassName);
-        $messageClassName = str_replace('core\services', 'core\containers\messages', $serviceClassName . 'Message');
-        $messageClassName = class_exists($messageClassName) ? $messageClassName : Message::class;
+        $serviceClass = rtrim(get_class($this), 'Service');
+        $modelClass = str_replace('core\services', 'models', $serviceClass);
+        $messageClass = str_replace('core\services', 'core\containers\messages', $serviceClass . 'Message');
+        $messageClass = class_exists($messageClass) ? $messageClass : Message::class;
 
-        $this->model = new $modelClassName;
-        $this->message = new $messageClassName;
-        $this->modelClassName = $modelClassName;
-        $this->messageClassName = $messageClassName;
-        $this->handleQuery = fn (ActiveQuery $query) => $query;
-        $this->handleResult = fn (ActiveRecord $item) => $item->getAttributes();
+        $this->model = new $modelClass();
+        $this->message = new $messageClass();
+        $this->modelClass = $modelClass;
+        $this->messageClass = $messageClass;
     }
 
     /**
@@ -52,24 +47,26 @@ abstract class BaseService
      */
     protected function handleResult(ActiveRecord $item, $scope = 'list')
     {
-        if (!defined($this->modelClassName . '::RESULT_FILTER') || isset($this->modelClassName::RESULT_FILTER[$scope])) {
+        if (!defined($this->modelClass . '::RESULT_FILTER') || isset($this->modelClass::RESULT_FILTER[$scope])) {
             $itemArray = $item->getAttributes();
         } else {
-            ['include' => $include, 'exclude' => $exclude] = $this->modelClassName::RESULT_FILTER[$scope];
+            $include = ArrayHelper::getValue($this->modelClass::RESULT_FILTER[$scope], 'include', null);
+            $exclude = ArrayHelper::getValue($this->modelClass::RESULT_FILTER[$scope], 'exclude', null);
             $itemArray = $item->getAttributes($include, $exclude);
         }
-        if (!defined($this->modelClassName . '::FIELD_DETAIL')) {
-            return $itemArray;
-        }
-        foreach ($this->modelClassName::FIELD_DETAIL as $field => $detail) {
-            if (!array_key_exists($field, $itemArray)) {
-                continue;
-            }
-            $type = ArrayHelper::getValue($detail, 'type', 'string');
-            if ($type == 'float') {
-                $itemArray[$field] = (float)$itemArray[$field];
-            } elseif ($type == 'int') {
-                $itemArray[$field] = (int)$itemArray[$field];
+        if (defined($this->modelClass . '::FIELD_DETAIL')) {
+            // TODO 事件分发
+            // 强类型转换
+            foreach ($this->modelClass::FIELD_DETAIL as $field => $detail) {
+                if (!array_key_exists($field, $itemArray)) {
+                    continue;
+                }
+                $type = ArrayHelper::getValue($detail, 'type', 'string');
+                if ($type == 'float') {
+                    $itemArray[$field] = (float)$itemArray[$field];
+                } elseif ($type == 'int') {
+                    $itemArray[$field] = (int)$itemArray[$field];
+                }
             }
         }
         return $itemArray;
@@ -86,8 +83,9 @@ abstract class BaseService
     protected function handleFilter(ActiveQuery $query, array $keywords = []): ActiveQuery
     {
         $likeFieldList = $equalsFieldList = $rangeFieldList = [];
-        if (defined($this->modelClassName . '::FIELD_DETAIL')) {
-            foreach ($this->modelClassName::FIELD_DETAIL as $field => $detail) {
+        if (defined($this->modelClass . '::FIELD_DETAIL')) {
+            // TODO 事件分发
+            foreach ($this->modelClass::FIELD_DETAIL as $field => $detail) {
                 $filterType = ArrayHelper::getValue($detail, 'filter', 'none');
                 if ($filterType == 'range') {
                     $rangeFieldList[] = $field;
@@ -98,13 +96,12 @@ abstract class BaseService
                 }
             }
         }
-        $query = (new FilterHandler)
+        return (new FilterHandler())
             ->setKeywords($keywords)
             ->setLike($likeFieldList)
             ->setEquals($equalsFieldList)
             ->setRange($rangeFieldList)
             ->buildQuery($query);
-        return $query;
     }
 
     /**
@@ -133,25 +130,24 @@ abstract class BaseService
      * 根据条件获取全部记录
      *
      * @param array        $keywords
-     * @param Closure|null $handleQuery  构造查询条件
-     * @param Closure|null $handleResult 处理结果集
+     * @param Closure|null $handleQuery 构造查询条件
      *
      * @return Result
      */
-    protected function allByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
+    protected function allByAttr(array $keywords = [], Closure $handleQuery = null)
     {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
-        $handleResult = $handleResult ?: $this->handleResult;
+        $limit = (int)($keywords['limit'] ?? Constant::DEFAULT_LIMIT);
 
         /** @var ActiveQuery $query */
-        $limit = (int)($keywords['limit'] ?? Constant::DEFAULT_LIMIT);
         $query = $this->model::find();
         $query = $this->handleSort($query, SortHandler::load($keywords));
         $query = $limit > 0 ? $query->limit($limit) : $query;
-        $query = $handleQuery($query);
+        if ($handleQuery) {
+            $query = $handleQuery($query);
+        }
 
         $total = (int)$query->count('1');
-        $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
+        $list = array_map(fn (ActiveRecord $item) => $this->handleResult($item, 'all'), $query->all());
         return Result::success('OK', ['list' => $list, 'limit' => $limit ?: $total, 'total' => $total]);
     }
 
@@ -159,16 +155,12 @@ abstract class BaseService
      * 根据条件获取列表记录
      *
      * @param array        $keywords
-     * @param Closure|null $handleQuery  构造查询条件
-     * @param Closure|null $handleResult 处理结果集
+     * @param Closure|null $handleQuery 构造查询条件
      *
      * @return Result
      */
-    protected function listsByAttr(array $keywords = [], Closure $handleQuery = null, Closure $handleResult = null)
+    protected function listsByAttr(array $keywords = [], Closure $handleQuery = null)
     {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
-        $handleResult = $handleResult ?: $this->handleResult;
-
         $page = (int)($keywords['page'] ?? Constant::DEFAULT_PAGE);
         $page = max($page, Constant::MIN_PAGE);
         $pageSize = (int)($keywords['page_size'] ?? Constant::DEFAULT_PAGE_SIZE);
@@ -179,10 +171,12 @@ abstract class BaseService
         /** @var ActiveQuery $query */
         $query = $this->model::find()->offset($offset)->limit($pageSize);
         $query = $this->handleSort($query, SortHandler::load($keywords));
-        $query = $handleQuery($query);
+        if ($handleQuery) {
+            $query = $handleQuery($query);
+        }
 
         $total = $query->count('1');
-        $list = array_map(fn (ActiveRecord $item) => $handleResult($item), $query->all());
+        $list = array_map(fn (ActiveRecord $item) => $this->handleResult($item, 'list'), $query->all());
         return Result::lists($list, $total, $page, $pageSize);
     }
 
@@ -195,10 +189,11 @@ abstract class BaseService
      */
     protected function existsByAttr(?Closure $handleQuery)
     {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
         /** @var ActiveQuery $query */
         $query = $this->model::find();
-        $query = $handleQuery($query);
+        if ($handleQuery) {
+            $query = $handleQuery($query);
+        }
         if ($query->exists() === false) {
             return Result::fail($this->message::get('NOT_EXISTS'));
         }
@@ -209,24 +204,22 @@ abstract class BaseService
      * 根据条件获取记录详情
      *
      * @param Closure|null $handleQuery
-     * @param Closure|null $handleResult
      *
      * @return Result
      */
-    protected function getByAttr(Closure $handleQuery = null, Closure $handleResult = null)
+    protected function getByAttr(Closure $handleQuery = null)
     {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
-        $handleResult = $handleResult ?: $this->handleResult;
-
         /** @var ActiveQuery $query */
         $query = $this->model::find();
-        $query = $handleQuery($query);
+        if ($handleQuery) {
+            $query = $handleQuery($query);
+        }
         $object = $query->one();
         if (!$object) {
             return Result::fail($this->message::get('NOT_EXISTS'));
         }
 
-        $detail = $handleResult($object);
+        $detail = $this->handleResult($object, 'detail');
         return Result::success('OK', $detail);
     }
 
@@ -260,7 +253,7 @@ abstract class BaseService
     protected function addOne(array $params)
     {
         /** @var ActiveRecord $model */
-        $model = new $this->modelClassName;
+        $model = new $this->modelClass();
         $model->setAttributes($params);
         if (!$model->save(true)) {
             return Result::fail($this->message::get('CREATE_FAIL'), $model->getErrors());
@@ -284,11 +277,11 @@ abstract class BaseService
      */
     protected function editOneByAttr(array $params, Closure $handleQuery = null)
     {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
-
         /** @var ActiveQuery $query */
         $query = $this->model::find();
-        $query = $handleQuery($query);
+        if ($handleQuery) {
+            $query = $handleQuery($query);
+        }
         $object = $query->one();
         if (!$object) {
             return Result::fail($this->message::get('NOT_EXISTS'));
@@ -317,11 +310,11 @@ abstract class BaseService
      */
     protected function deleteOneByAttr(?Closure $handleQuery)
     {
-        $handleQuery = $handleQuery ?: $this->handleQuery;
-
         /** @var ActiveQuery $query */
         $query = $this->model::find();
-        $query = $handleQuery($query);
+        if ($handleQuery) {
+            $query = $handleQuery($query);
+        }
         $object = $query->one();
         if (!$object) {
             return Result::success($this->message::get('DELETED'));

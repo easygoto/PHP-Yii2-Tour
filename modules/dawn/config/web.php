@@ -2,19 +2,13 @@
 
 use app\modules\dawn\core\services;
 
-$config = [
+return [
     'id' => 'dawn',
     // 'layout' => 'main',
     // 'defaultRoute' => 'test/index',
 
     'components' => [
         // list of component configurations
-        'userService' => [
-            'class' => services\UserService::class
-        ],
-        'menuService' => [
-            'class' => services\MenuService::class,
-        ],
         'goodsService' => [
             'class' => services\GoodsService::class,
         ],
@@ -24,5 +18,3 @@ $config = [
         // list of parameters
     ],
 ];
-
-return $config;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\commands;
 
 use Yii;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\modules\dawn\controllers\v1\api;
 
 use app\core\containers\Message;
@@ -18,8 +17,8 @@ class GoodsController extends ApiController
     {
         return [
             [
-                'class'  => CheckTokenFilter::class,
-                'only'   => ['create', 'update', 'delete'],
+                'class' => CheckTokenFilter::class,
+                'only' => ['create', 'update', 'delete'],
                 'except' => ['view', 'index'],
             ],
         ];
@@ -33,7 +32,6 @@ class GoodsController extends ApiController
      *     @OA\Parameter(name="page", in="path", required=false, description="限度", @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'list':[{'id':'2','name':'测试商品6177','wholesale':'421.30','sellingPrice':'490.24','marketPrice':'517.05','inventory':1200,'updatedAt':'2019-08-2114:05:54','operatedAt':'2019-08-2114:05:54','status':1},...],'limit':5,'total':78}}")
      * )
-     *
      * @return Response
      */
     public function actionAll()
@@ -51,7 +49,6 @@ class GoodsController extends ApiController
      *     @OA\Parameter(name="page", in="path", required=false, description="页码数", @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'list':[{'id':'2','name':'测试商品6177','wholesale':'421.30','sellingPrice':'490.24','marketPrice':'517.05','inventory':1200,'updatedAt':'2019-08-21 14:05:54','operatedAt':'2019-08-21 14:05:54','status':1},...],'page':1,'total':78,'pagesize':10,'totalpages':8}}")
      * )
-     *
      * @return Response
      */
     public function actionIndex()
@@ -69,7 +66,6 @@ class GoodsController extends ApiController
      *     @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'id':'2','name':'测试商品6177','wholesale':'421.30','sellingPrice':'490.24','marketPrice':'517.05',inventory':1200,'updatedAt':'2019-08-21 14:05:54','operatedAt':'2019-08-2114:05:54','status':1}}")
      * )
-     *
      * @param $id
      *
      * @return Response
@@ -90,7 +86,6 @@ class GoodsController extends ApiController
      *     ),
      *     @OA\Response(response=200, description="{'status':0,'msg':'OK','data':{'id':2,'name':'测试商品6177','wholesale':421.30,'sellingPrice':490.24,'marketPrice':517.05,'inventory':1200,'updatedAt':'2019-08-21 14:05:54','operatedAt':'2019-08-21 14:05:54','status':1}}")
      * )
-     *
      * @return Response
      */
     public function actionCreate()
@@ -108,7 +103,6 @@ class GoodsController extends ApiController
      *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="")
      * )
-     *
      * @param $id
      *
      * @return Response
@@ -128,7 +122,6 @@ class GoodsController extends ApiController
      *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="")
      * )
-     *
      * @param $id
      * @param $verb
      *
@@ -136,6 +129,7 @@ class GoodsController extends ApiController
      */
     public function actionModify($id, $verb)
     {
+        // TODO 事件分发
         switch ($verb) {
             case 'enable':
                 $result = $this->module->goodsService->enableById((int)$id);
@@ -158,7 +152,6 @@ class GoodsController extends ApiController
      *     path="/dawn/v1/api/goods/{id}",
      *     @OA\Response(response=200, description="{'status':0,'msg':'商品已删除','data':[]}")
      * )
-     *
      * @param $id
      *
      * @return Response

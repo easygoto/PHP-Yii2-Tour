@@ -1,6 +1,5 @@
 <?php
 
-
 namespace app\modules\dawn\core\containers\messages;
 
 use app\core\containers\Message;
