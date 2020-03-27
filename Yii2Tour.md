@@ -1,6 +1,6 @@
 # 源码之旅
 
-## 心得(以后再整理系列)
+## 路由 
 
 ```
 vendor/yiisoft/yii2/web/Application.php->handleRequest:
@@ -23,9 +23,11 @@ vendor/yiisoft/yii2/web/UrlRule.php->parseRequest:
     1. 规则和 mode 设置相关, PARSING_ONLY, CREATION_ONLY 等, 一些简单的处理
 ```
 
-```
-vendor/yiisoft/yii2/validators
-    1. 默认所有的验证器都在此文件夹下，可以自定义，但 Validator 中 $builtInValidators 属性也要添加
-    2. 对于各验证器的 message，{attribute} 可以自定义提示信息，而这个值在 Model::attributeLabels 中定义
-```
+## 数据验证器
+
+[数据验证器的文件夹](vendor/yiisoft/yii2/validators)
+
+1. 默认所有的验证器都在此文件夹下, 可以自定义 Validator, Validator 中 $builtInValidators 定义类型和验证器的映射
+1. on/except 可以根据场景决定 使用/不使用 某验证器, 场景可以根据 scenarios 属性来指定
+1. 对于各验证器的 message 属性, {attribute} 代表着 Model::attributeLabels 中定义的属性, {value} 代表着 Model 的当前值
 
