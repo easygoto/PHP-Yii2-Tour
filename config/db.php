@@ -1,6 +1,6 @@
 <?php
 
-return [
+$db = [
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=localhost;dbname=stu_yii2basic',
     'username' => 'root',
@@ -13,3 +13,9 @@ return [
     //'schemaCacheDuration' => 60,
     //'schemaCache' => 'cache',
 ];
+
+if (YII_ENV === 'test') {
+    $db['dsn'] = 'mysql:host=localhost;dbname=yii2_basic_tests';
+}
+
+return $db;

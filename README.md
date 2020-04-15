@@ -1,11 +1,12 @@
 ## 自定义设计思路
 
-- [模块分离](README.md#1-)
-- [基础组件](README.md#2-)
-    - [有代码提示的Yii::$app](README.md#21--application)
-    - [二次封装的服务](README.md#22-)
-- [个性化的Gii组件](README.md#3-gen-)
-- [API文档](README.md#4-)
+- [模块分离](README.md#1-模块分离)
+- [基础组件](README.md#2-基础组件)
+    - [有代码提示的Yii::$app](README.md#21-有代码提示的-application)
+    - [二次封装的服务](README.md#22-二次封装的服务)
+    - [错误信息管理](README.md#23-错误信息管理)
+- [个性化的Gii组件](README.md#3-gen-组件)
+- [API文档](README.md#4-注释文档)
 
 ### 1 模块分离
 

@@ -12,7 +12,7 @@ class CreateController extends Controller
     public function actionGoods($nums = 100)
     {
         print "create goods ... ";
-        for ($i = 0; $i < $nums; $i ++) {
+        for ($i = 0; $i < $nums; $i++) {
             $price = rand(200, 999);
             $nowTime = time();
             $sn = substr(md5(uniqid()), 0, 4);
