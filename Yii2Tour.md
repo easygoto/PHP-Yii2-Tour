@@ -1,13 +1,16 @@
 # 源码之旅
 
-## 路由 
+## "研途"存疑点
+
+- [x] `\yii\base\Module::runAction` 为何使用 oldController 把当前的 controller 保存起来?
+    - 是因为之后的操作会改变其 controllerId, 先把保护起来, 防止本控制器中的 id 被其他的控制器更改
+    - 控制器中的 runAction 也是同样处理 actionId, 先把它保护起来, 因为 runAction 用的非常普遍, 很容易就被其他的方法改掉
+
+## 执行过程研究
+
+### 请求层面
 
 ```
-vendor/yiisoft/yii2/web/Application.php->handleRequest:
-    1. 判断 $this->catchAll 是否要拦截所有页面
-    2. 解析网址和参数
-    3. 通过 $this->runAction($route, $params) 运行 route
-
 vendor/yiisoft/yii2/web/Request.php->resolve:
     1. 直接委托 Yii::$app->getUrlManager()->parseRequest($this) 来处理网址
     2. $_GET = $params + $_GET, 存疑点: 数组相加是合并?
@@ -22,6 +25,23 @@ vendor/yiisoft/yii2/web/UrlManager.php->parseRequest:
 vendor/yiisoft/yii2/web/UrlRule.php->parseRequest:
     1. 规则和 mode 设置相关, PARSING_ONLY, CREATION_ONLY 等, 一些简单的处理
 ```
+
+### 路由层面
+
+> \yii\web\Application::handleRequest
+>
+> \yii\base\Module::runAction
+>
+> \yii\base\Controller::runAction
+>
+> \yii\base\InlineAction::runWithParams
+
+1. 接受一个 Request 返回一个 Response
+1. 调用 Request 解析网址和参数, 拿到结果通过 runAction 寻找控制器(优先匹配非模块中的控制器)
+1. 通过控制器的 runAction 寻找动作, actionId 被限制成 `/^(?:[a-z0-9_]+-)*[a-z0-9_]+$/`
+1. 找到其模块所有的 beforeAction, 依次执行
+1. 使用 `call_user_func_array(...)` 执行自己的方法
+1. 依次执行其模块所有的 afterAction
 
 ## 数据验证器
 
